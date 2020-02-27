@@ -1,0 +1,14 @@
+ing <My Use>
+
+rename
+- search and replace(hi, sel, all)
+
+ctrl color
+- setting at first
+
+mirror joint (search and replace)
+orient joint
+joint copy(ik spline)
+
+quick add, lock, unlock attribute
+

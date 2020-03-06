@@ -180,7 +180,7 @@ def SelectShape(obj):
             c=cmds.circle(nr=(0,0,1))
     elif cmds.optionMenu(shapes, q=True, sl=2)==2:
         c=cmds.curve(d=1, p=[(1,1,1),(1,-1,1), (1,-1,-1),(1,1,-1),(-1,1,-1),(-1,-1,-1),(1,-1,-1),(1,1,-1),(1,1,1),(-1,1,1),(-1,-1,1),(1,-1,1),(-1,-1,1),(-1,-1,-1),(-1,1,-1),(-1,1,1)])
-    
+    #need to fix
     elif cmds.optionMenu(shapes, q=True, sl=3)==3:
         a=cmds.circle(nr=(1,0,0), n="cir")
         cmds.circle(nr=(0,1,0), n="cir1")
@@ -389,9 +389,5 @@ def Color():
     cmds.showWindow(win)
 
 #--------------------------------------------------------------------------------------------#
-
-
-
-
 
 

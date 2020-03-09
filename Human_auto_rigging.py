@@ -56,33 +56,48 @@ cmds.showWindow(win)
 
 #Create basic Jnt
 def CreateBaseJoint():
-    if cmds.objExists("d_Root"):
+    if cmds.objExists("Root"):
         cmds.warning("Basic Joints are already exists")
     else:
         root=cmds.joint(n="Root", p=(0,10,0))
-        cmds.joint(n="L_Hip", p=(1,9.5,0))
-        cmds.joint(n="L_Knee",p=(1,4.5,0))
-        cmds.joint(n="L_Ankle",p=(1,1,0))
-        cmds.joint(n="L_Heel",p=(1,0,0))
-        cmds.joint(n="L_Toes",p=(0,0,0))
-        cmds.joint(n="L_FootSideInner")
-        cmds.joint(n="L_FootSideOuter")
-        cmds.joint(n="L_ToesEnd")
-        cmds.joint(n="Spine1")
-        cmds.joint(n="Chest")
-        cmds.joint(n="L_Scapula")
-        cmds.joint(n="L_Shoulder")
-        cmds.joint(n="L_Elbow")
-        cmds.joint(n="L_Wrist")
-        cmds.joint(n="Neck")
-        cmds.joint(n="Head")
-        cmds.joint(n="L_Eye")
-        cmds.joint(n="L_EyeEnd")
-        cmds.joint(n="Jaw")
-        cmds.joint(n="JawEnd")
-        cmds.joint(n="HeadEnd")
+        cmds.joint(n="L_Hip", p=(0.8,9.5,-0.2))
+        cmds.joint(n="L_Knee",p=(0.9,4.5,0.2))
+        cmds.joint(n="L_Ankle",p=(1,0.85,-0.05))
+        cmds.joint(n="L_Heel",p=(1,0,-0.7))
+        
+        cmds.select("L_Ankle")
+        cmds.joint(n="L_Toes",p=(1,0.2,1.3))
+        cmds.joint(n="L_FootSideInner", p=(0.5,0,1.3))
+        cmds.select("L_Toes")
+        cmds.joint(n="L_FootSideOuter", p=(1.5,0,1.3))
+        cmds.select("L_Toes")
+        cmds.joint(n="L_ToesEnd", p=(1,0,2))
+        
+        cmds.select("Root")
+        cmds.joint(n="Spine1", p=(0,11.5,-0.4))
+        cmds.joint(n="Chest", p=(0,13,-0.5))
+        cmds.joint(n="Neck", p=(0,14,-0.4))
+        cmds.joint(n="Head", p=(0,15.6,-0.1))
+        cmds.joint(n="HeadEnd", p=(0,17.1,-0.1))
+        
+        cmds.select("Head")
+        cmds.joint(n="Jaw", p=(0,15.4,0.3))
+        cmds.joint(n="JawEnd", p=(0,14.9,1.25))
+        cmds.select("Head")
+        cmds.joint(n="L_Eye", p=(-0.3,16,1))
+        cmds.joint(n="L_EyeEnd", p=(-0.3,16,1.5))
+        
+        cmds.select("Chest")
+        cmds.joint(n="L_Scapula", p=(0.4,13.7,-0.15))
+        cmds.joint(n="L_Shoulder", p=(1.5,13.7,-0.15))
+        cmds.joint(n="L_Elbow", p=(4,13.7,-0.3))
+        cmds.joint(n="L_Wrist", p=(6.4,13.7,-0.15))
+        
         a=cmds.circle(nr=(0,1,0), n="world_ctrl")
-        cmds.parent("Root",a)
+        cmds.scale(3,3,3, a)
+        cmds.makeIdentity(a=True, t=True, r=True, s=True, n=0)
+        cmds.DeleteHistory(a)
+        cmds.parent("Root","world_ctrl")
         
 
 #Mirror Jnt -> Orient Jnt -> Create Ctrl

@@ -71,8 +71,8 @@ def CreateBaseJoint():
     if cmds.objExists("Root"):
         cmds.warning("Basic Joints are already exists")
     else:
-        root=cmds.joint(n="Root", p=(0,10,0))
-        cmds.joint(n="L_Hip", p=(0.8,9.5,-0.2))
+        root=cmds.joint(n="Root", p=(0,9.82,-0.17))
+        cmds.joint(n="L_Hip", p=(0.8,9.6,-0.2))
         cmds.joint(n="L_Knee",p=(0.9,4.5,0.2))
         cmds.joint(n="L_Ankle",p=(1,0.85,-0.05))
         cmds.joint(n="L_Heel",p=(1,0,-0.7))
@@ -88,7 +88,7 @@ def CreateBaseJoint():
         cmds.select("Root")
         cmds.joint(n="Spine1", p=(0,11.5,-0.4))
         cmds.joint(n="Chest", p=(0,13,-0.5))
-        cmds.joint(n="Neck", p=(0,14,-0.4))
+        cmds.joint(n="Neck", p=(0,14,-0.38))
         cmds.joint(n="Head", p=(0,15.6,-0.1))
         cmds.joint(n="HeadEnd", p=(0,17.1,-0.1))
         
@@ -96,8 +96,8 @@ def CreateBaseJoint():
         cmds.joint(n="Jaw", p=(0,15.4,0.3))
         cmds.joint(n="JawEnd", p=(0,14.9,1.25))
         cmds.select("Head")
-        cmds.joint(n="L_Eye", p=(-0.3,16,1))
-        cmds.joint(n="L_EyeEnd", p=(-0.3,16,1.5))
+        cmds.joint(n="L_Eye", p=(0.34,15.8,0.9))
+        cmds.joint(n="L_EyeEnd", p=(0.3,16,1.5))
         
         cmds.select("Chest")
         cmds.joint(n="L_Scapula", p=(0.4,13.7,-0.15))

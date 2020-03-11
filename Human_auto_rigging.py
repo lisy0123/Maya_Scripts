@@ -30,9 +30,16 @@ cmds.separator(h=3)
 #Setting UI
 cmds.frameLayout(l="Setting", cll=True)
 cmds.rowLayout(nc=1)
-colorsetting = cmds.radioButtonGrp(l="Ctrl Color     ", cw3=(80,100,10), la2=["Same (L=R)","Separate (L/R)"], nrb=2, sl=1, w=298)
+colorsetting = cmds.radioButtonGrp(l="Ctrl Color     ", cw3=(80,100,5), la2=["Same (L=R)","Separate (L/R)"], nrb=2, sl=1, w=298)
 cmds.setParent("..")
 cmds.button(l="Setting", h=30, c="Setting()")
+cmds.button(l="Select Bind Skin Joints", h=30, c="SelectJoints()")
+wi=(1,144,144)
+cmds.rowLayout(nc=3, cw3=wi)
+cmds.text(l="", w=wi[0])
+cmds.button(l="Open Bind SKin Options", h=30, w=wi[1], c="OpenOptions()")
+cmds.button(l="Bind Skin (Default)", h=30, w=wi[2], c="BindSkin()")
+cmds.setParent("..")
 cmds.setParent("..")
 cmds.rowLayout(nc=1)
 cmds.setParent("..")
@@ -41,6 +48,11 @@ cmds.separator(h=3)
 
 #ctrl setting UI
 cmds.frameLayout(l="Control", cll=True)
+cmds.rowLayout(nc=1)
+cmds.setParent("..")
+cmds.button(l="Default Pose", h=30, c="DefaultPose()")
+cmds.button(l="Key Save", h=30, c="KeySave()")
+cmds.button(l="Key Mirror", h=30, c="KeyMirror()")
 cmds.setParent("..")
 cmds.rowLayout(nc=1)
 cmds.setParent("..")
@@ -106,12 +118,6 @@ def Setting():
     OrientJoints()
     cmds.warning("Fixing")
 
-def Arm():
-    cmds.warning("Arm")
-
-def Leg():
-    cmds.warning("Leg")
-
 #---------------------------------------------------------------------------------------#
 
 def DeleteJoint():
@@ -120,7 +126,7 @@ def DeleteJoint():
     else:
         cmds.warning("Already delete it!")
 
-#Hip, Scapula, Eye,
+#Hip, Scapula, Eye
 def MirrorJoints():
     if cmds.objExists("R_Hip"):
         cmds.warning("R_Leg is already exists")
@@ -138,8 +144,7 @@ def MirrorJoints():
         cmds.mirrorJoint("L_Eye",mirrorBehavior=True, myz=True, sr=("L_","R_"))
 
 def OrientJoints():
-    cmds.makeIdentity("Root", a=True, r=True)
-
+    cmds.makeIdentity("Root", a=True, t=True, r=True, s=True, n=0)
 
 def JointSize():
     j=cmds.floatSliderGrp(jnt, q=True, v=True)

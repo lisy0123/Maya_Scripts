@@ -96,11 +96,6 @@ def CreateBaseJoint():
         cmds.joint(n="L_Eye", p=(0.34,15.9,0.9))
         cmds.joint(n="L_EyeEnd", p=(0.34,15.9,1.5))
         JntArm()
-        cmds.select("Chest")
-        cmds.joint(n="L_Scapula", p=(0.4,13.7,-0.15))
-        cmds.joint(n="L_Shoulder", p=(1.5,13.7,-0.15))
-        cmds.joint(n="L_Elbow", p=(4,13.7,-0.3))
-        cmds.joint(n="L_Wrist", p=(6.4,13.7,-0.15))
         
         a=cmds.circle(nr=(0,1,0), n="world_ctrl")
         cmds.scale(3,3,3, a)
@@ -108,11 +103,12 @@ def CreateBaseJoint():
         cmds.DeleteHistory(a)
         cmds.parent("Root","world_ctrl")
 
+#---------------------------------------------------------------------------------------#
+
 # Leg Jnt
 def JntLeg():
-    cmds.warning("JntLeg")
     i = cmds.intSliderGrp(leg, q=True, v=True)
-    cmds.warning(i)
+    cmds.warning("Leg Jnt count: "+str(i))
     if i==1:
         JntLeg_sub(0,0,i)
     elif i==2:
@@ -123,7 +119,7 @@ def JntLeg():
         JntLeg_sub(0.4,-0.4,i-1)
         JntLeg_sub(0.4,0.4,i)
 
-def JntLeg_sub(x, y, i):
+def JntLeg_sub(x,y,i):
     cmds.select("Root")
     cmds.joint(n="L_Hip_"+str(i), p=(0.8-x,9.6,-0.2-y))
     cmds.joint(n="L_Knee_"+str(i),p=(0.98-x,4.7,0.2-y))
@@ -139,10 +135,26 @@ def JntLeg_sub(x, y, i):
 
 # Arm Jnt
 def JntArm():
-    cmds.warning("JntArm")
+    i = cmds.intSliderGrp(arm, q=True, v=True)
+    cmds.warning("Arm Jnt count: "+str(i))
+    if i==1:
+        JntArm_sub(0,0,i)
+    elif i==2:
+        JntArm_sub(0,0,i-1)
+        JntArm_sub(0,0.8,i)
+    else:
+        JntArm_sub(0.2,-0.1,i-2)
+        JntArm_sub(0,0.4,i-1)
+        JntArm_sub(0.2,0.9,i)
 
-def JntArm_Sub():
-    cmds.warning("JntArm_Sub")
+def JntArm_sub(x,y,i):
+    cmds.select("Chest")
+    cmds.joint(n="L_Scapula_"+str(i), p=(0.4-x,13.7,-0.15-y))
+    cmds.joint(n="L_Shoulder_"+str(i), p=(1.5-x,13.7,-0.15-y))
+    cmds.joint(n="L_Elbow_"+str(i), p=(4-x,13.7,-0.3-y))
+    cmds.joint(n="L_Wrist_"+str(i), p=(6.4-x,13.7,-0.15-y))
+
+#---------------------------------------------------------------------------------------#
 
 # Finger Jnt
 def Finger():
@@ -172,15 +184,19 @@ def Setting():
 
 # Mirror Hip(leg), Scapula(Arm), Eye
 def JntMirror():
-    if cmds.objExists("R_Hip"):
-        cmds.warning("R_Leg is already exists")
-    else:
-        cmds.mirrorJoint("L_Hip",mirrorBehavior=True, myz=True, sr=("L_","R_"))
+    i = cmds.intSliderGrp(leg, q=True, v=True)
+    for x in range(1, i+1):
+        if cmds.objExists("R_Hip_"+str(x)):
+            cmds.warning("R_Leg_"+str(x)+" is already exists")
+        else:
+            cmds.mirrorJoint("L_Hip_"+str(x),mirrorBehavior=True, myz=True, sr=("L_","R_"))
     
-    if cmds.objExists("R_Scapula"):
-        cmds.warning("R_Arm is already exists")
-    else:
-        cmds.mirrorJoint("L_Scapula",mirrorBehavior=True, myz=True, sr=("L_","R_"))
+    j = cmds.intSliderGrp(arm, q=True, v=True)
+    for y in range(1, j+1):
+        if cmds.objExists("R_Scapula_"+str(y)):
+            cmds.warning("R_Arm_"+str(y)+" is already exists")
+        else:
+            cmds.mirrorJoint("L_Scapula_"+str(y),mirrorBehavior=True, myz=True, sr=("L_","R_"))
     
     if cmds.objExists("R_Eye"):
         cmds.warning("R_Eye is already exists")

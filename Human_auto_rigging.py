@@ -78,6 +78,8 @@ def DeleteJoint():
 # Need to fix!
 # Go back to Default Jnt Setting
 def DefaultJntSetting():
+    l = cmds.intSliderGrp(leg, q=True, v=True)
+    cmds.intSliderGrp.setValue(l.setValue,v=1,)
     cmds.intSliderGrp(leg, v=1)
     cmds.intSliderGrp(arm, v=1)
     cmds.intSliderGrp(basefinger, v=5)

@@ -222,4 +222,3 @@ def coloring(h, colors):
 def JointSize():
     j=cmds.floatSliderGrp(jnt, q=True, v=True)
     cmds.jointDisplayScale(j)
-

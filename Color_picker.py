@@ -77,4 +77,3 @@ def ColorPicker(num):
         #cmds.setAttr(b[0]+".overrideColor",num)
         cmds.setAttr(col+".overrideEnabled",1)
         cmds.setAttr(col+".overrideColor",num)
-

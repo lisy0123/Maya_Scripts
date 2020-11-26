@@ -5,33 +5,29 @@ if cmds.window(win, ex=True):
     cmds.deleteUI(win)
 
 cmds.window(win, t="My Use")
+
+form = cmds.formLayout()
+tabs = cmds.tabLayout(imh = 5, imw = 5)
+cmds.formLayout(form, e=True, attachForm=((tabs, 'top',0), (tabs,'left', 0), (tabs, 'right', 0), (tabs, 'bottom',0)))
+
 cmds.rowColumnLayout(w=285)
 
 cmds.frameLayout(l="Joint Size", cll=True)
 jnt=cmds.floatSliderButtonGrp(l="Joint    ", bl="Set", bc="JointSize()", cw4=(50,50,70,40), f=True, min=0.1, max=1, v=0.5)
 cmds.setParent("..")
 
-cmds.frameLayout(l="Color Picker", cll=True)
-wi=(45,45,45,45,45,45)
-hi=30
-cmds.rowLayout(nc=6, cw6=wi)
-cmds.button(l="", w=wi[0], h=hi, c="ColorPicker(13)", bgc=(1,0,0))
-cmds.button(l="", w=wi[1], h=hi, c="ColorPicker(17)",bgc=(1,1,0))
-cmds.button(l="", w=wi[2], h=hi, c="ColorPicker(6)", bgc=(0,0,1))
-cmds.button(l="", w=wi[3], h=hi, c="ColorPicker(18)", bgc=(0,1,1))
-cmds.button(l="", w=wi[4], h=hi, c="ColorPicker(20)", bgc=(1,0.75,0.75))
-cmds.button(l="More", w=wi[5], c="Color()", h=hi)
-cmds.setParent("..")
-cmds.setParent("..")
+#--------------------------------------------------------------------------------------------#
 
-cmds.frameLayout(l="Constrain", cll=True)
-cmds.rowLayout(nc=1)
-cons=cmds.checkBoxGrp(l="Constrain: ", ncb=4, cw5=(60,55,48,55,10), la4=["Parent","Point","Orient","Scale"], v1=True)
-cmds.setParent("..")
-wi=(2,273)
-cmds.rowLayout(nc=2, cw2=wi)
+cmds.frameLayout(l="Joints", cll=True)
+wi=(90,1,90,1,90)
+cmds.rowLayout(nc=5, cw5=wi)
+cmds.button(l="Joints", w=wi[0])
 cmds.text("")
-cmds.button(l="Constrain", c="Cons()", w=wi[1])
+cmds.button(l="MIrror Joints", w=wi[2])
+cmds.text(" ")
+cmds.button(l="Orient Joints", w=wi[4])
+
+
 cmds.setParent("..")
 cmds.setParent("..")
 
@@ -74,8 +70,6 @@ cmds.button(l="Create Controller", c="CreateController()", w=wi[1])
 cmds.setParent("..")
 cmds.separator(h=1)
 
-#--------------------------------------------------------------------------------------------#
-
 wi=(50,170,1,50)
 cmds.rowLayout(nc=4, cw4=wi)
 cmds.text(l="   Text :", w=wi[0])
@@ -84,6 +78,21 @@ cmds.text("")
 cmds.button(l="Create", w=wi[3], c="Text()")
 cmds.setParent("..")
 cmds.setParent("..")
+
+#--------------------------------------------------------------------------------------------#
+
+cmds.frameLayout(l="Constrain", cll=True)
+cmds.rowLayout(nc=1)
+cons=cmds.checkBoxGrp(l="Constrain: ", ncb=4, cw5=(60,55,48,55,10), la4=["Parent","Point","Orient","Scale"], v1=True)
+cmds.setParent("..")
+wi=(2,273)
+cmds.rowLayout(nc=2, cw2=wi)
+cmds.text("")
+cmds.button(l="Constrain", c="Cons()", w=wi[1])
+cmds.setParent("..")
+cmds.setParent("..")
+
+#--------------------------------------------------------------------------------------------#
 
 cmds.frameLayout(l="Renamer", cll=True)
 wi=(50,84,84,1,50)
@@ -129,10 +138,27 @@ cmds.button(l="extra", w=wi[5], c="Add(6)")
 cmds.setParent("..")
 cmds.setParent("..")
 
+#--------------------------------------------------------------------------------------------#
+
+cmds.frameLayout(l="Color Picker", cll=True)
+wi=(45,45,45,45,45,45)
+hi=30
+cmds.rowLayout(nc=6, cw6=wi)
+cmds.button(l="", w=wi[0], h=hi, c="ColorPicker(13)", bgc=(1,0,0))
+cmds.button(l="", w=wi[1], h=hi, c="ColorPicker(17)",bgc=(1,1,0))
+cmds.button(l="", w=wi[2], h=hi, c="ColorPicker(6)", bgc=(0,0,1))
+cmds.button(l="", w=wi[3], h=hi, c="ColorPicker(18)", bgc=(0,1,1))
+cmds.button(l="", w=wi[4], h=hi, c="ColorPicker(20)", bgc=(1,0.75,0.75))
+cmds.button(l="More", w=wi[5], c="Color()", h=hi)
+cmds.setParent("..")
+cmds.setParent("..")
+
 
 cmds.showWindow(win)
 
+
 #-------------------------------------- Active Code ------------------------------------#
+
 
 def JointSize():
     j=cmds.floatSliderGrp(jnt, q=True, v=True)
@@ -389,4 +415,5 @@ def Color():
     cmds.showWindow(win)
 
 #--------------------------------------------------------------------------------------------#
+
 

@@ -22,7 +22,7 @@
 
 ## Hand auto rigging
 
-![Hand_auto_rigging](/Users/sangeunlee/lisy/com/Study/Maya_Scripts/Hand_auto_rigging.png)
+![Hand_auto_rigging](https://github.com/lisy0123/Maya_Scripts/blob/master/Hand_auto_rigging.png)
 
 :bulb: Rechecking...
 

@@ -6,9 +6,7 @@ Useful tools made with [**mel and pymel**](https://help.autodesk.com/cloudhelp/2
 
 
 
-## My use
-
-:label: Updating...
+## :mag: My use
 
 - [ ] rename - search and replace(hi, sel, all)
 - [ ] text didn't work well (123..,[]!@#$%%^&*)
@@ -21,26 +19,28 @@ Useful tools made with [**mel and pymel**](https://help.autodesk.com/cloudhelp/2
 - [ ] quick add, lock, unlock attribute
 - [ ] self clearly
 
+:label: Updating...
+
 ---
 
-## Hand auto rigging
+## :hand: Hand auto rigging
 
 ![Hand_auto_rigging](https://github.com/lisy0123/Maya_Scripts/blob/master/Hand_auto_rigging.png)
-
-:bulb: Rechecking...
 
 - [ ] orient joint error: didn't work
 - [ ] controller error: keep making ctrl
 
+:bulb: Rechecking...
+
 ---
 
-## Human auto rigging
+## :couple: Human auto rigging
 
 :label: Updating...
 
 ----
 
-## Wing auto rigging
+## :bird: Wing auto rigging
 
 :label: Updating...
 

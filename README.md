@@ -27,8 +27,11 @@ Useful tools made with [**mel and pymel**](https://help.autodesk.com/cloudhelp/2
 
 ![Hand_auto_rigging](https://github.com/lisy0123/Maya_Scripts/blob/master/Hand_auto_rigging.png)
 
-- [ ] orient joint error: didn't work
-- [ ] controller error: keep making ctrl
+- [x] orient joint error: didn't work
+- [x] ctrl error: keep making ctrl
+- [x] fix sub_ctrl rotate
+- [ ] Warning: Cannot parent components or objects in the underworld.
+- [ ] Add ik joint
 
 :bulb: Rechecking...
 

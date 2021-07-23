@@ -51,8 +51,8 @@ def CreateHands():
             else:
                 createFin(i, cmds.intField(subfinger, q=True, v=True), cmds.intField(basefinger, q=True, v=True))
                 
-        a=cmds.circle(nr=(0,1,0), n="Hand_World")
-        cmds.parent("L_Hand",a)
+        cmds.circle(nr=(0,1,0), n="Hand_World")
+        cmds.parent("L_Hand","Hand_World")
 
 #--------------------------------------------------------------------------------------------#
 
@@ -90,62 +90,73 @@ def MirrorJoints():
         cmds.mirrorJoint("L_Hand",mirrorBehavior=True, myz=True, sr=("L_","R_"))
 
 def OrientJoints():
-    cmds.makeIdentity("L_Hand", a=True, r=True)
-    cmds.makeIdentity("R_Hand", a=True, r=True)
+    for x in range(1,cmds.intField(subfinger, q=True, v=True)+1):
+        cmds.select("L_finger_"+str(x)+"_1")
+        cmds.joint(e=True, oj="xyz", sao="zdown", ch=True, zso=True)
+        cmds.makeIdentity("L_Hand", a=True, r=True)
+        cmds.DeleteHistory("L_Hand")
+        
+        cmds.select("R_finger_"+str(x)+"_1")
+        cmds.joint(e=True, oj="xyz", sao="zup", ch=True, zso=True)
+        cmds.makeIdentity("R_Hand", a=True, r=True)
+        cmds.DeleteHistory("R_Hand")
 
 #--------------------------------------------------------------------------------------------#
 
 def CreateController():
-    for x in range(0,2): 
-        if x==0: 
-            f="L_"
-        else: 
-            f="R_"
-            
-        handgrp=cmds.group(em=True, n=f+"Hand_ctrl_grp")
-        othergrp=cmds.group(em=True, n=f+"Hand_ctrl_g_grp")
-        hand=cmds.circle(nr=(1, 0, 0), n=f+"Hand_ctrl")
-        grouping(hand, othergrp, handgrp)
-        z=cmds.getAttr("Hand_World.scaleX")
-        cmds.scale(1*z,1.2*z,0.8*z, handgrp)
-        
-        cmds.parentConstraint(f+"Hand",handgrp, mo=False, n="L")
-        cmds.delete("L")
-        cmds.parentConstraint(hand, f+"Hand")
-        cmds.DeleteHistory(f+"Hand_ctrl")
-        coloring(f+"Hand_ctrl", 18)
-        
-        for i in range(1, cmds.intField(basefinger, q=True, v=True)+1):
-            if i==1:
-                createCon(i, cmds.intField(subfinger, q=True, v=True)-1,f)
+    if cmds.objExists("L_Hand_ctrl_grp"):
+            cmds.warning("Ctrls are already exists")
+    else:
+        for x in range(0,2):
+            if x==0:
+                f="L_"
             else:
-                createCon(i, cmds.intField(subfinger, q=True, v=True),f)
-        
-        SubCon(cmds.intField(basefinger, q=True, v=True), f)
-        SubConPlus(cmds.intField(basefinger, q=True, v=True), cmds.intField(subfinger, q=True, v=True), f)
-        
-        subgrp=cmds.group(em=True, n=f+"Hand_sub_ctrl_g_grp")
-        cmds.parentConstraint(f+"Hand",subgrp, mo=False, n="L")
-        cmds.delete("L")
-        
-        cmds.parent(f+"Hand_sub_ctrl_grp",subgrp)
-        cmds.parentConstraint(f+"Hand", subgrp)
-        
-    cmds.makeIdentity("Hand_World",a=True, s=True)
-    cmds.DeleteHistory("Hand_World")
-    grouping("L_Hand_sub_ctrl_g_grp","L_Hand_ctrl_grp", "Hand_World")
-    grouping("R_Hand_sub_ctrl_g_grp","R_Hand_ctrl_grp", "Hand_World")
+                f="R_"
+            handgrp=cmds.group(em=True, n=f+"Hand_ctrl_grp")
+            othergrp=cmds.group(em=True, n=f+"Hand_ctrl_g_grp")
+            hand=cmds.circle(nr=(1, 0, 0), n=f+"Hand_ctrl")
+            grouping(hand, othergrp, handgrp)
+            z=cmds.getAttr("Hand_World.scaleX")
+            cmds.scale(1*z,1.2*z,0.8*z, handgrp)
     
-    for num1 in [".t", ".r", ".s"]:
-        for num2 in ["x", "y", "z"]:
-            cmds.setAttr("L_Hand_sub_ctrl"+num1+num2, l=True, k=False)
-            cmds.setAttr("R_Hand_sub_ctrl"+num1+num2, l=True, k=False)
+            cmds.parentConstraint(f+"Hand",handgrp, mo=False, n="L")
+            cmds.delete("L")
+            cmds.parentConstraint(hand, f+"Hand")
+            cmds.DeleteHistory(f+"Hand_ctrl")
+            coloring(f+"Hand_ctrl", 18)
     
-    cmds.parent("L_Hand",w=True)
-    cmds.parent("R_Hand",w=True)
-    cmds.parent("L_Hand_ctrl_grp",w=True)
-    cmds.parent("R_Hand_ctrl_grp",w=True)
-    cmds.delete("Hand_World")
+            for i in range(1, cmds.intField(basefinger, q=True, v=True)+1):
+                if i==1:
+                    createCon(i, cmds.intField(subfinger, q=True, v=True)-1,f)
+                else:
+                    createCon(i, cmds.intField(subfinger, q=True, v=True),f)
+    
+            SubCon(cmds.intField(basefinger, q=True, v=True), f)
+            SubConPlus(cmds.intField(basefinger, q=True, v=True), cmds.intField(subfinger, q=True, v=True), f)
+    
+            subgrp=cmds.group(em=True, n=f+"Hand_sub_ctrl_g_grp")
+            cmds.parentConstraint(f+"Hand",subgrp, mo=False, n="L")
+            cmds.delete("L")
+            
+            cmds.parent(f+"Hand_sub_ctrl_grp",subgrp)
+            cmds.parentConstraint(f+"Hand", subgrp)
+            cmds.rotate(0,0,0, f+"Hand_sub_ctrl_grp")
+    
+        cmds.makeIdentity("Hand_World",a=True, s=True)
+        cmds.DeleteHistory("Hand_World")
+        grouping("L_Hand_sub_ctrl_g_grp","L_Hand_ctrl_grp", "Hand_World")
+        grouping("R_Hand_sub_ctrl_g_grp","R_Hand_ctrl_grp", "Hand_World")
+
+        for num1 in [".t", ".r", ".s"]:
+            for num2 in ["x", "y", "z"]:
+                cmds.setAttr("L_Hand_sub_ctrl"+num1+num2, l=True, k=False)
+                cmds.setAttr("R_Hand_sub_ctrl"+num1+num2, l=True, k=False)
+    
+        cmds.parent("L_Hand",w=True)
+        cmds.parent("R_Hand",w=True)
+        cmds.parent("L_Hand_ctrl_grp",w=True)
+        cmds.parent("R_Hand_ctrl_grp",w=True)
+        cmds.delete("Hand_World")
 
 #--------------------------------------------------------------------------------------------#
 
@@ -222,3 +233,4 @@ def coloring(h, colors):
 def JointSize():
     j=cmds.floatSliderGrp(jnt, q=True, v=True)
     cmds.jointDisplayScale(j)
+

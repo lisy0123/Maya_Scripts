@@ -8,6 +8,8 @@ Useful tools made with [**mel and pymel**](https://help.autodesk.com/cloudhelp/2
 
 ## :mag: My use
 
+![My_use](https://github.com/lisy0123/Maya_Scripts/blob/master/My_use.png)
+
 - [ ] rename - search and replace(hi, sel, all)
 - [ ] text didn't work well (123..,[]!@#$%%^&*)
 - [ ] controller hierarchy setting at beginning - on/off
@@ -38,6 +40,8 @@ Useful tools made with [**mel and pymel**](https://help.autodesk.com/cloudhelp/2
 ---
 
 ## :couple: Human auto rigging
+
+![Human_auto_rigging](https://github.com/lisy0123/Maya_Scripts/blob/master/Human_auto_rigging.png)
 
 :label: Updating...
 

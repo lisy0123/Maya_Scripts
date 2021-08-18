@@ -20,6 +20,7 @@ Useful tools made with [**mel and pymel**](https://help.autodesk.com/cloudhelp/2
 - [ ] joint copy(ik spline)
 - [ ] quick add, lock, unlock attribute
 - [ ] self clearly
+- [ ] add comment
 
 :label: Updating...
 
@@ -33,7 +34,8 @@ Useful tools made with [**mel and pymel**](https://help.autodesk.com/cloudhelp/2
 - [x] ctrl error: keep making ctrl
 - [x] fix sub_ctrl rotate
 - [ ] Warning: Cannot parent components or objects in the underworld.
-- [ ] Add ik joint
+- [ ] add ik joint
+- [ ] refactoring, add comment
 
 :bulb: Rechecking...
 
@@ -43,11 +45,15 @@ Useful tools made with [**mel and pymel**](https://help.autodesk.com/cloudhelp/2
 
 ![Human_auto_rigging](https://github.com/lisy0123/Maya_Scripts/blob/master/Human_auto_rigging.png)
 
+- [ ] rename function
+
 :label: Updating...
 
 ----
 
 ## :bird: Wing auto rigging
+
+
 
 :label: Updating...
 

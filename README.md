@@ -34,7 +34,6 @@ Useful tools made with [**mel and pymel**](https://help.autodesk.com/cloudhelp/2
 - [x] ctrl error: keep making ctrl
 - [x] fix sub_ctrl rotate
 - [ ] Warning: Cannot parent components or objects in the underworld.
-- [ ] add ik joint
 - [ ] refactoring, add comment
 
 :bulb: Rechecking...

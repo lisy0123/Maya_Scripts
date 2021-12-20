@@ -8,7 +8,36 @@ Useful tools made with [**mel and pymel**](https://help.autodesk.com/cloudhelp/2
 
 - [x] orient joint error: didn't work
 - [x] ctrl error: keep making ctrl
-- [x] Warning: Cannot parent components or objects in the underworld.
+
+<details>
+  <summary> Warning: Cannot parent components or objects in the underworld. </summary>
+  <div markdown="1">
+
+```python
+import maya.cmds as cmds
+
+cmds.circle(n="cir1")
+cmds.circle(n="cir2")
+cmds.parent("cir1", "cir2")
+# No Warning, but uncomfortable
+
+cir1 = cmds.circle()
+cir2 = cmds.circle()
+cmds.parent(cir1, cir2)
+# Warning: Cannot parent components or objects in the underworld.
+print cir1, cir2
+# [u'nurbsCircle1', u'makeNurbCircle1'] [u'nurbsCircle2', u'makeNurbCircle2']
+
+cir1 = cmds.circle()[0]
+cir2 = cmds.circle()[0]
+cmds.parent(cir1, cir2)
+# No Warning
+print cir1, cir2
+# nurbsCircle1 nurbsCircle2
+```
+
+  </div>
+</details>
 
 ---
 

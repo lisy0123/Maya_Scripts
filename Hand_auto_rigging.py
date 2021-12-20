@@ -47,7 +47,6 @@ cmds.rowColumnLayout(w=WIDTH)
 typing(TEXT01)
 basefinger = cmds.intField(min=1, max=10, v=5, w=WI[1])
 cmds.setParent("..")
-
 typing(TEXT02)
 subfinger = cmds.intField(min=1, max=10, v=5, w=WI[1])
 cmds.setParent("..")
@@ -76,7 +75,7 @@ def createHands():
         cmds.setAttr("L_Hand.jointOrientX", -90)
         for i in range(1, bf_int+1):
             createFingers(i, sf_int, bf_int)
-        cmds.circle(nr=(0,1,0), n=HW)
+        cmds.circle(nr=(0,1,0), n=HW)[0]
         cmds.parent(LHD, HW)
 
 
@@ -110,6 +109,7 @@ def mirrorJoints():
         cmds.warning(WARNING02)
     else:
         cmds.mirrorJoint(LHD, mirrorBehavior=True, myz=True, sr=("L_", "R_"))
+    orientJoints()
 
 
 def orientJoints():
@@ -133,7 +133,7 @@ def createController():
         for f in LR:
             handgrp = cmds.group(em=True, n=f+"Hand_ctrl_grp")
             othergrp = cmds.group(em=True, n=f+"Hand_ctrl_g_grp")
-            hand = cmds.circle(nr=(1, 0, 0), n=f+"Hand_ctrl")
+            hand = cmds.circle(nr=(1, 0, 0), n=f+"Hand_ctrl")[0]
             grouping(hand, othergrp, handgrp)
             z = cmds.getAttr("Hand_World.scaleX")
             cmds.scale(1*z,1.2*z,0.8*z, handgrp)
@@ -181,7 +181,7 @@ def createCon(count, sub, f):
         finjoint = f+"finger_"+str(count)+"_"+str(x)
         handgrp = cmds.group(em=True, r=True, n=f+"finger_"+str(count)+"_"+str(x)+"_grp")
         othergrp = cmds.group(em=True, r=True, n=f+"finger_"+str(count)+"_"+str(x)+"_g_grp")
-        hand = cmds.circle(nr=(1,0,0), n=f+"finger_"+str(count)+"_"+str(x)+"_ctrl")
+        hand = cmds.circle(nr=(1,0,0), n=f+"finger_"+str(count)+"_"+str(x)+"_ctrl")[0]
         grouping(hand, othergrp, handgrp)
         z = cmds.getAttr("Hand_World.scaleX")
         cmds.scale(0.3*z,0.3*z,0.3*z, handgrp)
@@ -205,7 +205,7 @@ def subCon(base, f):
     else:
         sweep = 180
         centerX = -0.2
-    cir = cmds.circle(r=1.5,nr=(0,0,1), sw=sweep, cx=centerX, n=f+"Hand_sub_ctrl")
+    cir = cmds.circle(r=1.5,nr=(0,0,1), sw=sweep, cx=centerX, n=f+"Hand_sub_ctrl")[0]
     
     grp = cmds.group(em=True, n=f+"Hand_sub_ctrl_grp")
     cmds.parent(cir, grp)
@@ -235,7 +235,6 @@ def subConPlus(base, sub, f):
             for i, j in [[0, 0], [10, 90], [-5, -10]]:
                 cmds.setDrivenKeyframe(cd=con, dv=i, at="rotateY", v=j)
 
-#---------------------------------------------------------------------------------------#
 
 def grouping(a,b,c):
     cmds.parent(a,b)

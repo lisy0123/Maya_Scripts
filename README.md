@@ -6,8 +6,19 @@ Useful tools made with [**mel and pymel**](https://help.autodesk.com/cloudhelp/2
 
 ![Hand_auto_rigging](https://github.com/lisy0123/Maya_Scripts/blob/master/Hand_auto_rigging.png)
 
-- [x] orient joint error: didn't work
-- [x] ctrl error: keep making ctrl
+- [x] one/both hand rigging
+
+<details>
+  <summary> Warning: Skipping L_finger_1_1: It has non-zero rotations. </summary>
+  <div markdown="1">
+
+```python
+# If I freeze the joint's transforms, rotation values will be added to the joint orient and the rotation will become (0,0,0).
+# So freeze transforms first and orient next.
+```
+
+  </div>
+</details>
 
 <details>
   <summary> Warning: Cannot parent components or objects in the underworld. </summary>
@@ -45,18 +56,17 @@ print cir1, cir2
 
 ![My_use](https://github.com/lisy0123/Maya_Scripts/blob/master/My_use.png)
 
-- [ ] constrain: maintain offset toggle
-- [ ] rename: search and replace(hi, sel, all)
+- [x] rename: search and replace(hi, sel, all)
 - [ ] text didn't work well (123..,[]!@#$%%^&*)
 - [ ] controller hierarchy setting at beginning - on/off
-- [ ] ctrl color: setting at beginning
-- [ ] create joint
-- [ ] mirror joint (search and replace)
-- [ ] orient joint
-- [ ] joint copy (ik spline)
+- [x] create joint, orient joint, mirror joint
+- [x] ik, ik spline
+- [x] weights options, set driven key, etc...
+- [ ] joint copy for ik spline
+- [ ] constrain: maintain offset toggle
 - [ ] quick add, lock, unlock attribute
-- [ ] set driven key
-- [ ] weights options
+- [ ] rivet
+- [ ] motion path
 
 :label: Updating...
 

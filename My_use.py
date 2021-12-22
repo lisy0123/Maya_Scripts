@@ -7,28 +7,85 @@ if cmds.window(TOOLNAME, ex=True):
     cmds.deleteUI(TOOLNAME)
 
 cmds.window(TOOLNAME, t=TOOLTITLE)
-
 form = cmds.formLayout()
 tabs = cmds.tabLayout(imh =5, imw =5)
 cmds.formLayout(form, e=True, attachForm=((tabs, 'top',0), (tabs,'left', 0), (tabs, 'right', 0), (tabs, 'bottom',0)))
-
 cmds.rowColumnLayout(w=285)
 
+
+# Joint Size
 cmds.frameLayout(l="Joint Size", cll=True)
 jnt = cmds.floatSliderButtonGrp(l="Joint    ", bl="Set", bc="jointSize()", cw4=(50,50,70,40), f=True, min=0.1, max=1, v=0.5)
 cmds.setParent("..")
+cmds.separator(h=1)
 
-cmds.frameLayout(l="Joints", cll=True)
-wi = (90,1,90,1,90)
+
+# Create
+cmds.frameLayout(l="Create", cll=True)
+wi = (1,137,137)
+cmds.rowLayout(nc=3, cw3=wi)
+cmds.text("", w=wi[0])
+cmds.button(l="Loc", c="cmds.CreateLocator()", w=wi[1])
+cmds.button(l="Curve", c="cmds.EPCurveTool()", w=wi[2])
+cmds.setParent("..")
+
+wi = (54,69,75,75)
+cmds.rowLayout(nc=4, cw4=wi)
+cmds.text("    Joints : ", w=wi[0])
+cmds.button(l="Jnt", c="cmds.JointTool()", w=wi[1])
+cmds.button(l="Orient", c="cmds.OrientJointOptions()", w=wi[2])
+cmds.button(l="Mirror", c="cmds.MirrorJointOptions()", w=wi[3])
+cmds.setParent("..")
+
+wi = (54,110,110)
+cmds.rowLayout(nc=3, cw3=wi)
+cmds.text("        IK : ", w=wi[0])
+cmds.button(l="IK", c="cmds.IKHandleTool()", w=wi[1])
+cmds.button(l="IK Spline", c="cmds.ikHandle(sol='ikSplineSolver', ns=4)", w=wi[2])
+cmds.setParent("..")
+
+wi = (54,110,110)
+cmds.rowLayout(nc=3, cw3=wi)
+cmds.text("      Skin : ", w=wi[0])
+cmds.button(l="Bind", c="cmds.SmoothBindSkinOptions()", w=wi[1])
+cmds.button(l="Detach", c="cmds.DetachSkinOptions()", w=wi[2])
+cmds.setParent("..")
+
+cmds.rowLayout(nc=3, cw3=wi)
+cmds.text(" Weights : ", w=wi[0])
+cmds.button(l="Paint", c="cmds.ArtPaintSkinWeightsToolOptions()", w=wi[1])
+cmds.button(l="Mirror", c="cmds.MirrorSkinWeightsOptions()", w=wi[2])
+cmds.setParent("..")
+
+wi = (54,79,70,70)
+cmds.rowLayout(nc=4, cw4=wi)
+cmds.text("    More : ", w=wi[0])
+cmds.button(l="Blend Shape", c="cmds.CreateBlendShapeOptions()", w=wi[1])
+cmds.button(l="Lattice", c="cmds.CreateLatticeOptions()", w=wi[2])
+cmds.button(l="Cluster", c="cmds.CreateClusterOptions()", w=wi[3])
+cmds.setParent("..")
+cmds.separator(h=1)
+
+wi = (1,67,68,67,68)
 cmds.rowLayout(nc=5, cw5=wi)
-cmds.button(l="Joints", w=wi[0])
 cmds.text("")
-cmds.button(l="MIrror Joints", w=wi[2])
-cmds.text(" ")
-cmds.button(l="Orient Joints", w=wi[4])
+cmds.button(l="FT", c="cmds.FreezeTransformations()", w=wi[1])
+cmds.button(l="RT", c="cmds.ResetTransformations()", w=wi[2])
+cmds.button(l="CP", c="cmds.CenterPivot()", w=wi[3])
+cmds.button(l="MT", c="cmds.MatchTranslation()", w=wi[4])
+cmds.setParent("..")
 
+wi = (1,137,137)
+cmds.rowLayout(nc=3, cw3=wi)
+cmds.text("")
+cmds.button(l="Delete History", c="cmds.DeleteHistory()", w=wi[1])
+cmds.button(l="Set Driven Key", c="cmds.SetDrivenKeyOptions()", w=wi[2])
 cmds.setParent("..")
 cmds.setParent("..")
+cmds.separator(h=1)
+
+
+# Controller
 cmds.frameLayout(l="Controller", cll=True)
 cmds.rowLayout(nc=1)
 make = cmds.radioButtonGrp(l=" Make : ", cw3=(60,110,10), la2=["Each","Sum"], nrb=2, sl=1)
@@ -71,9 +128,12 @@ cmds.text(l="   Text :", w=wi[0])
 tx = cmds.textField(w=wi[1])
 cmds.text("")
 cmds.button(l="Create", w=wi[3], c="text()")
+cmds.setParent("..")
+cmds.setParent("..")
+cmds.separator(h=1)
 
-cmds.setParent("..")
-cmds.setParent("..")
+
+# Constrain
 cmds.frameLayout(l="Constrain", cll=True)
 cmds.rowLayout(nc=1)
 cons = cmds.checkBoxGrp(l="Constrain: ", ncb=4, cw5=(60,55,48,55,10), la4=["Parent", "Point", "Orient", "Scale"], v1=True)
@@ -83,10 +143,13 @@ wi = (2,273)
 cmds.rowLayout(nc=2, cw2=wi)
 cmds.text("")
 cmds.button(l="Constrain", c="Cons()", w=wi[1])
+cmds.setParent("..")
+cmds.setParent("..")
+cmds.separator(h=1)
 
-cmds.setParent("..")
-cmds.setParent("..")
-cmds.frameLayout(l="Renamer", cll=True)
+
+# Rename
+cmds.frameLayout(l="Rename", cll=True)
 wi=(50,84,84,1,50)
 cmds.rowLayout(nc=5, cw5=wi)
 cmds.text("Hash",l="Nums", w=wi[0])
@@ -97,9 +160,8 @@ cmds.button(l="Add", c="hashRenamer()", w=wi[4])
 cmds.setParent("..")
 cmds.separator(h=1)
 
-#ing
 cmds.rowLayout(nc=1)
-ch = cmds.checkBoxGrp(ncb=2, l="Check :  ", cw3=(50,100,50), la2=[" Hierarchy"," Once"])
+check = cmds.radioButtonGrp(l=" Check : ", cw3=(60,110,10), la2=["Once","Hierarchy"], nrb=2, sl=2)
 cmds.setParent("..")
 
 wi = (50,170,1,50)
@@ -117,7 +179,6 @@ arn = cmds.textField(w=wi[1])
 cmds.text("")
 cmds.button(l="Add", c="renamer(2)", w=wi[3])
 cmds.setParent("..")
-cmds.separator(h=1)
 
 wi = (45,45,45,45,45,45)
 cmds.rowLayout(nc=6, cw6=wi)
@@ -129,10 +190,13 @@ cmds.button(l="drv", w=wi[4], c="add(5)")
 cmds.button(l="extra", w=wi[5], c="add(6)")
 cmds.setParent("..")
 cmds.setParent("..")
+cmds.separator(h=1)
 
+
+# Color Picker
+cmds.frameLayout(l="Color Picker", cll=True)
 wi=(45,45,45,45,45,45)
 hi=30
-cmds.frameLayout(l="Color Picker", cll=True)
 cmds.rowLayout(nc=6, cw6=wi)
 cmds.button(l="", w=wi[0], h=hi, c="colorPicker(13)", bgc=(1,0,0))
 cmds.button(l="", w=wi[1], h=hi, c="colorPicker(17)",bgc=(1,1,0))
@@ -274,15 +338,10 @@ def hashRenamer():
         cmds.rename(obj,Name)
 
 def renamer(i):
-    if cmds.checkBoxGrp(ch, q=True, v1=True):
+    if cmds.radioButtonGrp(check, q=True, sl=1) == 2:
         ob = cmds.listRelatives(cmds.ls(sl=True), ad=True)
         objs = cmds.ls(ob)
         objs.append(cmds.ls(sl=True)[0])
-        #ing
-        for x in range(0, len(objs)):
-            if objs[x] == "*Shape":
-                print "a"
-        print objs
         namer(i, objs)
     else:
         objs=cmds.ls(sl=True)
@@ -294,36 +353,27 @@ def namer(i, objs):
     
     for x in range(0, len(objs)):
         obj = objs[x]
-        if cmds.checkBoxGrp(ch, q=True, v2=True):
-            if i == 1:
-                blen = len(brn_text)
-                bcheck=""
-                for x in range(0, blen):
-                    bcheck = bcheck+obj[x]
-                print bcheck
-                if bcheck == brn_text:
-                    pass
-                else:
-                    Name = brn_text+"_"+obj
-                    cmds.rename(obj, Name)
+        if i == 1:
+            blen = len(brn_text)
+            bcheck=""
+            for x in range(0, blen+1):
+                bcheck = bcheck+obj[x]
+            if bcheck == brn_text+"_":
+                pass
             else:
-                alen = len(arn_text)
-                acheck=""
-                for x in range(0, alen):
-                    w = len(obj)-len(arn_text)+x
-                    acheck = acheck+obj[w]
-                print acheck
-                if acheck == arn_text:
-                    pass
-                else:
-                    Name = obj+"_"+arn_text
-                    cmds.rename(obj, Name)
-        else:
-            if i == 1:
                 Name = brn_text+"_"+obj
+                cmds.rename(obj, Name)
+        else:
+            alen = len(arn_text)
+            acheck=""
+            for x in range(0, alen+1):
+                w = len(obj)-len(arn_text)+x-1
+                acheck = acheck+obj[w]
+            if acheck == "_"+arn_text:
+                pass
             else:
                 Name = obj+"_"+arn_text
-            cmds.rename(obj, Name)
+                cmds.rename(obj, Name)
 
 def add(tail):
     tails = [

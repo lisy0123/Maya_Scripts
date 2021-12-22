@@ -11,12 +11,11 @@ TEXT02 = "Sub Finger"
 
 BUTTONS = [
     ["Create Joints", "createHands()"],
-    ["Mirror Joints", "mirrorJoints()"],
     ["Orient Joints", "orientJoints()"],
+    ["Mirror Joints", "mirrorJoints()"],
     ["Create Controller", "createController()"]
 ]
 
-LR = ["L_", "R_"]
 HW = "Hand_World"
 LHD = "L_Hand"
 RHD = "R_Hand"
@@ -102,6 +101,7 @@ def createFingers(count, sub, base):
         finger = cmds.joint(n="L_finger_"+str(count)+"_"+str(x), p=position)
     cmds.select(LHD)
     cmds.setAttr("L_finger_1_1.jointOrientZ", -45)
+    cmds.setAttr("L_finger_1_1.jointOrientX", 90)
 
 
 def mirrorJoints():
@@ -109,18 +109,20 @@ def mirrorJoints():
         cmds.warning(WARNING02)
     else:
         cmds.mirrorJoint(LHD, mirrorBehavior=True, myz=True, sr=("L_", "R_"))
-    orientJoints()
 
 
 def orientJoints():
     bf_int = cmds.intField(basefinger, q=True, v=True)
     
     for x in range(1, bf_int+1):
-        for i, j in [["L_", "zdown"], ["R_", "zup"]]:
-            cmds.select(i+"finger_"+str(x)+"_1")
-            cmds.joint(e=True, oj="xyz", sao=j, ch=True, zso=True)
-            cmds.makeIdentity(i+"Hand", a=True, r=True)
-            cmds.DeleteHistory(i+"Hand")
+        cmds.select("L_finger_"+str(x)+"_1")
+        cmds.FreezeTransformations()
+        if x == 1:
+            cmds.joint(e=True, oj="xzy", sao="zup", ch=True, zso=True)
+        else:
+            cmds.joint(e=True, oj="xyz", sao="zdown", ch=True, zso=True)
+        cmds.makeIdentity("L_Hand", a=True, r=True)
+        cmds.DeleteHistory("L_Hand")
 
 
 def createController():
@@ -130,6 +132,13 @@ def createController():
         bf_int = cmds.intField(basefinger, q=True, v=True)
         sf_int = cmds.intField(subfinger, q=True, v=True)
         
+        if cmds.objExists(RHD):
+            LR = ["L_", "R_"]
+            unparent = [LHD, RHD, "L_Hand_ctrl_grp", "R_Hand_ctrl_grp"]
+        else:
+            LR = ["L_"]
+            unparent = [LHD, "L_Hand_ctrl_grp"]
+            
         for f in LR:
             handgrp = cmds.group(em=True, n=f+"Hand_ctrl_grp")
             othergrp = cmds.group(em=True, n=f+"Hand_ctrl_g_grp")
@@ -168,7 +177,7 @@ def createController():
                 for num3 in LR:
                     cmds.setAttr(num3+"Hand_sub_ctrl"+num1+num2, l=True, k=False)
     
-        for name in [LHD, RHD, "L_Hand_ctrl_grp", "R_Hand_ctrl_grp"]:
+        for name in unparent:
             cmds.parent(name, w=True)
         cmds.delete(HW)
 

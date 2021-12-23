@@ -115,6 +115,10 @@ cmds.rowLayout(nc=1)
 const = cmds.checkBoxGrp(l="Constrain: ", ncb=4, cw5=(60,55,48,55,10), la4=["Parent","Point","Orient","Scale"], v1=True)
 cmds.setParent("..")
 
+cmds.rowLayout(nc=1)
+con_check = cmds.radioButtonGrp(l="Check : ", cw3=(60,110,10), la2=["Once","Hierarchy"], nrb=2, sl=1)
+cmds.setParent("..")
+
 wi = (2,273)
 cmds.rowLayout(nc=2, cw2=wi)
 cmds.text("")
@@ -122,9 +126,9 @@ cmds.button(l="Create Controller", c="createController()", w=wi[1])
 cmds.setParent("..")
 cmds.separator(h=1)
 
-wi = (50,170,1,50)
+wi = (40,180,1,50)
 cmds.rowLayout(nc=4, cw4=wi)
-cmds.text(l="   Text :", w=wi[0])
+cmds.text(l="  Text : ", w=wi[0])
 tx = cmds.textField(w=wi[1])
 cmds.text("")
 cmds.button(l="Create", w=wi[3], c="text()")
@@ -136,13 +140,17 @@ cmds.separator(h=1)
 # Constrain
 cmds.frameLayout(l="Constrain", cll=True)
 cmds.rowLayout(nc=1)
-cons = cmds.checkBoxGrp(l="Constrain: ", ncb=4, cw5=(60,55,48,55,10), la4=["Parent", "Point", "Orient", "Scale"], v1=True)
+mo_const = cmds.checkBoxGrp(l="Constrain: ", ncb=4, cw5=(60,55,48,55,10), la4=["Parent","Point","Orient","Scale"], v1=True)
+cmds.setParent("..")
+
+cmds.rowLayout(nc=1)
+mo = cmds.radioButtonGrp(l="Maintain offset : ", cw3=(93,90,50), la2=["On","Off"], nrb=2, sl=1)
 cmds.setParent("..")
 
 wi = (2,273)
 cmds.rowLayout(nc=2, cw2=wi)
 cmds.text("")
-cmds.button(l="Constrain", c="Cons()", w=wi[1])
+cmds.button(l="Constrain", c="Const()", w=wi[1])
 cmds.setParent("..")
 cmds.setParent("..")
 cmds.separator(h=1)
@@ -152,7 +160,7 @@ cmds.separator(h=1)
 cmds.frameLayout(l="Rename", cll=True)
 wi=(50,84,84,1,50)
 cmds.rowLayout(nc=5, cw5=wi)
-cmds.text("Hash",l="Nums", w=wi[0])
+cmds.text("Hash",l="Nums :", w=wi[0])
 hf = cmds.textField(w=wi[1], tx="Front")
 hb = cmds.textField(w=wi[2], tx="Back")
 cmds.text("")
@@ -161,7 +169,7 @@ cmds.setParent("..")
 cmds.separator(h=1)
 
 cmds.rowLayout(nc=1)
-check = cmds.radioButtonGrp(l=" Check : ", cw3=(60,110,10), la2=["Once","Hierarchy"], nrb=2, sl=2)
+check = cmds.radioButtonGrp(l="Check : ", cw3=(50,120,10), la2=["Once","Hierarchy"], nrb=2, sl=2)
 cmds.setParent("..")
 
 wi = (50,170,1,50)
@@ -224,7 +232,8 @@ def colorPicker(num):
         cmds.setAttr(col+".overrideEnabled", 1)
         cmds.setAttr(col+".overrideColor", num)
 
-def Cons():
+# ing
+def Const():
     a = cmds.ls(sl=True)
     for x in range(0, len(a)):
         if x == 0:
@@ -283,7 +292,17 @@ def constrains(con, obj, i):
     if i == 0:
         a = const
     else:
-        a = cons
+        a = mo_const
+        if cmds.radioButtonGrp(mo, q=True, sl=1) == 2:
+            if cmds.checkBoxGrp(a, q=True, v1=True):
+                cmds.parentConstraint(con, obj)
+            if cmds.checkBoxGrp(a, q=True, v2=True):
+                cmds.pointConstraint(con, obj)
+            if cmds.checkBoxGrp(a, q=True, v3=True):
+                cmds.orientConstraint(con, obj)
+            if cmds.checkBoxGrp(a, q=True, v4=True):
+                cmds.scaleConstraint(con, obj)
+            return
     if cmds.checkBoxGrp(a, q=True, v1=True):
         cmds.parentConstraint(con, obj, mo=True)
     if cmds.checkBoxGrp(a, q=True, v2=True):

@@ -63,7 +63,7 @@ print cir1, cir2
 - [x] ik, ik spline
 - [x] weights options, set driven key, etc...
 - [ ] joint copy for ik spline
-- [ ] constrain: maintain offset toggle
+- [x] constrain: maintain offset toggle
 - [ ] quick add, lock, unlock attribute
 - [ ] rivet
 - [ ] motion path

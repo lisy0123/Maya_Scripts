@@ -1,4 +1,5 @@
 import maya.cmds as cmds
+import re
 
 TOOLNAME = "MyUse"
 TOOLTITLE = "My Use"
@@ -6,28 +7,45 @@ TOOLTITLE = "My Use"
 if cmds.window(TOOLNAME, ex=True):
     cmds.deleteUI(TOOLNAME)
 
-cmds.window(TOOLNAME, t=TOOLTITLE)
-form = cmds.formLayout()
-tabs = cmds.tabLayout(imh =5, imw =5)
-cmds.formLayout(form, e=True, attachForm=((tabs, 'top',0), (tabs,'left', 0), (tabs, 'right', 0), (tabs, 'bottom',0)))
-cmds.rowColumnLayout(w=285)
+WINDOW = cmds.window(TOOLNAME, t=TOOLTITLE)
+tabs = cmds.tabLayout(imh=5, imw=5)
+# form = cmds.formLayout()
+# cmds.formLayout(form, e=True, attachForm=((tabs,'top',0), (tabs,'left',0), (tabs,'right',0), (tabs,'bottom',0)))
+
+# 1: Rigging
+ch1 = cmds.rowColumnLayout(w=570, nc=2)
 
 
 # Joint Size
-cmds.frameLayout(l="Joint Size", cll=True)
+cmds.frameLayout(l="Joint Size", cll=True, w=285)
 jnt = cmds.floatSliderButtonGrp(l="Joint    ", bl="Set", bc="jointSize()", cw4=(50,50,70,40), f=True, min=0.1, max=1, v=0.5)
 cmds.setParent("..")
-cmds.separator(h=1)
+
+
+# Color Picker
+cmds.frameLayout(l="Color Picker", cll=True, w=285)
+wi=(45,45,45,45,45,45)
+hi=30
+cmds.rowLayout(nc=6, cw6=wi)
+cmds.button(l="", w=wi[0], h=hi, c="colorPicker(13)", bgc=(1,0,0))
+cmds.button(l="", w=wi[1], h=hi, c="colorPicker(17)",bgc=(1,1,0))
+cmds.button(l="", w=wi[2], h=hi, c="colorPicker(6)", bgc=(0,0,1))
+cmds.button(l="", w=wi[3], h=hi, c="colorPicker(18)", bgc=(0,1,1))
+cmds.button(l="", w=wi[4], h=hi, c="colorPicker(20)", bgc=(1,0.75,0.75))
+cmds.button(l="More", w=wi[5], c="color()", h=hi)
+cmds.setParent("..")
+cmds.setParent("..")
 
 
 # Create
-cmds.frameLayout(l="Create", cll=True)
+cmds.frameLayout(l="Create", cll=True, w=285)
 wi = (1,137,137)
 cmds.rowLayout(nc=3, cw3=wi)
 cmds.text("", w=wi[0])
 cmds.button(l="Loc", c="cmds.CreateLocator()", w=wi[1])
 cmds.button(l="Curve", c="cmds.EPCurveTool()", w=wi[2])
 cmds.setParent("..")
+cmds.separator(h=1)
 
 wi = (54,69,75,75)
 cmds.rowLayout(nc=4, cw4=wi)
@@ -81,12 +99,20 @@ cmds.text("")
 cmds.button(l="Delete History", c="cmds.DeleteHistory()", w=wi[1])
 cmds.button(l="Set Driven Key", c="cmds.SetDrivenKeyOptions()", w=wi[2])
 cmds.setParent("..")
+cmds.separator(h=1)
+
+wi = (2,273)
+cmds.rowLayout(nc=2, cw2=wi)
+cmds.text("")
+# ing
+cmds.button(l="Set in order", c="setInOrder()", w=wi[1])
 cmds.setParent("..")
 cmds.separator(h=1)
+cmds.setParent("..")
 
 
 # Controller
-cmds.frameLayout(l="Controller", cll=True)
+cmds.frameLayout(l="Controller", cll=True, w=285)
 cmds.rowLayout(nc=1)
 make = cmds.radioButtonGrp(l=" Make : ", cw3=(60,110,10), la2=["Each","Sum"], nrb=2, sl=1)
 cmds.setParent("..")
@@ -98,15 +124,15 @@ shapes = cmds.optionMenu(w=wi[1])
 cmds.menuItem(l="Circle")
 cmds.menuItem(l="Box")
 cmds.menuItem(l="Ball")
-#ing
+# ing
 cmds.menuItem(l="Cross")
 cmds.menuItem(l="Eyes")
 cmds.menuItem(l="Handle")
 cmds.menuItem(l="Arrow1")
 cmds.menuItem(l="Arrow2")
 cmds.menuItem(l="Arrow4")
-
 cmds.setParent("..")
+
 cmds.rowLayout(nc=1)
 axis=cmds.radioButtonGrp(l="Axis : ", la3=["X","Y","Z"], nrb=3, cw4=(60,70,70,20), sl=1)
 cmds.setParent("..")
@@ -115,6 +141,7 @@ cmds.rowLayout(nc=1)
 const = cmds.checkBoxGrp(l="Constrain: ", ncb=4, cw5=(60,55,48,55,10), la4=["Parent","Point","Orient","Scale"], v1=True)
 cmds.setParent("..")
 
+# ing
 cmds.rowLayout(nc=1)
 con_check = cmds.radioButtonGrp(l="Check : ", cw3=(60,110,10), la2=["Once","Hierarchy"], nrb=2, sl=1)
 cmds.setParent("..")
@@ -126,19 +153,19 @@ cmds.button(l="Create Controller", c="createController()", w=wi[1])
 cmds.setParent("..")
 cmds.separator(h=1)
 
-wi = (40,180,1,50)
+
+wi = (50,170,1,50)
 cmds.rowLayout(nc=4, cw4=wi)
 cmds.text(l="  Text : ", w=wi[0])
 tx = cmds.textField(w=wi[1])
 cmds.text("")
-cmds.button(l="Create", w=wi[3], c="text()")
-cmds.setParent("..")
+cmds.button(l="Create", c="text()", w=wi[3])
 cmds.setParent("..")
 cmds.separator(h=1)
-
+#cmds.setParent("..")
 
 # Constrain
-cmds.frameLayout(l="Constrain", cll=True)
+#cmds.frameLayout(l="Constrain", cll=True, w=285)
 cmds.rowLayout(nc=1)
 mo_const = cmds.checkBoxGrp(l="Constrain: ", ncb=4, cw5=(60,55,48,55,10), la4=["Parent","Point","Orient","Scale"], v1=True)
 cmds.setParent("..")
@@ -152,21 +179,20 @@ cmds.rowLayout(nc=2, cw2=wi)
 cmds.text("")
 cmds.button(l="Constrain", c="Const()", w=wi[1])
 cmds.setParent("..")
-cmds.setParent("..")
 cmds.separator(h=1)
+cmds.setParent("..")
 
 
 # Rename
-cmds.frameLayout(l="Rename", cll=True)
-wi=(50,84,84,1,50)
+cmds.frameLayout(l="Rename", cll=True, w=285)
+wi=(46,85,85,1,52)
 cmds.rowLayout(nc=5, cw5=wi)
 cmds.text("Hash",l="Nums :", w=wi[0])
 hf = cmds.textField(w=wi[1], tx="Front")
 hb = cmds.textField(w=wi[2], tx="Back")
 cmds.text("")
-cmds.button(l="Add", c="hashRenamer()", w=wi[4])
+cmds.button(l="Rename", c="hashRenamer()", w=wi[4])
 cmds.setParent("..")
-cmds.separator(h=1)
 
 cmds.rowLayout(nc=1)
 check = cmds.radioButtonGrp(l="Check : ", cw3=(50,120,10), la2=["Once","Hierarchy"], nrb=2, sl=2)
@@ -188,7 +214,7 @@ cmds.text("")
 cmds.button(l="Add", c="renamer(2)", w=wi[3])
 cmds.setParent("..")
 
-wi = (45,45,45,45,45,45)
+wi = (44,44,44,45,45,45)
 cmds.rowLayout(nc=6, cw6=wi)
 cmds.button(l="grp", w=wi[0], c="add(1)")
 cmds.button(l="jnt", w=wi[1], c="add(2)")
@@ -197,27 +223,33 @@ cmds.button(l="loc", w=wi[3], c="add(4)")
 cmds.button(l="drv", w=wi[4], c="add(5)")
 cmds.button(l="extra", w=wi[5], c="add(6)")
 cmds.setParent("..")
+cmds.separator(h=1)
+cmds.setParent("..")
+
+# ing
+# Rivet
+cmds.frameLayout(l="Rivet", cll=True, w=285)
+wi = (2,273)
+cmds.rowLayout(nc=2, cw2=wi)
+cmds.text("")
+cmds.button(l="Rivet", c="rivet()", w=wi[1])
 cmds.setParent("..")
 cmds.separator(h=1)
+cmds.setParent("..")
 
 
-# Color Picker
-cmds.frameLayout(l="Color Picker", cll=True)
-wi=(45,45,45,45,45,45)
-hi=30
-cmds.rowLayout(nc=6, cw6=wi)
-cmds.button(l="", w=wi[0], h=hi, c="colorPicker(13)", bgc=(1,0,0))
-cmds.button(l="", w=wi[1], h=hi, c="colorPicker(17)",bgc=(1,1,0))
-cmds.button(l="", w=wi[2], h=hi, c="colorPicker(6)", bgc=(0,0,1))
-cmds.button(l="", w=wi[3], h=hi, c="colorPicker(18)", bgc=(0,1,1))
-cmds.button(l="", w=wi[4], h=hi, c="colorPicker(20)", bgc=(1,0.75,0.75))
-cmds.button(l="More", w=wi[5], c="color()", h=hi)
-cmds.setParent("..")
-cmds.setParent("..")
+# 2: Else
+cmds.setParent(WINDOW)
+ch2 = cmds.rowColumnLayout(w=570, nc=2)
+
+
+cmds.tabLayout(tabs, edit=True, tabLabel=((ch1, 'Rigging'), (ch2, 'Else')))
 
 cmds.showWindow(TOOLNAME)
 
+
 #-------------------------------------- Active Code ------------------------------------#
+
 
 def jointSize():
     j = cmds.floatSliderGrp(jnt, q=True, v=True)
@@ -233,6 +265,64 @@ def colorPicker(num):
         cmds.setAttr(col+".overrideColor", num)
 
 # ing
+def setInOrder():
+    a = cmds.ls(sl=True)
+    if len(a) > 1:
+        cmds.warning("warning")
+    list = cmds.pickWalk(d="down")
+    print list
+    cnt = 0
+    while True:
+        if list[0] == list[len(list)-1] and cnt != 0:
+            list = list[:-1]
+            break
+        list += cmds.pickWalk(d="right")
+        cnt += 1
+    print cnt, list
+    num_list = []
+    for x in range(0, len(list)):
+        num_list.append(int(re.sub(r"[^0-9]", "", list[x])))
+    print num_list
+    
+#    for x in range(0, len(a)):
+#        list.append(int(re.sub(r"[^0-9]", "", a[x])))
+#    print list
+#    num = 1
+#    tmp = 0
+#    while tmp < len(a)-1:
+#        print num
+#        for x in range(0, len(list)):
+#            if list[x] == num:
+#                cmds.reorder(a[x], r=-x)
+#                break
+#        tmp += 1
+#        num += 1
+#        list = []
+#        for x in range(tmp, len(a)):
+#            list.append(int(re.sub(r"[^0-9]", "", a[x])))
+#        print list
+        
+#    for x in range(0, len(a)):
+#        ex= re.sub(r"[^0-9]", "", a[x])
+#        print x+1, ex, "result: ", int(ex)-(x+1)
+#        list.append(int(ex)-(x+1))
+#    for x in range(0, len(a)):
+#        if list[x] == 0:
+#            continue
+#        else:
+#            cmds.reorder(a[x], r=list[x])
+#            if list[x] > 0:
+#                for y in range(x, x+list[x]):
+#                    list[y] += 1
+#            else:
+#                for y in range(x+list[x], x):
+#                    list[y] -= 1
+#            list[x] = 0
+#        print list
+        
+#--------------------------------------------------------------------------------------------#
+
+# ing
 def Const():
     a = cmds.ls(sl=True)
     for x in range(0, len(a)):
@@ -245,8 +335,7 @@ def Const():
         if x % 2 == 1:
             pass
 
-#--------------------------------------------------------------------------------------------#
-
+# add check options
 def createController():
     objs = cmds.ls(sl=True)
     if cmds.radioButtonGrp(make, q=True, sl=1) == 1:

@@ -185,43 +185,87 @@ cmds.setParent("..")
 
 # Rename
 cmds.frameLayout(l="Rename", cll=True, w=285)
-wi=(46,85,85,1,52)
-cmds.rowLayout(nc=5, cw5=wi)
-cmds.text("Hash",l="Nums :", w=wi[0])
-hf = cmds.textField(w=wi[1], tx="Front")
-hb = cmds.textField(w=wi[2], tx="Back")
-cmds.text("")
-cmds.button(l="Rename", c="hashRenamer()", w=wi[4])
+cmds.rowLayout(nc=1)
+pos_check = cmds.radioButtonGrp(l="Position : ", cw4=(58,60,60,10), la3=["rt","lf","None"], nrb=3, sl=3)
 cmds.setParent("..")
 
+wi=(1,136,136)
+cmds.rowLayout(nc=3, cw3=wi)
+cmds.text("", w=wi[0])
+hf = cmds.textField(w=wi[1], tx="Front")
+hb = cmds.textField(w=wi[2], tx="Back")
+cmds.setParent("..")
+
+wi = (2,273)
+cmds.rowLayout(nc=2, cw2=wi)
+cmds.text("")
+cmds.button(l="Rename", c="hashRenamer()", w=wi[1])
+cmds.setParent("..")
+cmds.separator(h=1)
+
 cmds.rowLayout(nc=1)
-check = cmds.radioButtonGrp(l="Check : ", cw3=(50,120,10), la2=["Once","Hierarchy"], nrb=2, sl=2)
+replace_check = cmds.radioButtonGrp(l="Check : ", cw3=(55,90,10), la2=["Once","Hierarchy"], nrb=2, sl=1)
+cmds.setParent("..")
+
+wi=(80,195)
+cmds.rowLayout(nc=2, cw2=wi)
+cmds.text(l="    Search for :", w=wi[0])
+search_w = cmds.textField(w=wi[1], tx="")
+cmds.setParent("..")
+
+wi=(80,195)
+cmds.rowLayout(nc=2, cw2=wi)
+cmds.text(l="Replace with :", w=wi[0])
+replace_w = cmds.textField(w=wi[1], tx="")
+cmds.setParent("..")
+
+wi = (2,273)
+cmds.rowLayout(nc=2, cw2=wi)
+cmds.text("")
+cmds.button(l="Replace", c="SearchReplace()", w=wi[1])
+cmds.setParent("..")
+cmds.separator(h=1)
+cmds.setParent("..")
+
+
+# Add
+cmds.frameLayout(l="Add", cll=True, w=285)
+cmds.rowLayout(nc=1)
+check = cmds.radioButtonGrp(l="Check : ", cw3=(50,90,10), la2=["Once","Hierarchy"], nrb=2, sl=2)
 cmds.setParent("..")
 
 wi = (50,170,1,50)
 cmds.rowLayout(nc=4, cw4=wi)
-cmds.text("Before", l="(Before)", w=wi[0])
+cmds.text("Before", l="  Before : ", w=wi[0])
 brn = cmds.textField(w=wi[1])
 cmds.text("")
 cmds.button(l="Add", c="renamer(1)", w=wi[3])
 cmds.setParent("..")
 
+# ing
 wi = (50,170,1,50)
 cmds.rowLayout(nc=4, cw4=wi)
-cmds.text("After", l="(After)", w=wi[0])
+cmds.text("After", l="    After : ", w=wi[0])
 arn = cmds.textField(w=wi[1])
 cmds.text("")
 cmds.button(l="Add", c="renamer(2)", w=wi[3])
 cmds.setParent("..")
+cmds.separator(h=1)
 
-wi = (44,44,44,45,45,45)
-cmds.rowLayout(nc=6, cw6=wi)
-cmds.button(l="grp", w=wi[0], c="add(1)")
-cmds.button(l="jnt", w=wi[1], c="add(2)")
-cmds.button(l="ctrl", w=wi[2], c="add(3)")
-cmds.button(l="loc", w=wi[3], c="add(4)")
-cmds.button(l="drv", w=wi[4], c="add(5)")
-cmds.button(l="extra", w=wi[5], c="add(6)")
+wi = (1,90,90,90)
+cmds.rowLayout(nc=4, cw4=wi)
+cmds.text("")
+cmds.button(l="grp", w=wi[1], c="add(1)")
+cmds.button(l="jnt", w=wi[2], c="add(2)")
+cmds.button(l="ctrl", w=wi[3], c="add(3)")
+cmds.setParent("..")
+
+wi = (1,90,90,90)
+cmds.rowLayout(nc=4, cw4=wi)
+cmds.text("")
+cmds.button(l="extra", w=wi[1], c="add(4)")
+cmds.button(l="loc", w=wi[2], c="add(5)")
+cmds.button(l="drv", w=wi[3], c="add(6)")
 cmds.setParent("..")
 cmds.separator(h=1)
 cmds.setParent("..")
@@ -266,22 +310,12 @@ def colorPicker(num):
 
 # ing
 def setInOrder():
-    a = cmds.ls(sl=True)
-    if len(a) > 1:
-        cmds.warning("warning")
-    list = cmds.pickWalk(d="down")
-    print list
-    cnt = 0
-    while True:
-        if list[0] == list[len(list)-1] and cnt != 0:
-            list = list[:-1]
-            break
-        list += cmds.pickWalk(d="right")
-        cnt += 1
-    print cnt, list
+    ob = cmds.listRelatives(cmds.ls(sl=True))
+    objs = cmds.ls(ob)
+    print objs
     num_list = []
-    for x in range(0, len(list)):
-        num_list.append(int(re.sub(r"[^0-9]", "", list[x])))
+    for x in range(0, len(objs)):
+        num_list.append(int(re.sub(r"[^0-9]", "", objs[x])))
     print num_list
     
 #    for x in range(0, len(a)):
@@ -435,64 +469,86 @@ def text():
 def hashRenamer():
     hf_text = cmds.textField(hf, q=True, tx=True)
     hb_text = cmds.textField(hb, q=True, tx=True)
+    if cmds.radioButtonGrp(pos_check, q=True, sl=1) == 1:
+        hf_text = "rt_"+hf_text
+    elif cmds.radioButtonGrp(pos_check, q=True, sl=1) == 2:
+        hf_text = "lf_"+hf_text
     
     objs = cmds.ls(sl=True)
     for x in range(0, len(objs)):
         obj = objs[x]
         if x<9:
-            Name = hf_text+"_0"+str(x+1)+"_"+hb_text
+            name = hf_text+"_0"+str(x+1)+"_"+hb_text
         else:
-            Name = hf_text+"_"+str(x+1)+"_"+hb_text
-        cmds.rename(obj,Name)
+            name = hf_text+"_"+str(x+1)+"_"+hb_text
+        cmds.rename(obj, name)
+
+
+def SearchReplace():
+    search_wd = cmds.textField(search_w, q=True, tx=True)
+    replace_wd = cmds.textField(replace_w, q=True, tx=True)
+    
+    if cmds.radioButtonGrp(replace_check, q=True, sl=1) == 2:
+        ob = cmds.listRelatives(cmds.ls(sl=True))
+        objs = cmds.ls(ob)
+        objs.append(cmds.ls(sl=True)[0])
+    else:
+        objs = cmds.ls(sl=True)
+    for obj in objs:
+        if search_wd in obj:
+            name = replace_wd.join(obj.split(search_wd))
+            cmds.rename(obj, name)
 
 def renamer(i):
     if cmds.radioButtonGrp(check, q=True, sl=1) == 2:
-        ob = cmds.listRelatives(cmds.ls(sl=True), ad=True)
+        ob = cmds.listRelatives(cmds.ls(sl=True))
         objs = cmds.ls(ob)
         objs.append(cmds.ls(sl=True)[0])
-        namer(i, objs)
+        namer(i, objs, None)
     else:
-        objs=cmds.ls(sl=True)
-        namer(i, objs)
+        objs = cmds.ls(sl=True)
+        namer(i, objs, None)
 
-def namer(i, objs):
-    brn_text = cmds.textField(brn, q=True, tx=True)
-    arn_text = cmds.textField(arn, q=True, tx=True)
-    
+# ing
+def namer(i, objs, tmp):
+    if tmp:
+        arn_text = tmp
+    else:
+        brn_text = cmds.textField(brn, q=True, tx=True)
+        arn_text = cmds.textField(arn, q=True, tx=True)
+
     for x in range(0, len(objs)):
         obj = objs[x]
         if i == 1:
             blen = len(brn_text)
             bcheck=""
-            for x in range(0, blen+1):
-                bcheck = bcheck+obj[x]
+            for x in range(blen+1):
+                bcheck += obj[x]
             if bcheck == brn_text+"_":
                 pass
             else:
-                Name = brn_text+"_"+obj
-                cmds.rename(obj, Name)
+                name = brn_text+"_"+obj
+                cmds.rename(obj, name)
         else:
             alen = len(arn_text)
             acheck=""
-            for x in range(0, alen+1):
+            for x in range(alen+1):
                 w = len(obj)-len(arn_text)+x-1
-                acheck = acheck+obj[w]
+                acheck += obj[w]
             if acheck == "_"+arn_text:
                 pass
             else:
-                Name = obj+"_"+arn_text
-                cmds.rename(obj, Name)
+                name = obj+"_"+arn_text
+                cmds.rename(obj, name)
 
 def add(tail):
     tails = [
-        "_grp", "_jnt", "_ctrl",
-        "_loc", "_drv", "_extra"
+        "grp", "jnt", "ctrl",
+        "extra", "loc", "drv",
     ]
     objs = cmds.ls(sl=True)
-    for x in range(0, len(objs)):
-        obj = objs[x]
-        Name = obj+tails[tail-1]
-        cmds.rename(obj, Name)
+    text = tails[tail-1]
+    namer(0, objs, text)
 
 #--------------------------------------------------------------------------------------------#
 

@@ -57,16 +57,18 @@ print cir1, cir2
 ![My_use](https://github.com/lisy0123/Maya_Scripts/blob/master/My_use.png)
 
 - [x] rename: search and replace(hi, sel, all)
-- [ ] text didn't work well (123..,[]!@#$%%^&*)
-- [ ] controller hierarchy setting at beginning - on/off
 - [x] create joint, orient joint, mirror joint
 - [x] ik, ik spline
 - [x] weights options, set driven key, etc...
-- [ ] joint copy for ik spline
 - [x] constrain: maintain offset toggle
+- [ ] set in order
+- [ ] namer(after): shape인 경우 제외하기
 - [ ] quick add, lock, unlock attribute
+- [ ] joint copy for ik spline
 - [ ] rivet
 - [ ] motion path
+- [ ] text didn't work well (123..,[]!@#$%%^&*)
+- [ ] controller hierarchy setting at beginning - on/off
 
 :label: Updating...
 

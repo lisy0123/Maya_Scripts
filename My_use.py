@@ -12,28 +12,15 @@ tabs = cmds.tabLayout(imh=5, imw=5)
 # form = cmds.formLayout()
 # cmds.formLayout(form, e=True, attachForm=((tabs,'top',0), (tabs,'left',0), (tabs,'right',0), (tabs,'bottom',0)))
 
-# 1: Rigging
-ch1 = cmds.rowColumnLayout(w=570, nc=2)
+#--------------------------------------------------------------------------------------------#
+
+# 1: Create
+ch1 = cmds.rowColumnLayout(w=285, nc=1)
 
 
 # Joint Size
 cmds.frameLayout(l="Joint Size", cll=True, w=285)
-jnt = cmds.floatSliderButtonGrp(l="Joint    ", bl="Set", bc="jointSize()", cw4=(50,50,70,40), f=True, min=0.1, max=1, v=0.5)
-cmds.setParent("..")
-
-
-# Color Picker
-cmds.frameLayout(l="Color Picker", cll=True, w=285)
-wi=(45,45,45,45,45,45)
-hi=30
-cmds.rowLayout(nc=6, cw6=wi)
-cmds.button(l="", w=wi[0], h=hi, c="colorPicker(13)", bgc=(1,0,0))
-cmds.button(l="", w=wi[1], h=hi, c="colorPicker(17)",bgc=(1,1,0))
-cmds.button(l="", w=wi[2], h=hi, c="colorPicker(6)", bgc=(0,0,1))
-cmds.button(l="", w=wi[3], h=hi, c="colorPicker(18)", bgc=(0,1,1))
-cmds.button(l="", w=wi[4], h=hi, c="colorPicker(20)", bgc=(1,0.75,0.75))
-cmds.button(l="More", w=wi[5], c="color()", h=hi)
-cmds.setParent("..")
+jnt = cmds.floatSliderButtonGrp(l="Joint   ", bl="Set", bc="jointSize()", cw4=(50,50,70,50), f=True, min=0.1, max=1, v=0.5)
 cmds.setParent("..")
 
 
@@ -45,24 +32,29 @@ cmds.text("", w=wi[0])
 cmds.button(l="Loc", c="cmds.CreateLocator()", w=wi[1])
 cmds.button(l="Curve", c="cmds.EPCurveTool()", w=wi[2])
 cmds.setParent("..")
-cmds.separator(h=1)
 
-wi = (54,69,75,75)
-cmds.rowLayout(nc=4, cw4=wi)
+wi = (50,112,112)
+cmds.rowLayout(nc=3, cw3=wi)
 cmds.text("    Joints : ", w=wi[0])
 cmds.button(l="Jnt", c="cmds.JointTool()", w=wi[1])
-cmds.button(l="Orient", c="cmds.OrientJointOptions()", w=wi[2])
-cmds.button(l="Mirror", c="cmds.MirrorJointOptions()", w=wi[3])
+cmds.button(l="Insert", c="cmds.InsertJointTool()", w=wi[2])
 cmds.setParent("..")
 
-wi = (54,110,110)
+wi = (50,112,112)
 cmds.rowLayout(nc=3, cw3=wi)
-cmds.text("        IK : ", w=wi[0])
+cmds.text("", w=wi[0])
+cmds.button(l="Orient", c="cmds.OrientJointOptions()", w=wi[1])
+cmds.button(l="Mirror", c="cmds.MirrorJointOptions()", w=wi[2])
+cmds.setParent("..")
+
+wi = (50,112,112)
+cmds.rowLayout(nc=3, cw3=wi)
+cmds.text("  Handle : ", w=wi[0])
 cmds.button(l="IK", c="cmds.IKHandleTool()", w=wi[1])
 cmds.button(l="IK Spline", c="cmds.ikHandle(sol='ikSplineSolver', ns=4)", w=wi[2])
 cmds.setParent("..")
 
-wi = (54,110,110)
+wi = (50,112,112)
 cmds.rowLayout(nc=3, cw3=wi)
 cmds.text("      Skin : ", w=wi[0])
 cmds.button(l="Bind", c="cmds.SmoothBindSkinOptions()", w=wi[1])
@@ -70,14 +62,14 @@ cmds.button(l="Detach", c="cmds.DetachSkinOptions()", w=wi[2])
 cmds.setParent("..")
 
 cmds.rowLayout(nc=3, cw3=wi)
-cmds.text(" Weights : ", w=wi[0])
+cmds.text(" Weights: ", w=wi[0])
 cmds.button(l="Paint", c="cmds.ArtPaintSkinWeightsToolOptions()", w=wi[1])
 cmds.button(l="Mirror", c="cmds.MirrorSkinWeightsOptions()", w=wi[2])
 cmds.setParent("..")
 
-wi = (54,79,70,70)
+wi = (1,90,90,90)
 cmds.rowLayout(nc=4, cw4=wi)
-cmds.text("    More : ", w=wi[0])
+cmds.text("", w=wi[0])
 cmds.button(l="Blend Shape", c="cmds.CreateBlendShapeOptions()", w=wi[1])
 cmds.button(l="Lattice", c="cmds.CreateLatticeOptions()", w=wi[2])
 cmds.button(l="Cluster", c="cmds.CreateClusterOptions()", w=wi[3])
@@ -100,93 +92,19 @@ cmds.button(l="Delete History", c="cmds.DeleteHistory()", w=wi[1])
 cmds.button(l="Set Driven Key", c="cmds.SetDrivenKeyOptions()", w=wi[2])
 cmds.setParent("..")
 cmds.separator(h=1)
-
-wi = (2,273)
-cmds.rowLayout(nc=2, cw2=wi)
-cmds.text("")
-# ing
-cmds.button(l="Set in order", c="setInOrder()", w=wi[1])
-cmds.setParent("..")
-cmds.separator(h=1)
 cmds.setParent("..")
 
+#--------------------------------------------------------------------------------------------#
 
-# Controller
-cmds.frameLayout(l="Controller", cll=True, w=285)
-cmds.rowLayout(nc=1)
-make = cmds.radioButtonGrp(l=" Make : ", cw3=(60,110,10), la2=["Each","Sum"], nrb=2, sl=1)
-cmds.setParent("..")
-
-wi = (60,100)
-cmds.rowLayout(nc=2, cw2=wi)
-cmds.text("      Shape :", w=wi[0])
-shapes = cmds.optionMenu(w=wi[1])
-cmds.menuItem(l="Circle")
-cmds.menuItem(l="Box")
-cmds.menuItem(l="Ball")
-# ing
-cmds.menuItem(l="Cross")
-cmds.menuItem(l="Eyes")
-cmds.menuItem(l="Handle")
-cmds.menuItem(l="Arrow1")
-cmds.menuItem(l="Arrow2")
-cmds.menuItem(l="Arrow4")
-cmds.setParent("..")
-
-cmds.rowLayout(nc=1)
-axis=cmds.radioButtonGrp(l="Axis : ", la3=["X","Y","Z"], nrb=3, cw4=(60,70,70,20), sl=1)
-cmds.setParent("..")
-
-cmds.rowLayout(nc=1)
-const = cmds.checkBoxGrp(l="Constrain: ", ncb=4, cw5=(60,55,48,55,10), la4=["Parent","Point","Orient","Scale"], v1=True)
-cmds.setParent("..")
-
-# ing
-cmds.rowLayout(nc=1)
-con_check = cmds.radioButtonGrp(l="Check : ", cw3=(60,110,10), la2=["Once","Hierarchy"], nrb=2, sl=1)
-cmds.setParent("..")
-
-wi = (2,273)
-cmds.rowLayout(nc=2, cw2=wi)
-cmds.text("")
-cmds.button(l="Create Controller", c="createController()", w=wi[1])
-cmds.setParent("..")
-cmds.separator(h=1)
-
-
-wi = (50,170,1,50)
-cmds.rowLayout(nc=4, cw4=wi)
-cmds.text(l="  Text : ", w=wi[0])
-tx = cmds.textField(w=wi[1])
-cmds.text("")
-cmds.button(l="Create", c="text()", w=wi[3])
-cmds.setParent("..")
-cmds.separator(h=1)
-#cmds.setParent("..")
-
-# Constrain
-#cmds.frameLayout(l="Constrain", cll=True, w=285)
-cmds.rowLayout(nc=1)
-mo_const = cmds.checkBoxGrp(l="Constrain: ", ncb=4, cw5=(60,55,48,55,10), la4=["Parent","Point","Orient","Scale"], v1=True)
-cmds.setParent("..")
-
-cmds.rowLayout(nc=1)
-mo = cmds.radioButtonGrp(l="Maintain offset : ", cw3=(93,90,50), la2=["On","Off"], nrb=2, sl=1)
-cmds.setParent("..")
-
-wi = (2,273)
-cmds.rowLayout(nc=2, cw2=wi)
-cmds.text("")
-cmds.button(l="Constrain", c="Const()", w=wi[1])
-cmds.setParent("..")
-cmds.separator(h=1)
-cmds.setParent("..")
+# 2: Naming
+cmds.setParent(WINDOW)
+ch2 = cmds.rowColumnLayout(w=285, nc=1)
 
 
 # Rename
 cmds.frameLayout(l="Rename", cll=True, w=285)
 cmds.rowLayout(nc=1)
-pos_check = cmds.radioButtonGrp(l="Position : ", cw4=(58,60,60,10), la3=["rt","lf","None"], nrb=3, sl=3)
+pos_check = cmds.radioButtonGrp(l="Position : ", cw4=(60,60,60,10), la3=["rt","lf","None"], nrb=3, sl=3)
 cmds.setParent("..")
 
 wi=(1,136,136)
@@ -203,6 +121,18 @@ cmds.button(l="Rename", c="hashRenamer()", w=wi[1])
 cmds.setParent("..")
 cmds.separator(h=1)
 
+wi = (2,273)
+cmds.rowLayout(nc=2, cw2=wi)
+cmds.text("")
+# ing
+cmds.button(l="Set in order", c="setInOrder()", w=wi[1])
+cmds.setParent("..")
+cmds.separator(h=1)
+cmds.setParent("..")
+
+
+# Replace
+cmds.frameLayout(l="Replace", cll=True, w=285)
 cmds.rowLayout(nc=1)
 replace_check = cmds.radioButtonGrp(l="Check : ", cw3=(55,90,10), la2=["Once","Hierarchy"], nrb=2, sl=1)
 cmds.setParent("..")
@@ -270,6 +200,107 @@ cmds.setParent("..")
 cmds.separator(h=1)
 cmds.setParent("..")
 
+#--------------------------------------------------------------------------------------------#
+
+# 3: Rigging 1
+cmds.setParent(WINDOW)
+ch3 = cmds.rowColumnLayout(w=285, nc=1)
+
+
+# Controller
+cmds.frameLayout(l="Controller", cll=True, w=285)
+cmds.rowLayout(nc=1)
+make = cmds.radioButtonGrp(l=" Make : ", cw3=(60,110,10), la2=["Each","Sum"], nrb=2, sl=1)
+cmds.setParent("..")
+
+wi = (60,100)
+cmds.rowLayout(nc=2, cw2=wi)
+cmds.text("      Shape :", w=wi[0])
+shapes = cmds.optionMenu(w=wi[1])
+cmds.menuItem(l="Circle")
+cmds.menuItem(l="Box")
+cmds.menuItem(l="Ball")
+# ing
+cmds.menuItem(l="Cross")
+cmds.menuItem(l="Eyes")
+cmds.menuItem(l="Handle")
+cmds.menuItem(l="Arrow1")
+cmds.menuItem(l="Arrow2")
+cmds.menuItem(l="Arrow4")
+cmds.setParent("..")
+
+cmds.rowLayout(nc=1)
+axis=cmds.radioButtonGrp(l="Axis : ", la3=["X","Y","Z"], nrb=3, cw4=(60,70,70,20), sl=1)
+cmds.setParent("..")
+
+cmds.rowLayout(nc=1)
+const = cmds.checkBoxGrp(l="Constrain: ", ncb=4, cw5=(60,55,48,55,10), la4=["Parent","Point","Orient","Scale"], v1=True)
+cmds.setParent("..")
+
+# ing
+cmds.rowLayout(nc=1)
+con_check = cmds.radioButtonGrp(l="Check : ", cw3=(60,110,10), la2=["Once","Hierarchy"], nrb=2, sl=1)
+cmds.setParent("..")
+
+wi = (2,273)
+cmds.rowLayout(nc=2, cw2=wi)
+cmds.text("")
+cmds.button(l="Create Controller", c="createController()", w=wi[1])
+cmds.setParent("..")
+cmds.separator(h=1)
+
+# Text
+wi = (45,175,1,50)
+cmds.rowLayout(nc=4, cw4=wi)
+cmds.text(l="   Text :  ", w=wi[0])
+tx = cmds.textField(w=wi[1])
+cmds.text("")
+cmds.button(l="Create", c="text()", w=wi[3])
+cmds.setParent("..")
+cmds.separator(h=1)
+cmds.setParent("..")
+
+
+# Constrain
+cmds.frameLayout(l="Constrain", cll=True, w=285)
+cmds.rowLayout(nc=1)
+mo_const = cmds.checkBoxGrp(l="Constrain: ", ncb=4, cw5=(60,55,48,55,10), la4=["Parent","Point","Orient","Scale"], v1=True)
+cmds.setParent("..")
+
+cmds.rowLayout(nc=1)
+mo = cmds.radioButtonGrp(l="Maintain offset : ", cw3=(93,90,50), la2=["On","Off"], nrb=2, sl=1)
+cmds.setParent("..")
+
+wi = (2,273)
+cmds.rowLayout(nc=2, cw2=wi)
+cmds.text("")
+cmds.button(l="Constrain", c="Const()", w=wi[1])
+cmds.setParent("..")
+cmds.separator(h=1)
+cmds.setParent("..")
+
+
+# Color Picker
+cmds.frameLayout(l="Color Picker", cll=True, w=285)
+wi=(45,45,45,45,45,45)
+hi=30
+cmds.rowLayout(nc=6, cw6=wi)
+cmds.button(l="", w=wi[0], h=hi, c="colorPicker(13)", bgc=(1,0,0))
+cmds.button(l="", w=wi[1], h=hi, c="colorPicker(17)",bgc=(1,1,0))
+cmds.button(l="", w=wi[2], h=hi, c="colorPicker(6)", bgc=(0,0,1))
+cmds.button(l="", w=wi[3], h=hi, c="colorPicker(18)", bgc=(0,1,1))
+cmds.button(l="", w=wi[4], h=hi, c="colorPicker(20)", bgc=(1,0.75,0.75))
+cmds.button(l="More", w=wi[5], c="color()", h=hi)
+cmds.setParent("..")
+cmds.setParent("..")
+
+#--------------------------------------------------------------------------------------------#
+
+# 4: Rigging 2
+cmds.setParent(WINDOW)
+ch4 = cmds.rowColumnLayout(w=285, nc=1)
+
+
 # ing
 # Rivet
 cmds.frameLayout(l="Rivet", cll=True, w=285)
@@ -281,13 +312,16 @@ cmds.setParent("..")
 cmds.separator(h=1)
 cmds.setParent("..")
 
+# ing
+# Motion path
+cmds.frameLayout(l="Motion path", cll=True, w=285)
+cmds.setParent("..")
+cmds.separator(h=1)
+cmds.setParent("..")
 
-# 2: Else
-cmds.setParent(WINDOW)
-ch2 = cmds.rowColumnLayout(w=570, nc=2)
+#--------------------------------------------------------------------------------------------#
 
-
-cmds.tabLayout(tabs, edit=True, tabLabel=((ch1, 'Rigging'), (ch2, 'Else')))
+cmds.tabLayout(tabs, edit=True, tabLabel=((ch1, "Create"), (ch2, "Naming"), (ch3, "Rigging 1"), (ch4, "Rigging 2")))
 
 cmds.showWindow(TOOLNAME)
 
@@ -469,18 +503,23 @@ def text():
 def hashRenamer():
     hf_text = cmds.textField(hf, q=True, tx=True)
     hb_text = cmds.textField(hb, q=True, tx=True)
+    
     if cmds.radioButtonGrp(pos_check, q=True, sl=1) == 1:
         hf_text = "rt_"+hf_text
     elif cmds.radioButtonGrp(pos_check, q=True, sl=1) == 2:
         hf_text = "lf_"+hf_text
+    if hb_text != "":
+        hb_text = "_"+hb_text
     
     objs = cmds.ls(sl=True)
     for x in range(0, len(objs)):
         obj = objs[x]
-        if x<9:
-            name = hf_text+"_0"+str(x+1)+"_"+hb_text
+        if len(objs) == 1:
+            name = hf_text+hb_text
+        elif x<9:
+            name = hf_text+"_0"+str(x+1)+hb_text
         else:
-            name = hf_text+"_"+str(x+1)+"_"+hb_text
+            name = hf_text+"_"+str(x+1)+hb_text
         cmds.rename(obj, name)
 
 

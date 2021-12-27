@@ -85,11 +85,12 @@ cmds.button(l="CP", c="cmds.CenterPivot()", w=wi[3])
 cmds.button(l="MT", c="cmds.MatchTranslation()", w=wi[4])
 cmds.setParent("..")
 
-wi = (1,137,137)
-cmds.rowLayout(nc=3, cw3=wi)
+wi = (1,90,90,90)
+cmds.rowLayout(nc=4, cw4=wi)
 cmds.text("")
-cmds.button(l="Delete History", c="cmds.DeleteHistory()", w=wi[1])
+cmds.button(l="Delete Hist", c="cmds.DeleteHistory()", w=wi[1])
 cmds.button(l="Set Driven Key", c="cmds.SetDrivenKeyOptions()", w=wi[2])
+cmds.button(l="Connection Ed", c="cmds.ConnectionEditor()", w=wi[3])
 cmds.setParent("..")
 cmds.separator(h=1)
 cmds.setParent("..")
@@ -237,11 +238,6 @@ cmds.rowLayout(nc=1)
 const = cmds.checkBoxGrp(l="Constrain: ", ncb=4, cw5=(60,55,48,55,10), la4=["Parent","Point","Orient","Scale"], v1=True)
 cmds.setParent("..")
 
-# ing
-cmds.rowLayout(nc=1)
-con_check = cmds.radioButtonGrp(l="Check : ", cw3=(60,110,10), la2=["Once","Hierarchy"], nrb=2, sl=1)
-cmds.setParent("..")
-
 wi = (2,273)
 cmds.rowLayout(nc=2, cw2=wi)
 cmds.text("")
@@ -274,7 +270,29 @@ cmds.setParent("..")
 wi = (2,273)
 cmds.rowLayout(nc=2, cw2=wi)
 cmds.text("")
-cmds.button(l="Constrain", c="Const()", w=wi[1])
+cmds.button(l="Constrain", c="const()", w=wi[1])
+cmds.setParent("..")
+cmds.separator(h=1)
+cmds.setParent("..")
+
+
+# Lock
+cmds.frameLayout(l="Lock", cll=True, w=285)
+cmds.rowLayout(nc=1)
+lock_check = cmds.checkBoxGrp(l="Attr : ", ncb=4, cw5=(40,60,60,60,10), la4=["Trans","Rot","Scale","Vis"], v1=True)
+cmds.setParent("..")
+
+wi = (1,137,137)
+cmds.rowLayout(nc=3, cw3=wi)
+cmds.text("")
+cmds.button(l="Lock + UnKeyable", c="lockUnlock(True, False)", w=wi[1])
+cmds.button(l="Lock + Keyable", c="lockUnlock(True, True)", w=wi[2])
+cmds.setParent("..")
+
+wi = (2,273)
+cmds.rowLayout(nc=2, cw2=wi)
+cmds.text("")
+cmds.button(l="Unlock + Keyable", c="lockUnlock(False, True)", w=wi[1])
 cmds.setParent("..")
 cmds.separator(h=1)
 cmds.setParent("..")
@@ -391,7 +409,7 @@ def setInOrder():
 #--------------------------------------------------------------------------------------------#
 
 # ing
-def Const():
+def const():
     a = cmds.ls(sl=True)
     for x in range(0, len(a)):
         if x == 0:
@@ -588,6 +606,25 @@ def add(tail):
     objs = cmds.ls(sl=True)
     text = tails[tail-1]
     namer(0, objs, text)
+
+#--------------------------------------------------------------------------------------------#
+
+def lockUnlock(i, j):
+    ranges = []
+    objs = cmds.ls(sl=True)
+    
+    if cmds.checkBoxGrp(lock_check, q=True, v1=True):
+        ranges.append(".t")
+    if cmds.checkBoxGrp(lock_check, q=True, v2=True):
+        ranges.append(".r")
+    if cmds.checkBoxGrp(lock_check, q=True, v3=True):
+        ranges.append(".s")
+    for obj in objs:
+        for attr1 in ranges:
+            for attr2 in ["x", "y", "z"]:
+                cmds.setAttr(obj+attr1+attr2, l=i, k=j)
+        if cmds.checkBoxGrp(lock_check, q=True, v4=True):
+            cmds.setAttr(obj+".visibility", l=i, k=j)
 
 #--------------------------------------------------------------------------------------------#
 

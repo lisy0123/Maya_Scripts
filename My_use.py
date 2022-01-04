@@ -28,8 +28,14 @@ def applyMenuItem(item):
         cmds.DistanceTool()
     elif item == "  Face Normal":
         cmds.ToggleFaceNormalDisplay()
-    elif item == "  Normal Size":
+    elif item == "  = Normal Size":
         cmds.ChangeNormalSize()
+    elif item == "  Border Edges":
+        cmds.ToggleBorderEdges()
+    elif item == "  = Edge Width":
+        cmds.ChangeEdgeWidth()
+    elif item == "  File Path Editor":
+        cmds.FilePathEditor()
 
 if cmds.window(TOOLNAME, ex=True):
     cmds.deleteUI(TOOLNAME)
@@ -97,25 +103,37 @@ cmds.button(l="Mirror", c="cmds.MirrorSkinWeightsOptions()", w=wi[2], h=25)
 cmds.setParent("..")
 cmds.separator(h=1)
 
-wi = (45,230)
+wi = (1,136,136)
+cmds.rowLayout(nc=3, cw3=wi)
+cmds.text("", w=wi[0])
+cmds.button(l="Delete Hist", c="cmds.DeleteHistory()", w=wi[1], h=25)
+cmds.button(l="LBA", c="cmds.ToggleLocalRotationAxes()", w=wi[2], h=25)
+cmds.setParent("..")
+
+wi = (2,273)
 cmds.rowLayout(nc=2, cw2=wi)
-cmds.text("    More : ", w=wi[0])
+cmds.text("")
+cmds.button(l="Node Editor", c="cmds.NodeEditorWindow()", w=wi[1], h=30)
+cmds.setParent("..")
+cmds.separator(h=1)
+
+wi = (1,136,136)
+cmds.rowLayout(nc=3, cw3=wi)
+cmds.text(" ", w=wi[0])
 create_options = cmds.optionMenu(w=wi[1], cc=applyMenuItem, h=25)
 cmds.menuItem(l="  Set Driven Key")
 cmds.menuItem(l="  Connection Editor")
 cmds.menuItem(l="  Blend Shape")
 cmds.menuItem(l="  Lattice")
 cmds.menuItem(l="  Cluster")
+create_options = cmds.optionMenu(w=wi[1], cc=applyMenuItem, h=25)
 cmds.menuItem(l="  Distance Tool")
 cmds.menuItem(l="  Face Normal")
-cmds.menuItem(l="  Normal Size")
-cmds.setParent("..")
-
-wi = (1,137,137)
-cmds.rowLayout(nc=3, cw3=wi)
-cmds.text("", w=wi[0])
-cmds.button(l="Delete Hist", c="cmds.DeleteHistory()", w=wi[1], h=25)
-cmds.button(l="LBA", c="cmds.ToggleLocalRotationAxes()", w=wi[2], h=25)
+cmds.menuItem(l="  = Normal Size")
+cmds.menuItem(l="  Border Edges")
+cmds.menuItem(l="  = Edge Width")
+cmds.menuItem(l="="*14)
+cmds.menuItem(l="  File Path Editor")
 endspace()
 
 
@@ -134,9 +152,9 @@ cmds.setParent("..")
 wi = (1,90,90,90)
 cmds.rowLayout(nc=4, cw4=wi)
 cmds.text("")
-cmds.button(l="Freeze Tfm", c="cmds.FreezeTransformations()", w=wi[1], h=25)
-cmds.button(l="Rest Tfm", c="cmds.ResetTransformations()", w=wi[2], h=25)
-cmds.button(l="Center Pivot", c="cmds.CenterPivot()", w=wi[3], h=25)
+cmds.button(l="Freeze Tfm", c="cmds.FreezeTransformations()", w=wi[1], h=30)
+cmds.button(l="Rest Tfm", c="cmds.ResetTransformations()", w=wi[2], h=30)
+cmds.button(l="Center Pivot", c="cmds.CenterPivot()", w=wi[3], h=30)
 endspace()
 
 #--------------------------------------------------------------------------------------------#
@@ -680,6 +698,13 @@ def lockUnlock(i, j):
                 cmds.setAttr(obj+attr1+attr2, l=i, k=j)
         if cmds.checkBoxGrp(lock_check, q=True, v4=True):
             cmds.setAttr(obj+".visibility", l=i, k=j)
+
+def rivet():
+    # Each
+    if cmds.radioButtonGrp(rivet_check, q=True, sl=1) == 1:
+        
+    # Sum
+    else:
 
 #--------------------------------------------------------------------------------------------#
 

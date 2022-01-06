@@ -1,4 +1,5 @@
 import maya.cmds as cmds
+import pymel.core as pm
 import re
 
 TOOLNAME = "MyUse"
@@ -195,7 +196,7 @@ endspace()
 # Replace
 cmds.frameLayout(l="Replace", cll=True, w=285)
 cmds.rowLayout(nc=1)
-replace_check = cmds.radioButtonGrp(l="Check : ", cw3=(55,90,10), la2=["Once","Hierarchy"], nrb=2, sl=1, h=25)
+replace_check = cmds.radioButtonGrp(l="Check : ", cw3=(55,90,10), la2=["Once","Hierarchy"], nrb=2, sl=2, h=25)
 cmds.setParent("..")
 
 wi=(80,195)
@@ -220,9 +221,9 @@ endspace()
 # Add
 cmds.frameLayout(l="Add", cll=True, w=285)
 startspace()
-#cmds.rowLayout(nc=1)
-#add_check = cmds.radioButtonGrp(l="Check : ", cw3=(50,90,10), la2=["Once","Hierarchy"], nrb=2, sl=2)
-#cmds.setParent("..")
+cmds.rowLayout(nc=1)
+add_check = cmds.radioButtonGrp(l="Check : ", cw3=(50,90,10), la2=["Once","Hierarchy"], nrb=2, sl=2)
+cmds.setParent("..")
 
 wi = (50,170,1,50)
 cmds.rowLayout(nc=4, cw4=wi)
@@ -423,28 +424,31 @@ def match():
 
 # ing
 def setInOrder():
-    ob = cmds.listRelatives(cmds.ls(sl=True))
-    objs = cmds.ls(ob)
+    objs = pm.listRelatives(ad=True, type='joint')
+    objs += pm.listRelatives(ad=True, typ='transform')
+    objs += pm.ls(sl=True)
+    print objs
+    
     num_list = []
-    for x in range(0, len(objs)):
-        num_list.append(int(re.sub(r"[^0-9]", "", objs[x])))
+    for obj in objs:
+        num_list.append(int(re.sub(r"[^0-9]", "", obj.name())))
     print num_list
-    num = 1
-    tmp = 0
-    while tmp <= len(num_list)+2:
-        print num
-        for x in range(0, len(num_list)):
-            if num_list[x] == num:
-                cmds.reorder(objs[x], r=-x)
-                break
-        tmp += 1
-        num += 1
-        ob = cmds.listRelatives(cmds.ls(sl=True))
-        objs = cmds.ls(ob)
-        num_list = []
-        for x in range(tmp, len(objs)):
-            num_list.append(int(re.sub(r"[^0-9]", "", objs[x])))
-        print num_list
+#    num = 1
+#    tmp = 0
+#    while tmp <= len(num_list)+2:
+#        print num
+#        for x in range(0, len(num_list)):
+#            if num_list[x] == num:
+#                cmds.reorder(objs[x], r=-x)
+#                break
+#        tmp += 1
+#        num += 1
+#        ob = cmds.listRelatives(cmds.ls(sl=True))
+#        objs = cmds.ls(ob)
+#        num_list = []
+#        for x in range(tmp, len(objs)):
+#            num_list.append(int(re.sub(r"[^0-9]", "", objs[x])))
+#        print num_list
     
 #    for x in range(0, len(a)):
 #        list.append(int(re.sub(r"[^0-9]", "", a[x])))
@@ -576,7 +580,7 @@ def text():
     c = cmds.ls(ci)
     for x in range(0, len(c)):
         s = c[x]
-        cmds.select(s)
+        cmds.ls(s)
         a = cmds.rename(s, t+str(x+1))
     
     cmds.parent(t+"*", "Text_"+t+"_1")
@@ -584,7 +588,7 @@ def text():
     cmds.DeleteHistory(t+"*")
     cmds.parent(t+"*", "Text_"+t+"_1", r=True, s=True)
     cmds.delete("Char*")
-    cmds.select(cl=True)
+    cmds.ls(cl=True)
     sel = cmds.ls(t+"*", typ="transform")
     cmds.delete(sel)
     cmds.rename("Text_"+t+"_1", t+"_ctrl")
@@ -602,16 +606,15 @@ def hashRenamer():
     if hb_text != "":
         hb_text = "_"+hb_text
     
-    objs = cmds.ls(sl=True)
+    objs = pm.ls(sl=True)
     for x in range(0, len(objs)):
-        obj = objs[x]
         if len(objs) == 1:
             name = hf_text+hb_text
-        elif x<9:
+        elif x < 9:
             name = hf_text+"_0"+str(x+1)+hb_text
         else:
             name = hf_text+"_"+str(x+1)+hb_text
-        cmds.rename(obj, name)
+        objs[x].rename(name)
 
 
 def SearchReplace():
@@ -619,24 +622,21 @@ def SearchReplace():
     replace_wd = cmds.textField(replace_w, q=True, tx=True)
     
     if cmds.radioButtonGrp(replace_check, q=True, sl=1) == 2:
-        ob = cmds.listRelatives(cmds.ls(sl=True))
-        objs = cmds.ls(ob)
-        objs.append(cmds.ls(sl=True)[0])
+        objs = pm.listRelatives(ad=True)
+        objs += pm.ls(sl=True)
     else:
-        objs = cmds.ls(sl=True)
+        objs = pm.ls(sl=True)
     for obj in objs:
-        if search_wd in obj:
-            name = replace_wd.join(obj.split(search_wd))
-            cmds.rename(obj, name)
+        obj.rename(obj.name().replace(search_wd, replace_wd))
 
 def renamer(i):
-#    if cmds.radioButtonGrp(add_check, q=True, sl=1) == 2:
-#        ob = cmds.listRelatives(cmds.ls(sl=True))
-#        objs = cmds.ls(ob)
-#        objs.append(cmds.ls(sl=True)[0])
-#        namer(i, objs, None)
-#    else:
-    objs = cmds.ls(sl=True)
+    if cmds.radioButtonGrp(add_check, q=True, sl=1) == 2:
+        objs = pm.listRelatives(ad=True, type='joint')
+        objs += pm.listRelatives(ad=True, typ='transform')
+        objs += pm.ls(sl=True)
+        print objs
+    else:
+        objs = pm.ls(sl=True)
     namer(i, objs, None)
 
 # ing
@@ -647,36 +647,31 @@ def namer(i, objs, tmp):
         brn_text = cmds.textField(brn, q=True, tx=True)
         arn_text = cmds.textField(arn, q=True, tx=True)
 
-    for x in range(0, len(objs)):
-        obj = objs[x]
+    for obj in objs:
         if i == 1:
             blen = len(brn_text)
             bcheck=""
             for x in range(blen+1):
                 bcheck += obj[x]
-            if bcheck == brn_text+"_":
-                pass
-            else:
+            if bcheck != brn_text+"_":
                 name = brn_text+"_"+obj
-                cmds.rename(obj, name)
+                obj.rename(name)
         else:
             alen = len(arn_text)
             acheck=""
             for x in range(alen+1):
-                w = len(obj)-len(arn_text)+x-1
-                acheck += obj[w]
-            if acheck == "_"+arn_text:
-                pass
-            else:
+                tmp = len(obj.name())-len(arn_text)+x-1
+                acheck += obj[tmp]
+            if acheck != "_"+arn_text:
                 name = obj+"_"+arn_text
-                cmds.rename(obj, name)
+                obj.rename(name)
 
 def add(tail):
     tails = [
         "grp", "jnt", "ctrl",
         "extra", "loc", "drv",
     ]
-    objs = cmds.ls(sl=True)
+    objs = pm.ls(sl=True)
     text = tails[tail-1]
     namer(0, objs, text)
 
@@ -702,9 +697,10 @@ def lockUnlock(i, j):
 def rivet():
     # Each
     if cmds.radioButtonGrp(rivet_check, q=True, sl=1) == 1:
-        
+        pass
     # Sum
     else:
+        pass
 
 #--------------------------------------------------------------------------------------------#
 

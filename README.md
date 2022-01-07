@@ -58,13 +58,14 @@ print cir1, cir2
 
 - [x] joint, ik, weights options, set driven key, etc...
 - [x] constrain: maintain offset toggle
-- [x] namer(after): Exclude *shape => Delete once/hierarchy
-- [x] rename: search and replace
 - [x] quick add, lock, unlock attribute
-- [ ] set in order: 방법 고민...
-- [ ] joint copy for ik spline
+- [x] rename: search and replace
+- [x] namer(after): Exclude *shape => Include joint, transform
+- [x] set in order => Solved by ordering it from the bottom, not from the top.
 - [ ] rivet (Each/Sum)
 - [ ] motion path (Basic/Advance)
+- [ ] joint copy for ik spline
+- [ ] copy weight
 - [ ] text didn't work well (123..,[]!@#$%%^&*)
 
 :label: Updating...

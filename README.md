@@ -62,11 +62,11 @@ print cir1, cir2
 - [x] rename: search and replace
 - [x] namer(after): Exclude *shape => Include joint, transform
 - [x] set in order => Solved by ordering it from the bottom, not from the top.
+- [x] text didn't work well (123..,[]!@#$%%^&*)
 - [ ] rivet (Each/Sum)
 - [ ] motion path (Basic/Advance)
 - [ ] joint copy for ik spline
 - [ ] copy weight
-- [ ] text didn't work well (123..,[]!@#$%%^&*)
 
 :label: Updating...
 

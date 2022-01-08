@@ -411,13 +411,12 @@ cmds.tabLayout(tabs, edit=True, tabLabel=((ch1, "Create"), (ch2, "Naming"), (ch3
 
 cmds.showWindow(TOOLNAME)
 
-
 #-------------------------------------- Active Code ------------------------------------#
-
 
 def jointSize():
     j = cmds.floatSliderGrp(jnt, q=True, v=True)
     cmds.jointDisplayScale(j)
+
 
 def colorPicker(num):
     a = cmds.ls(sl=True)
@@ -427,6 +426,7 @@ def colorPicker(num):
         #cmds.setAttr(b[0]+".overrideColor", num)
         cmds.setAttr(col+".overrideEnabled", 1)
         cmds.setAttr(col+".overrideColor", num)
+
 
 def match():
     if cmds.checkBoxGrp(match_check, q=True, v1=True):
@@ -438,8 +438,9 @@ def match():
     if cmds.checkBoxGrp(match_check, q=True, v4=True):
         cmds.MatchPivots();
 
+
 def setInOrder():
-    objs = pm.listRelatives(ad=True, type='joint')
+    objs = pm.listRelatives(ad=True, typ='joint')
     objs += pm.listRelatives(ad=True, typ='transform')
     objs += pm.ls(sl=True)
     num_list = []
@@ -450,7 +451,25 @@ def setInOrder():
             if x == num_list[y]:
                 pm.reorder(objs[y], b=True)
                 break
-        
+
+
+def lockUnlock(i, j):
+    ranges = []
+    objs = cmds.ls(sl=True)
+    
+    if cmds.checkBoxGrp(lock_check, q=True, v1=True):
+        ranges.append(".t")
+    if cmds.checkBoxGrp(lock_check, q=True, v2=True):
+        ranges.append(".r")
+    if cmds.checkBoxGrp(lock_check, q=True, v3=True):
+        ranges.append(".s")
+    for obj in objs:
+        for attr1 in ranges:
+            for attr2 in ["x", "y", "z"]:
+                cmds.setAttr(obj+attr1+attr2, l=i, k=j)
+        if cmds.checkBoxGrp(lock_check, q=True, v4=True):
+            cmds.setAttr(obj+".visibility", l=i, k=j)
+
 #--------------------------------------------------------------------------------------------#
 
 # ing
@@ -466,6 +485,7 @@ def const():
         else:
             pass
 
+
 def createController():
     objs = cmds.ls(sl=True)
     if cmds.radioButtonGrp(ctrl_make, q=True, sl=1) == 1:
@@ -474,6 +494,7 @@ def createController():
             selectShape(obj)
     else:
         selectShape(objs)
+
 
 # add check options
 def selectShape(obj):
@@ -505,6 +526,7 @@ def selectShape(obj):
     if cmds.radioButtonGrp(ctrl_make, q=True, sl=1) == 1:
         constrains(c, obj, 0)
 
+
 def constrains(con, obj, i):
     if i == 0:
         a = const_check
@@ -532,33 +554,22 @@ def constrains(con, obj, i):
 
 #--------------------------------------------------------------------------------------------#
 
-# need to fix
 def text():
-    t = cmds.textField(tx, q=True, tx=True)
-    cmds.textCurves(t=t)
-    if t.isalpha():
-        b = cmds.listRelatives(cmds.ls("Text_"+t+"_1"), c=True)
-    else:
-        tmp_t = "x"*len(t)
-        b = cmds.listRelatives(cmds.ls("Text_"+tmp_t+"_1"), c=True)
-    ci = cmds.listRelatives(b, c=True)
-    c = cmds.ls(ci)
-    for x in range(0, len(c)):
-        s = c[x]
-        cmds.ls(s)
-        a = cmds.rename(s, t+str(x+1))
+    t = pm.textField(tx, q=True, tx=True)
     
-    cmds.parent(t+"*", "Text_"+t+"_1")
-    cmds.makeIdentity(t+"*", a=True, t=True)
-    cmds.DeleteHistory(t+"*")
-    cmds.parent(t+"*", "Text_"+t+"_1", r=True, s=True)
-    cmds.delete("Char*")
-    cmds.ls(cl=True)
-    sel = cmds.ls(t+"*", typ="transform")
-    cmds.delete(sel)
-    cmds.rename("Text_"+t+"_1", t+"_ctrl")
+    pm.textCurves(t=t, ch=True)
+    objs = pm.listRelatives(ad=True, typ='transform')
+    for obj in objs:
+        if "Char_" in obj.name():
+            objs.remove(obj)
+    pm.parent(objs, "Text_*")
+    pm.makeIdentity(objs, a=True, t=1, r=1, s=1, n=0, pn=1)
+    cmds.ResetTransformations(pm.ls(objs))
+    pm.delete(objs, ch=True)
+    pm.parent(pm.listRelatives(objs, ad=True), "Text_*", r=True, s=True)
+    pm.delete("Char_*", objs)
+    pm.ls("Text_*")[0].rename(t+"_crv")
 
-#--------------------------------------------------------------------------------------------#
 
 def hashRenamer():
     hf_text = cmds.textField(hf, q=True, tx=True)
@@ -594,15 +605,6 @@ def SearchReplace():
     for obj in objs:
         obj.rename(obj.name().replace(search_wd, replace_wd))
 
-def renamer(i):
-    if cmds.radioButtonGrp(add_check, q=True, sl=1) == 2:
-        objs = pm.listRelatives(ad=True, type='joint')
-        objs += pm.listRelatives(ad=True, typ='transform')
-        objs += pm.ls(sl=True)
-        print objs
-    else:
-        objs = pm.ls(sl=True)
-    namer(i, objs, None)
 
 def namer(i, objs, tmp):
     if tmp:
@@ -630,6 +632,18 @@ def namer(i, objs, tmp):
                 name = obj+"_"+arn_text
                 obj.rename(name)
 
+
+def renamer(i):
+    if cmds.radioButtonGrp(add_check, q=True, sl=1) == 2:
+        objs = pm.listRelatives(ad=True, typ='joint')
+        objs += pm.listRelatives(ad=True, typ='transform')
+        objs += pm.ls(sl=True)
+        print objs
+    else:
+        objs = pm.ls(sl=True)
+    namer(i, objs, None)
+
+
 def add(tail):
     tails = [
         "grp", "jnt", "ctrl",
@@ -641,23 +655,6 @@ def add(tail):
 
 #--------------------------------------------------------------------------------------------#
 
-def lockUnlock(i, j):
-    ranges = []
-    objs = cmds.ls(sl=True)
-    
-    if cmds.checkBoxGrp(lock_check, q=True, v1=True):
-        ranges.append(".t")
-    if cmds.checkBoxGrp(lock_check, q=True, v2=True):
-        ranges.append(".r")
-    if cmds.checkBoxGrp(lock_check, q=True, v3=True):
-        ranges.append(".s")
-    for obj in objs:
-        for attr1 in ranges:
-            for attr2 in ["x", "y", "z"]:
-                cmds.setAttr(obj+attr1+attr2, l=i, k=j)
-        if cmds.checkBoxGrp(lock_check, q=True, v4=True):
-            cmds.setAttr(obj+".visibility", l=i, k=j)
-
 def rivet():
     # Each
     if cmds.radioButtonGrp(rivet_check, q=True, sl=1) == 1:
@@ -665,15 +662,19 @@ def rivet():
     # Sum
     else:
         pass
+    objs = pm.ls(sl=True)
+    for obj in objs:
+        print obj.name()
 
 #--------------------------------------------------------------------------------------------#
 
 def color():
     win = "ColorPicker"
+    wintitle = "Color Picker"
+    
     if cmds.window(win, ex=True):
         cmds.deleteUI(win)
-    
-    cmds.window(win, t="Color Picker")
+    cmds.window(win, t=wintitle)
     cmds.rowColumnLayout(w=255)
     
     wi=(125,125)
@@ -732,5 +733,3 @@ def color():
     cmds.showWindow(win)
 
 #--------------------------------------------------------------------------------------------#
-
-

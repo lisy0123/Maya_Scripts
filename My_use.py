@@ -202,7 +202,7 @@ cmds.frameLayout(l="Replace", cll=True, w=285)
 startspace()
 
 cmds.rowLayout(nc=1)
-replace_check = cmds.radioButtonGrp(l="Check : ", cw3=(80,80,10), la2=["Once","Hierarchy"], nrb=2, sl=2, h=25)
+replace_check = cmds.radioButtonGrp(l="Check : ", cw3=(80,80,10), la2=["Once","Hierarchy"], nrb=2, sl=1, h=25)
 cmds.setParent("..")
 
 wi=(80,195)
@@ -229,7 +229,7 @@ cmds.frameLayout(l="Add", cll=True, w=285)
 startspace()
 
 cmds.rowLayout(nc=1)
-add_check = cmds.radioButtonGrp(l="Check : ", cw3=(50,80,10), la2=["Once","Hierarchy"], nrb=2, sl=2)
+add_check = cmds.radioButtonGrp(l="Check : ", cw3=(50,80,10), la2=["Once","Hierarchy"], nrb=2, sl=1, h=25)
 cmds.setParent("..")
 
 wi = (50,170,1,50)
@@ -267,9 +267,79 @@ endspace()
 
 #--------------------------------------------------------------------------------------------#
 
-# 3: Rigging 1
+# 3: Attribute
 cmds.setParent(WINDOW)
 ch3 = cmds.rowColumnLayout(w=285, nc=1)
+
+# Lock
+cmds.frameLayout(l="Lock", cll=True, w=285)
+startspace()
+
+cmds.rowLayout(nc=1)
+lock_check = cmds.checkBoxGrp(l="Attr : ", ncb=4, cw5=(40,60,60,60,10), la4=["Trans","Rot","Scale","Vis"], v1=True, v2=True, v3=True, h=25)
+cmds.setParent("..")
+
+wi = (1,136,136)
+cmds.rowLayout(nc=3, cw3=wi)
+cmds.text("")
+cmds.button(l="Lock + UnKeyable", c="lockUnlock(True, False)", w=wi[1], h=25)
+cmds.button(l="Lock + Keyable", c="lockUnlock(True, True)", w=wi[2], h=25)
+cmds.setParent("..")
+
+wi = (2,273)
+cmds.rowLayout(nc=2, cw2=wi)
+cmds.text("")
+cmds.button(l="Unlock + Keyable", c="lockUnlock(False, True)", w=wi[1], h=25)
+endspace()
+
+# ing, add delete
+# Attribute
+cmds.frameLayout(l="Attribute", cll=True, w=285)
+startspace()
+
+wi=(45,230)
+cmds.rowLayout(nc=2, cw2=wi)
+cmds.text(l="  Name : ", w=wi[0])
+attr_tx = cmds.textField(w=wi[1], tx="", h=25)
+cmds.setParent("..")
+
+wi = (45,20,65,69,69)
+cmds.rowLayout(nc=5, cw5=wi)
+cmds.text(l="   Reset :  ", w=wi[0])
+attr_check = cmds.checkBox(l="", w=wi[1], h=25)
+cmds.text(l="  Min/Max :", w=wi[2])
+min_attr = cmds.textField(w=wi[3], tx="0.0", h=25)
+max_attr = cmds.textField(w=wi[4], tx="1.0", h=25)
+cmds.setParent("..")
+
+wi = (1,136,136)
+cmds.rowLayout(nc=3, cw3=wi)
+cmds.text("")
+cmds.button(l="Float Attr", c="addAttr(0)", w=wi[1], h=25)
+cmds.button(l="Bool Attr", c="addAttr(1)", w=wi[2], h=25)
+cmds.setParent("..")
+
+wi = (2,273)
+cmds.rowLayout(nc=2, cw2=wi)
+cmds.text("")
+cmds.button(l="Separator Attr", c="addAttr(2)", w=wi[1], h=25)
+cmds.setParent("..")
+cmds.separator(h=1)
+
+wi=(1,67,67,67,67)
+cmds.rowLayout(nc=5, cw5=wi)
+cmds.text("")
+cmds.button(l="TUP", c="lockUnlock(False, True)", w=wi[1], h=30)
+cmds.button(l="UP", c="lockUnlock(False, True)", w=wi[2], h=30)
+cmds.button(l="DOWN", c="lockUnlock(False, True)", w=wi[3], h=30)
+cmds.button(l="TDOWN", c="lockUnlock(False, True)", w=wi[4], h=30)
+endspace()
+
+#--------------------------------------------------------------------------------------------#
+
+# 4: Rigging
+cmds.setParent(WINDOW)
+ch4 = cmds.rowColumnLayout(w=285, nc=1)
 
 
 # Controller
@@ -340,28 +410,6 @@ cmds.button(l="Constrain", c="const()", w=wi[1], h=30)
 endspace()
 
 
-# Lock
-cmds.frameLayout(l="Lock", cll=True, w=285)
-startspace()
-
-cmds.rowLayout(nc=1)
-lock_check = cmds.checkBoxGrp(l="Attr : ", ncb=4, cw5=(40,60,60,60,10), la4=["Trans","Rot","Scale","Vis"], v1=True, h=25)
-cmds.setParent("..")
-
-wi = (1,137,137)
-cmds.rowLayout(nc=3, cw3=wi)
-cmds.text("")
-cmds.button(l="Lock + UnKeyable", c="lockUnlock(True, False)", w=wi[1], h=25)
-cmds.button(l="Lock + Keyable", c="lockUnlock(True, True)", w=wi[2], h=25)
-cmds.setParent("..")
-
-wi = (2,273)
-cmds.rowLayout(nc=2, cw2=wi)
-cmds.text("")
-cmds.button(l="Unlock + Keyable", c="lockUnlock(False, True)", w=wi[1], h=25)
-endspace()
-
-
 # Color Picker
 cmds.frameLayout(l="Color Picker", cll=True, w=285)
 wi=(45,45,45,45,45,45)
@@ -374,12 +422,6 @@ cmds.button(l="", w=wi[4], c="colorPicker(20)", bgc=(1,0.75,0.75), h=30)
 cmds.button(l="More", w=wi[5], c="color()", h=30)
 cmds.setParent("..")
 cmds.setParent("..")
-
-#--------------------------------------------------------------------------------------------#
-
-# 4: Rigging 2
-cmds.setParent(WINDOW)
-ch4 = cmds.rowColumnLayout(w=285, nc=1)
 
 
 # ing
@@ -407,7 +449,7 @@ endspace()
 
 #--------------------------------------------------------------------------------------------#
 
-cmds.tabLayout(tabs, edit=True, tabLabel=((ch1, "Create"), (ch2, "Naming"), (ch3, "Rigging 1"), (ch4, "Rigging 2")))
+cmds.tabLayout(tabs, edit=True, tabLabel=((ch1, "Create"), (ch2, "Naming"), (ch3, "Attribute"), (ch4, "Rigging")))
 
 cmds.showWindow(TOOLNAME)
 
@@ -469,6 +511,48 @@ def lockUnlock(i, j):
                 cmds.setAttr(obj+attr1+attr2, l=i, k=j)
         if cmds.checkBoxGrp(lock_check, q=True, v4=True):
             cmds.setAttr(obj+".visibility", l=i, k=j)
+
+# ing
+#addAttr -ln "wetfgthjuki"  -at double  -min 0 -max 1 -dv 0 |locator1;
+#setAttr -e-keyable true |locator1.wetfgthjuki;
+#addAttr -ln "dfg" -nn "eerw" -at double  -dv 0 |locator1;
+#setAttr -e-keyable true |locator1.dfg;
+
+#addAttr -ln "sdf"  -at double  -dv 0 |locator1;
+#setAttr -e-channelBox true |locator1.sdf;
+
+#catch (`deleteAttr -attribute "sdf" "locator1"`);
+
+#addAttr -ln "dngcdcv" -nn "------" -at "enum" -en "------:"  |locator1;
+
+def addAttr(i):
+    attr_text = cmds.textField(attr_tx, q=True, tx=True)
+    min_num = cmds.textField(min_attr, q=True, tx=True)
+    max_num = cmds.textField(max_attr, q=True, tx=True)
+    
+    objs = pm.ls(sl=True)
+    for obj in objs:
+        if i == 0:
+            if cmds.checkBox(attr_check, q=True, v=True):
+                pass
+            else:
+                pass
+        elif i == 1:
+            cnt = 0
+            if pm.attributeQuery("separator"+str(cnt), n=obj, e=True):
+                print "!!!!"
+            pass
+        else:
+            cnt = 0
+            flag = True
+            while flag:
+                cnt_str = "separator"+str(cnt)
+                if pm.attributeQuery(cnt_str, n=obj, e=True):
+                    cnt += 1
+                else:
+                    pm.addAttr(obj, ln=cnt_str, nn="------", at="enum", en="------:")
+                    pm.setAttr(obj+"."+cnt_str, cb=True)
+                    flag = False
 
 #--------------------------------------------------------------------------------------------#
 

@@ -5,33 +5,59 @@ import re
 TOOLNAME = "MyUse"
 TOOLTITLE = "My Use"
 
-def startspace():
-    cmds.rowLayout(nc=1, h=1)
-    cmds.setParent("..")
+WI01 = (2,273)
+WI02 = (1,136,136)
 
-def endspace():
+CREATE01 = ["  Blend Shape", "  Lattice", "  Cluster"]
+CREATE02 = [
+    "  Distance Tool", "  Face Normal", "  = Normal Size",
+    "  Border Edges", "  = Edge Width", "="*14, "  File Path Editor"
+]
+CREATEALL = CREATE01 + CREATE02
+
+def btnLayout(cnt):
+    if cnt == 1:
+        cmds.rowLayout(nc=2, cw2=WI01)
+    elif cnt == 2:
+        cmds.rowLayout(nc=3, cw3=WI02)
+
+def frame(text, tmp=True):
+    cmds.frameLayout(l=text, cll=True, w=285)
+    if tmp:
+        cmds.rowLayout(nc=1, h=1)
+        cmds.setParent("..")
+
+def endSpace():
     cmds.setParent("..")
     cmds.separator(h=1)
     cmds.setParent("..")
 
+def createBtn(subject, things):
+    wi = (50,111,111)
+    cmds.rowLayout(nc=3, cw3=wi)
+    cmds.text(subject, w=wi[0])
+    cmds.button(l=things[0][0], c=things[0][1], w=wi[1], h=25)
+    cmds.button(l=things[1][0], c=things[1][1], w=wi[2], h=25)
+    cmds.setParent("..")
+
 def applyMenuItem(item):
-    if item == "  Blend Shape":
+    if item == CREATEALL[0]:
         cmds.CreateBlendShapeOptions()
-    elif item == "  Lattice":
+    elif item == CREATEALL[1]:
         cmds.CreateLatticeOptions(),
-    elif item == "  Cluster":
+    elif item == CREATEALL[2]:
         cmds.CreateClusterOptions()
-    elif item == "  Distance Tool":
+    elif item == CREATEALL[3]:
         cmds.DistanceTool()
-    elif item == "  Face Normal":
+    elif item == CREATEALL[4]:
         cmds.ToggleFaceNormalDisplay()
-    elif item == "  = Normal Size":
+    elif item == CREATEALL[5]:
         cmds.ChangeNormalSize()
-    elif item == "  Border Edges":
+    elif item == CREATEALL[6]:
         cmds.ToggleBorderEdges()
-    elif item == "  = Edge Width":
+    elif item == CREATEALL[7]:
         cmds.ChangeEdgeWidth()
-    elif item == "  File Path Editor":
+    elif item == CREATEALL[9]:
         cmds.FilePathEditor()
 
 if cmds.window(TOOLNAME, ex=True):
@@ -49,100 +75,74 @@ ch1 = cmds.rowColumnLayout(w=285, nc=1)
 
 
 # Joint Size
-cmds.frameLayout(l="Joint Size", cll=True, w=285)
+frame("Joint Size", 0)
 jnt = cmds.floatSliderButtonGrp(l="Size   ", bl="Set", bc="jointSize()", cw4=(50,50,70,50), f=True, min=0.1, max=1, v=0.5, h=30)
 cmds.setParent("..")
 
 
 # Create
-cmds.frameLayout(l="Create", cll=True, w=285)
-startspace()
+frame("Create")
 
-wi = (1,137,137)
-cmds.rowLayout(nc=3, cw3=wi)
-cmds.text("", w=wi[0])
-cmds.button(l="Loc", c="cmds.CreateLocator()", w=wi[1], h=25)
-cmds.button(l="Curve", c="cmds.EPCurveTool()", w=wi[2], h=25)
+btnLayout(2)
+cmds.text("", w=WI02[0])
+cmds.button(l="Loc", c="cmds.CreateLocator()", w=WI02[1], h=25)
+cmds.button(l="Curve", c="cmds.EPCurveTool()", w=WI02[2], h=25)
 cmds.setParent("..")
 
-wi = (50,112,112)
-cmds.rowLayout(nc=3, cw3=wi)
-cmds.text("    Joints : ", w=wi[0])
-cmds.button(l="Jnt", c="cmds.JointTool()", w=wi[1], h=25)
-cmds.button(l="Insert", c="cmds.InsertJointTool()", w=wi[2], h=25)
-cmds.setParent("..")
-
-wi = (50,112,112)
-cmds.rowLayout(nc=3, cw3=wi)
-cmds.text("", w=wi[0])
-cmds.button(l="Orient", c="cmds.OrientJointOptions()", w=wi[1], h=25)
-cmds.button(l="Mirror", c="cmds.MirrorJointOptions()", w=wi[2], h=25)
-cmds.setParent("..")
-
-wi = (50,112,112)
-cmds.rowLayout(nc=3, cw3=wi)
-cmds.text("  Handle : ", w=wi[0])
-cmds.button(l="IK", c="cmds.IKHandleTool()", w=wi[1], h=25)
-cmds.button(l="IK Spline", c="cmds.ikHandle(sol='ikSplineSolver', ns=4)", w=wi[2], h=25)
-cmds.setParent("..")
-
-wi = (50,112,112)
-cmds.rowLayout(nc=3, cw3=wi)
-cmds.text("      Skin : ", w=wi[0])
-cmds.button(l="Bind", c="cmds.SmoothBindSkinOptions()", w=wi[1], h=25)
-cmds.button(l="Detach", c="cmds.DetachSkinOptions()", w=wi[2], h=25)
-cmds.setParent("..")
-
-cmds.rowLayout(nc=3, cw3=wi)
-cmds.text(" Weights: ", w=wi[0])
-cmds.button(l="Paint", c="cmds.ArtPaintSkinWeightsToolOptions()", w=wi[1], h=25)
-cmds.button(l="Mirror", c="cmds.MirrorSkinWeightsOptions()", w=wi[2], h=25)
-cmds.setParent("..")
+createBtn(
+    "    Joints : ",
+    [["Jnt", "cmds.JointTool()"], ["Insert", "cmds.InsertJointTool()"]]
+)
+createBtn(
+    "",
+    [["Orient","cmds.OrientJointOptions()"], ["Mirror", "cmds.MirrorJointOptions()"]]
+)
+createBtn(
+    "  Handle : ",
+    [["IK", "cmds.IKHandleTool()"], ["IK Spline", "cmds.ikHandle(sol='ikSplineSolver', ns=4)"]]
+)
+createBtn(
+    "      Skin : ",
+    [["Bind", "cmds.SmoothBindSkinOptions()"], ["Detach", "cmds.DetachSkinOptions()"]]
+)
+createBtn(
+    " Weights: ",
+    [["Paint", "cmds.ArtPaintSkinWeightsToolOptions()"], ["Mirror", "cmds.MirrorSkinWeightsOptions()"]]
+)
 cmds.separator(h=1)
 
-wi = (2,273)
-cmds.rowLayout(nc=2, cw2=wi)
+cmds.rowLayout(nc=2, cw2=WI01)
 cmds.text("")
-cmds.button(l="Node Editor", c="cmds.NodeEditorWindow()", w=wi[1], h=30)
+cmds.button(l="Node Editor", c="cmds.NodeEditorWindow()", w=WI01[1], h=30)
 cmds.setParent("..")
 
-wi = (1,136,136)
-cmds.rowLayout(nc=3, cw3=wi)
-cmds.text("", w=wi[0])
-cmds.button(l="Set Driven Key", c="cmds.SetDrivenKeyOptions()()", w=wi[1], h=30)
-cmds.button(l="Connection Editor", c="cmds.ConnectionEditor()", w=wi[2], h=30)
+btnLayout(2)
+cmds.text("", w=WI02[0])
+cmds.button(l="Set Driven Key", c="cmds.SetDrivenKeyOptions()()", w=WI02[1], h=30)
+cmds.button(l="Connection Editor", c="cmds.ConnectionEditor()", w=WI02[2], h=30)
 cmds.setParent("..")
 
-wi = (1,136,136)
-cmds.rowLayout(nc=3, cw3=wi)
-cmds.text(" ", w=wi[0])
-create_options = cmds.optionMenu(w=wi[1], cc=applyMenuItem, h=25)
-cmds.menuItem(l="  Blend Shape")
-cmds.menuItem(l="  Lattice")
-cmds.menuItem(l="  Cluster")
-create_options = cmds.optionMenu(w=wi[1], cc=applyMenuItem, h=25)
-cmds.menuItem(l="  Distance Tool")
-cmds.menuItem(l="  Face Normal")
-cmds.menuItem(l="  = Normal Size")
-cmds.menuItem(l="  Border Edges")
-cmds.menuItem(l="  = Edge Width")
-cmds.menuItem(l="="*14)
-cmds.menuItem(l="  File Path Editor")
-endspace()
+btnLayout(2)
+cmds.text(" ", w=WI02[0])
+create_options = cmds.optionMenu(w=WI02[1], cc=applyMenuItem, h=25)
+for obj in CREATE01:
+    cmds.menuItem(l=obj)
+create_options = cmds.optionMenu(w=WI02[2], cc=applyMenuItem, h=25)
+for obj in CREATE02:
+    cmds.menuItem(l=obj)
+endSpace()
 
 
 # TRS
-cmds.frameLayout(l="TRS", cll=True, w=285)
-startspace()
+frame("TRS")
 
 cmds.rowLayout(nc=1)
 match_check = cmds.checkBoxGrp(l="Attr : ", ncb=4, cw5=(40,55,55,55,10), la4=["Trans","Rot","Scale","Pivots"], v1=True, h=25)
 cmds.setParent("..")
 
-wi = (2,273)
-cmds.rowLayout(nc=2, cw2=wi)
+btnLayout(1)
 cmds.text("")
-cmds.button(l="Match", c="match()", w=wi[1], h=30)
+cmds.button(l="Match", c="match()", w=WI01[1], h=30)
 cmds.setParent("..")
 
 wi = (1,90,90,90)
@@ -154,12 +154,11 @@ cmds.button(l="Center Pivot", c="cmds.CenterPivot()", w=wi[3], h=30)
 cmds.setParent("..")
 cmds.separator(h=1)
 
-wi = (1,136,136)
-cmds.rowLayout(nc=3, cw3=wi)
-cmds.text("", w=wi[0])
-cmds.button(l="Delete Hist", c="cmds.DeleteHistory()", w=wi[1], h=30)
-cmds.button(l="LBA", c="cmds.ToggleLocalRotationAxes()", w=wi[2], h=30)
-endspace()
+btnLayout(2)
+cmds.text("", w=WI02[0])
+cmds.button(l="Delete Hist", c="cmds.DeleteHistory()", w=WI02[1], h=30)
+cmds.button(l="LBA", c="cmds.ToggleLocalRotationAxes()", w=WI02[2], h=30)
+endSpace()
 
 #--------------------------------------------------------------------------------------------#
 
@@ -169,37 +168,32 @@ ch2 = cmds.rowColumnLayout(w=285, nc=1)
 
 
 # Rename
-cmds.frameLayout(l="Rename", cll=True, w=285)
-startspace()
+frame("Rename")
 
 cmds.rowLayout(nc=1)
 pos_check = cmds.radioButtonGrp(l="Position : ", cw4=(60,65,65,10), la3=["rt","lf","None"], nrb=3, sl=3, h=25)
 cmds.setParent("..")
 
-wi=(1,136,136)
-cmds.rowLayout(nc=3, cw3=wi)
-cmds.text("", w=wi[0])
-hf = cmds.textField(w=wi[1], tx="Front", h=25)
-hb = cmds.textField(w=wi[2], tx="Back", h=25)
+btnLayout(2)
+cmds.text("", w=WI02[0])
+hf = cmds.textField(w=WI02[1], tx="Front", h=25)
+hb = cmds.textField(w=WI02[2], tx="Back", h=25)
 cmds.setParent("..")
 
-wi = (2,273)
-cmds.rowLayout(nc=2, cw2=wi)
+btnLayout(1)
 cmds.text("")
-cmds.button(l="Rename", c="hashRenamer()", w=wi[1], h=30)
+cmds.button(l="Rename", c="hashRenamer()", w=WI01[1], h=30)
 cmds.setParent("..")
 cmds.separator(h=1)
 
-wi = (2,273)
-cmds.rowLayout(nc=2, cw2=wi)
+btnLayout(1)
 cmds.text("")
-cmds.button(l="Set in order", c="setInOrder()", w=wi[1], h=25)
-endspace()
+cmds.button(l="Set in order", c="setInOrder()", w=WI01[1], h=25)
+endSpace()
 
 
 # Replace
-cmds.frameLayout(l="Replace", cll=True, w=285)
-startspace()
+frame("Replace")
 
 cmds.rowLayout(nc=1)
 replace_check = cmds.radioButtonGrp(l="Check : ", cw3=(80,80,10), la2=["Once","Hierarchy"], nrb=2, sl=1, h=25)
@@ -211,22 +205,19 @@ cmds.text(l="    Search for :", w=wi[0])
 search_w = cmds.textField(w=wi[1], tx="", h=25)
 cmds.setParent("..")
 
-wi=(80,195)
 cmds.rowLayout(nc=2, cw2=wi)
 cmds.text(l="Replace with :", w=wi[0])
 replace_w = cmds.textField(w=wi[1], tx="", h=25)
 cmds.setParent("..")
 
-wi = (2,273)
-cmds.rowLayout(nc=2, cw2=wi)
+btnLayout(1)
 cmds.text("")
-cmds.button(l="Replace", c="SearchReplace()", w=wi[1], h=30)
-endspace()
+cmds.button(l="Replace", c="SearchReplace()", w=WI01[1], h=30)
+endSpace()
 
 
 # Add
-cmds.frameLayout(l="Add", cll=True, w=285)
-startspace()
+frame("Add")
 
 cmds.rowLayout(nc=1)
 add_check = cmds.radioButtonGrp(l="Check : ", cw3=(50,80,10), la2=["Once","Hierarchy"], nrb=2, sl=1, h=25)
@@ -240,7 +231,6 @@ cmds.text("")
 cmds.button(l="Add", c="renamer(1)", w=wi[3], h=25)
 cmds.setParent("..")
 
-wi = (50,170,1,50)
 cmds.rowLayout(nc=4, cw4=wi)
 cmds.text("After", l="    After : ", w=wi[0])
 arn = cmds.textField(w=wi[1], h=25)
@@ -257,13 +247,12 @@ cmds.button(l="jnt", w=wi[2], c="add(2)", h=25)
 cmds.button(l="ctrl", w=wi[3], c="add(3)", h=25)
 cmds.setParent("..")
 
-wi = (1,90,90,90)
 cmds.rowLayout(nc=4, cw4=wi)
 cmds.text("")
 cmds.button(l="extra", w=wi[1], c="add(4)", h=25)
 cmds.button(l="loc", w=wi[2], c="add(5)", h=25)
 cmds.button(l="drv", w=wi[3], c="add(6)", h=25)
-endspace()
+endSpace()
 
 #--------------------------------------------------------------------------------------------#
 
@@ -271,31 +260,29 @@ endspace()
 cmds.setParent(WINDOW)
 ch3 = cmds.rowColumnLayout(w=285, nc=1)
 
+
+# ing: need to update (select)
 # Lock
-cmds.frameLayout(l="Lock", cll=True, w=285)
-startspace()
+frame("Lock")
 
 cmds.rowLayout(nc=1)
 lock_check = cmds.checkBoxGrp(l="Attr : ", ncb=4, cw5=(40,60,60,60,10), la4=["Trans","Rot","Scale","Vis"], v1=True, v2=True, v3=True, h=25)
 cmds.setParent("..")
 
-wi = (1,136,136)
-cmds.rowLayout(nc=3, cw3=wi)
+btnLayout(2)
 cmds.text("")
-cmds.button(l="Lock + UnKeyable", c="lockUnlock(True, False)", w=wi[1], h=25)
-cmds.button(l="Lock + Keyable", c="lockUnlock(True, True)", w=wi[2], h=25)
+cmds.button(l="Lock + UnKeyable", c="lockUnlock(True, False)", w=WI02[1], h=25)
+cmds.button(l="Lock + Keyable", c="lockUnlock(True, True)", w=WI02[2], h=25)
 cmds.setParent("..")
 
-wi = (2,273)
-cmds.rowLayout(nc=2, cw2=wi)
+btnLayout(1)
 cmds.text("")
-cmds.button(l="Unlock + Keyable", c="lockUnlock(False, True)", w=wi[1], h=25)
-endspace()
+cmds.button(l="Unlock + Keyable", c="lockUnlock(False, True)", w=WI01[1], h=25)
+endSpace()
 
-# ing, add delete
+
 # Attribute
-cmds.frameLayout(l="Attribute", cll=True, w=285)
-startspace()
+frame("Attribute")
 
 wi=(45,230)
 cmds.rowLayout(nc=2, cw2=wi)
@@ -308,32 +295,43 @@ cmds.rowLayout(nc=5, cw5=wi)
 cmds.text(l="   Reset :  ", w=wi[0])
 attr_check = cmds.checkBox(l="", w=wi[1], h=25)
 cmds.text(l="  Min/Max :", w=wi[2])
-min_attr = cmds.textField(w=wi[3], tx="0.0", h=25)
-max_attr = cmds.textField(w=wi[4], tx="1.0", h=25)
+min_attr = cmds.textField(w=wi[3], tx=-1.0, h=25)
+max_attr = cmds.textField(w=wi[4], tx=1.0, h=25)
 cmds.setParent("..")
 
-wi = (1,136,136)
-cmds.rowLayout(nc=3, cw3=wi)
-cmds.text("")
-cmds.button(l="Float Attr", c="addAttr(0)", w=wi[1], h=25)
-cmds.button(l="Bool Attr", c="addAttr(1)", w=wi[2], h=25)
-cmds.setParent("..")
-
-wi = (2,273)
+wi=(65,210)
 cmds.rowLayout(nc=2, cw2=wi)
+cmds.text(l="  Enum List : ", w=wi[0])
+en01_tx = cmds.textField(w=wi[1], tx="ON:OFF", h=25)
+cmds.setParent("..")
+
+btnLayout(1)
 cmds.text("")
-cmds.button(l="Separator Attr", c="addAttr(2)", w=wi[1], h=25)
+cmds.button(l="Add Float Attr", c="addAttr(0)", w=WI01[1], h=30)
+cmds.setParent("..")
+
+btnLayout(1)
+cmds.text("")
+cmds.button(l="Add Bool Attr", c="addAttr(1)", w=WI01[1], h=30)
 cmds.setParent("..")
 cmds.separator(h=1)
 
+btnLayout(2)
+cmds.text("")
+cmds.button(l="Separator Attr", c="addAttr(2)", w=WI02[1], h=30)
+# ing
+cmds.button(l="Delete Attr", c="deleteAttr()", w=WI02[2], h=30)
+cmds.setParent("..")
+
+# ing
 wi=(1,67,67,67,67)
 cmds.rowLayout(nc=5, cw5=wi)
 cmds.text("")
-cmds.button(l="TUP", c="lockUnlock(False, True)", w=wi[1], h=30)
-cmds.button(l="UP", c="lockUnlock(False, True)", w=wi[2], h=30)
-cmds.button(l="DOWN", c="lockUnlock(False, True)", w=wi[3], h=30)
-cmds.button(l="TDOWN", c="lockUnlock(False, True)", w=wi[4], h=30)
-endspace()
+cmds.button(l="UUP", c="changeAttrOder(up, 0)", w=wi[1], h=30)
+cmds.button(l="UP", c="changeAttrOder(up)", w=wi[2], h=30)
+cmds.button(l="DOWN", c="changeAttrOder(down)", w=wi[3], h=30)
+cmds.button(l="DDOWN", c="changeAttrOder(down, 0)", w=wi[4], h=30)
+endSpace()
 
 #--------------------------------------------------------------------------------------------#
 
@@ -343,8 +341,7 @@ ch4 = cmds.rowColumnLayout(w=285, nc=1)
 
 
 # Controller
-cmds.frameLayout(l="Controller", cll=True, w=285)
-startspace()
+frame("Controller")
 
 cmds.rowLayout(nc=1)
 ctrl_make = cmds.radioButtonGrp(l=" Make : ", cw3=(60,100,10), la2=["Each","Sum"], nrb=2, sl=1, h=25)
@@ -374,10 +371,9 @@ cmds.rowLayout(nc=1)
 const_check = cmds.checkBoxGrp(l="Constrain: ", ncb=4, cw5=(60,55,48,55,10), la4=["Parent","Point","Orient","Scale"], v1=True, h=25)
 cmds.setParent("..")
 
-wi = (2,273)
-cmds.rowLayout(nc=2, cw2=wi)
+btnLayout(1)
 cmds.text("")
-cmds.button(l="Create Controller", c="createController()", w=wi[1], h=30)
+cmds.button(l="Create Controller", c="createController()", w=WI01[1], h=30)
 cmds.setParent("..")
 cmds.separator(h=1)
 
@@ -388,12 +384,11 @@ cmds.text(l="   Text :  ", w=wi[0])
 tx = cmds.textField(w=wi[1], h=25)
 cmds.text("")
 cmds.button(l="Create", c="text()", w=wi[3], h=25)
-endspace()
+endSpace()
 
 
 # Constrain
-cmds.frameLayout(l="Constrain", cll=True, w=285)
-startspace()
+frame("Constrain")
 
 cmds.rowLayout(nc=1)
 mo_const_check = cmds.checkBoxGrp(l="Constrain: ", ncb=4, cw5=(60,55,48,55,10), la4=["Parent","Point","Orient","Scale"], v1=True, h=25)
@@ -403,15 +398,15 @@ cmds.rowLayout(nc=1)
 mo = cmds.radioButtonGrp(l="Maintain offset : ", cw3=(93,80,50), la2=["On","Off"], nrb=2, sl=1, h=25)
 cmds.setParent("..")
 
-wi = (2,273)
-cmds.rowLayout(nc=2, cw2=wi)
+btnLayout(1)
 cmds.text("")
-cmds.button(l="Constrain", c="const()", w=wi[1], h=30)
-endspace()
+cmds.button(l="Constrain", c="const()", w=WI01[1], h=30)
+endSpace()
 
 
 # Color Picker
-cmds.frameLayout(l="Color Picker", cll=True, w=285)
+frame("Color Picker", 0)
+
 wi=(45,45,45,45,45,45)
 cmds.rowLayout(nc=6, cw6=wi)
 cmds.button(l="", w=wi[0], c="colorPicker(13)", bgc=(1,0,0), h=30)
@@ -426,26 +421,23 @@ cmds.setParent("..")
 
 # ing
 # Rivet
-cmds.frameLayout(l="Rivet", cll=True, w=285)
-startspace()
+frame("Rivet")
 
 cmds.rowLayout(nc=1)
 rivet_check = cmds.radioButtonGrp(l="Check : ", cw3=(50,90,10), la2=["Each","Sum"], nrb=2, sl=1, h=25)
 cmds.setParent("..")
 
-wi = (2,273)
-cmds.rowLayout(nc=2, cw2=wi)
+btnLayout(1)
 cmds.text("")
-cmds.button(l="Rivet", c="rivet()", w=wi[1], h=30)
-endspace()
+cmds.button(l="Rivet", c="rivet()", w=WI01[1], h=30)
+endSpace()
 
 
 # ing
 # Motion path
-cmds.frameLayout(l="Motion path", cll=True, w=285)
-startspace()
+frame("Motion path")
 
-endspace()
+endSpace()
 
 #--------------------------------------------------------------------------------------------#
 
@@ -512,47 +504,49 @@ def lockUnlock(i, j):
         if cmds.checkBoxGrp(lock_check, q=True, v4=True):
             cmds.setAttr(obj+".visibility", l=i, k=j)
 
-# ing
-#addAttr -ln "wetfgthjuki"  -at double  -min 0 -max 1 -dv 0 |locator1;
-#setAttr -e-keyable true |locator1.wetfgthjuki;
-#addAttr -ln "dfg" -nn "eerw" -at double  -dv 0 |locator1;
-#setAttr -e-keyable true |locator1.dfg;
-
-#addAttr -ln "sdf"  -at double  -dv 0 |locator1;
-#setAttr -e-channelBox true |locator1.sdf;
-
-#catch (`deleteAttr -attribute "sdf" "locator1"`);
-
-#addAttr -ln "dngcdcv" -nn "------" -at "enum" -en "------:"  |locator1;
-
-def addAttr(i):
+def addAttr(tmp):
     attr_text = cmds.textField(attr_tx, q=True, tx=True)
-    min_num = cmds.textField(min_attr, q=True, tx=True)
-    max_num = cmds.textField(max_attr, q=True, tx=True)
     
     objs = pm.ls(sl=True)
     for obj in objs:
-        if i == 0:
+        if tmp == 0:
             if cmds.checkBox(attr_check, q=True, v=True):
-                pass
+                pm.addAttr(obj, ln=attr_text, at="double", dv=0)
+                pm.setAttr(obj+"."+attr_text, k=True)
             else:
-                pass
-        elif i == 1:
-            cnt = 0
-            if pm.attributeQuery("separator"+str(cnt), n=obj, e=True):
-                print "!!!!"
-            pass
+                min_num = float(cmds.textField(min_attr, q=True, tx=True))
+                max_num = float(cmds.textField(max_attr, q=True, tx=True))
+                pm.addAttr(obj, ln=attr_text, at="double", dv=0, min=min_num, max=max_num)
+                pm.setAttr(obj+"."+attr_text, k=True)
+        elif tmp == 1:
+                en = cmds.textField(en01_tx, q=True, tx=True)
+                pm.addAttr(obj, ln=attr_text, at="enum", en=en)
+                pm.setAttr(obj+"."+attr_text, k=True)
         else:
             cnt = 0
             flag = True
             while flag:
                 cnt_str = "separator"+str(cnt)
-                if pm.attributeQuery(cnt_str, n=obj, e=True):
+                if pm.attributeQuery(cnt_str, n=obj.name(), ex=True):
                     cnt += 1
                 else:
-                    pm.addAttr(obj, ln=cnt_str, nn="------", at="enum", en="------:")
+                    pm.addAttr(obj, ln=cnt_str, nn="----------", at="enum", en="--------:")
                     pm.setAttr(obj+"."+cnt_str, cb=True)
                     flag = False
+
+# ing
+#catch (`deleteAttr -attribute "sdf" "locator1"`);
+def deleteAttr():
+    obj = pm.ls(sl=True)
+    print pm.listAttr(obj, ud=True)
+#    pm.deleteAttr (pm.ls(sl=True), at="separator4")
+
+# ing
+def changeAttrOder(updown, tmp=True):
+    if updown == "up":
+        pass
+    else:
+        pass
 
 #--------------------------------------------------------------------------------------------#
 
@@ -772,7 +766,7 @@ def color():
     cmds.button(l="", w=wi[1], h=60, c="colorPicker(18)", bgc=(0,1,1))
     cmds.setParent("..")
     
-    wi2=(41,40,40,41,40,40)
+    wi2=(41,41,41,41,41,41)
     cmds.rowLayout(nc=6, cw6=wi2)
     cmds.button(l="", w=wi2[0], h=40, c="colorPicker(20)", bgc=(1,0.75,0.75))
     cmds.button(l="", w=wi2[1], h=40, c="colorPicker(21)", bgc=(1,0.7,0.5))

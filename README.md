@@ -58,6 +58,7 @@ print cir1, cir2
 
 - [x] joint, ik, weights options, set driven key, etc...
 - [x] constrain: maintain offset toggle
+- [x] quick constrain (1:1, M:1)
 - [x] quick add, lock, unlock attribute
 - [x] rename: search and replace
 - [x] namer(after): Exclude *shape => Include joint, transform

@@ -18,8 +18,10 @@ CREATEALL = CREATE01 + CREATE02
 def btnLayout(cnt):
     if cnt == 1:
         cmds.rowLayout(nc=2, cw2=WI01)
+        cmds.text("")
     elif cnt == 2:
         cmds.rowLayout(nc=3, cw3=WI02)
+        cmds.text("")
 
 def frame(text, tmp=True):
     cmds.frameLayout(l=text, cll=True, w=285)
@@ -84,7 +86,6 @@ cmds.setParent("..")
 frame("Create")
 
 btnLayout(2)
-cmds.text("", w=WI02[0])
 cmds.button(l="Loc", c="cmds.CreateLocator()", w=WI02[1], h=25)
 cmds.button(l="Curve", c="cmds.EPCurveTool()", w=WI02[2], h=25)
 cmds.setParent("..")
@@ -117,13 +118,11 @@ cmds.button(l="Node Editor", c="cmds.NodeEditorWindow()", w=WI01[1], h=30)
 cmds.setParent("..")
 
 btnLayout(2)
-cmds.text("", w=WI02[0])
 cmds.button(l="Set Driven Key", c="cmds.SetDrivenKeyOptions()()", w=WI02[1], h=30)
 cmds.button(l="Connection Editor", c="cmds.ConnectionEditor()", w=WI02[2], h=30)
 cmds.setParent("..")
 
 btnLayout(2)
-cmds.text(" ", w=WI02[0])
 create_options = cmds.optionMenu(w=WI02[1], cc=applyMenuItem, h=25)
 for obj in CREATE01:
     cmds.menuItem(l=obj)
@@ -137,25 +136,24 @@ endSpace()
 frame("TRS")
 
 cmds.rowLayout(nc=1)
-match_check = cmds.checkBoxGrp(l="Attr : ", ncb=4, cw5=(40,55,55,55,10), la4=["Trans","Rot","Scale","Pivots"], v1=True, h=25)
+match_check = cmds.checkBoxGrp(l="Attr : ", ncb=4, cw5=(40,58,52,55,10), la4=["Trans","Rot","Scale","Pivots"], v1=True, v2=True, h=25)
 cmds.setParent("..")
 
 btnLayout(1)
-cmds.text("")
-cmds.button(l="Match", c="match()", w=WI01[1], h=30)
+cmds.button(l="Match", c="matchFreeze()", w=WI01[1], h=30)
 cmds.setParent("..")
 
-wi = (1,90,90,90)
-cmds.rowLayout(nc=4, cw4=wi)
-cmds.text("")
-cmds.button(l="Freeze Tfm", c="cmds.FreezeTransformations()", w=wi[1], h=30)
-cmds.button(l="Rest Tfm", c="cmds.ResetTransformations()", w=wi[2], h=30)
-cmds.button(l="Center Pivot", c="cmds.CenterPivot()", w=wi[3], h=30)
+btnLayout(1)
+cmds.button(l="Freeze", c="matchFreeze(0)", w=WI01[1], h=30)
 cmds.setParent("..")
 cmds.separator(h=1)
 
 btnLayout(2)
-cmds.text("", w=WI02[0])
+cmds.button(l="Rest Tfm", c="cmds.ResetTransformations()", w=WI02[1], h=30)
+cmds.button(l="Center Pivot", c="cmds.CenterPivot()", w=WI02[2], h=30)
+cmds.setParent("..")
+
+btnLayout(2)
 cmds.button(l="Delete Hist", c="cmds.DeleteHistory()", w=WI02[1], h=30)
 cmds.button(l="LBA", c="cmds.ToggleLocalRotationAxes()", w=WI02[2], h=30)
 endSpace()
@@ -175,19 +173,16 @@ pos_check = cmds.radioButtonGrp(l="Position : ", cw4=(60,65,65,10), la3=["rt","l
 cmds.setParent("..")
 
 btnLayout(2)
-cmds.text("", w=WI02[0])
 hf = cmds.textField(w=WI02[1], tx="Front", h=25)
 hb = cmds.textField(w=WI02[2], tx="Back", h=25)
 cmds.setParent("..")
 
 btnLayout(1)
-cmds.text("")
 cmds.button(l="Rename", c="hashRenamer()", w=WI01[1], h=30)
 cmds.setParent("..")
 cmds.separator(h=1)
 
 btnLayout(1)
-cmds.text("")
 cmds.button(l="Set in order", c="setInOrder()", w=WI01[1], h=25)
 endSpace()
 
@@ -211,7 +206,6 @@ replace_w = cmds.textField(w=wi[1], tx="", h=25)
 cmds.setParent("..")
 
 btnLayout(1)
-cmds.text("")
 cmds.button(l="Replace", c="SearchReplace()", w=WI01[1], h=30)
 endSpace()
 
@@ -266,18 +260,20 @@ ch3 = cmds.rowColumnLayout(w=285, nc=1)
 frame("Lock")
 
 cmds.rowLayout(nc=1)
+lock_user_check = cmds.checkBoxGrp(l=" User : ", ncb=1, cw2=(40,10), h=25)
+cmds.setParent("..")
+
+cmds.rowLayout(nc=1)
 lock_check = cmds.checkBoxGrp(l="Attr : ", ncb=4, cw5=(40,60,60,60,10), la4=["Trans","Rot","Scale","Vis"], v1=True, v2=True, v3=True, h=25)
 cmds.setParent("..")
 
 btnLayout(2)
-cmds.text("")
-cmds.button(l="Lock + UnKeyable", c="lockUnlock(True, False)", w=WI02[1], h=25)
-cmds.button(l="Lock + Keyable", c="lockUnlock(True, True)", w=WI02[2], h=25)
+cmds.button(l="Lock + UnKeyable", c="lockUnlock(True, False)", w=WI02[1], h=30)
+cmds.button(l="Lock + Keyable", c="lockUnlock(True, True)", w=WI02[2], h=30)
 cmds.setParent("..")
 
 btnLayout(1)
-cmds.text("")
-cmds.button(l="Unlock + Keyable", c="lockUnlock(False, True)", w=WI01[1], h=25)
+cmds.button(l="Unlock + Keyable", c="lockUnlock(False, True)", w=WI01[1], h=30)
 endSpace()
 
 
@@ -306,18 +302,15 @@ en01_tx = cmds.textField(w=wi[1], tx="ON:OFF", h=25)
 cmds.setParent("..")
 
 btnLayout(1)
-cmds.text("")
 cmds.button(l="Add Float Attr", c="addAttr(0)", w=WI01[1], h=30)
 cmds.setParent("..")
 
 btnLayout(1)
-cmds.text("")
 cmds.button(l="Add Bool Attr", c="addAttr(1)", w=WI01[1], h=30)
 cmds.setParent("..")
 cmds.separator(h=1)
 
 btnLayout(2)
-cmds.text("")
 cmds.button(l="Separator Attr", c="addAttr(2)", w=WI02[1], h=30)
 # ing
 cmds.button(l="Delete Attr", c="deleteAttr()", w=WI02[2], h=30)
@@ -368,11 +361,10 @@ axis = cmds.radioButtonGrp(l="Axis : ", la3=["X","Y","Z"], nrb=3, cw4=(60,70,70,
 cmds.setParent("..")
 
 cmds.rowLayout(nc=1)
-const_check = cmds.checkBoxGrp(l="Constrain: ", ncb=4, cw5=(60,55,48,55,10), la4=["Parent","Point","Orient","Scale"], v1=True, h=25)
+const_check = cmds.checkBoxGrp(l=" Constrain: ", ncb=4, cw5=(60,55,48,55,10), la4=["Parent","Point","Orient","Scale"], v1=True, h=25)
 cmds.setParent("..")
 
 btnLayout(1)
-cmds.text("")
 cmds.button(l="Create Controller", c="createController()", w=WI01[1], h=30)
 cmds.setParent("..")
 cmds.separator(h=1)
@@ -391,7 +383,11 @@ endSpace()
 frame("Constrain")
 
 cmds.rowLayout(nc=1)
-mo_const_check = cmds.checkBoxGrp(l="Constrain: ", ncb=4, cw5=(60,55,48,55,10), la4=["Parent","Point","Orient","Scale"], v1=True, h=25)
+mo_quick_check = cmds.checkBoxGrp(l=" Quick: ", ncb=1, cw2=(60,10), h=25)
+cmds.setParent("..")
+
+cmds.rowLayout(nc=1)
+mo_const_check = cmds.checkBoxGrp(l=" Constrain: ", ncb=4, cw5=(60,55,48,55,10), la4=["Parent","Point","Orient","Scale"], v1=True, h=25)
 cmds.setParent("..")
 
 cmds.rowLayout(nc=1)
@@ -399,7 +395,6 @@ mo = cmds.radioButtonGrp(l="Maintain offset : ", cw3=(93,80,50), la2=["On","Off"
 cmds.setParent("..")
 
 btnLayout(1)
-cmds.text("")
 cmds.button(l="Constrain", c="const()", w=WI01[1], h=30)
 endSpace()
 
@@ -428,7 +423,6 @@ rivet_check = cmds.radioButtonGrp(l="Check : ", cw3=(50,90,10), la2=["Each","Sum
 cmds.setParent("..")
 
 btnLayout(1)
-cmds.text("")
 cmds.button(l="Rivet", c="rivet()", w=WI01[1], h=30)
 endSpace()
 
@@ -462,15 +456,23 @@ def colorPicker(num):
         cmds.setAttr(col+".overrideColor", num)
 
 
-def match():
-    if cmds.checkBoxGrp(match_check, q=True, v1=True):
-        cmds.MatchTranslation();
-    if cmds.checkBoxGrp(match_check, q=True, v2=True):
-        cmds.MatchRotation();
-    if cmds.checkBoxGrp(match_check, q=True, v3=True):
-        cmds.MatchScaling();
-    if cmds.checkBoxGrp(match_check, q=True, v4=True):
-        cmds.MatchPivots();
+def matchFreeze(tmp=True):
+    if tmp:
+        if cmds.checkBoxGrp(match_check, q=True, v1=True):
+            cmds.MatchTranslation()
+        if cmds.checkBoxGrp(match_check, q=True, v2=True):
+            cmds.MatchRotation()
+        if cmds.checkBoxGrp(match_check, q=True, v3=True):
+            cmds.MatchScaling()
+        if cmds.checkBoxGrp(match_check, q=True, v4=True):
+            cmds.MatchPivots()
+    else:
+        if cmds.checkBoxGrp(match_check, q=True, v1=True):
+            cmds.makeIdentity(a=True, t=1, r=0, s=0, n=0, pn=1)
+        if cmds.checkBoxGrp(match_check, q=True, v2=True):
+            cmds.makeIdentity(a=True, t=0, r=1, s=0, n=0, pn=1)
+        if cmds.checkBoxGrp(match_check, q=True, v3=True):
+            cmds.makeIdentity(a=True, t=0, r=0, s=1, n=0, pn=1)
 
 
 def setInOrder():
@@ -503,6 +505,8 @@ def lockUnlock(i, j):
                 cmds.setAttr(obj+attr1+attr2, l=i, k=j)
         if cmds.checkBoxGrp(lock_check, q=True, v4=True):
             cmds.setAttr(obj+".visibility", l=i, k=j)
+
+#--------------------------------------------------------------------------------------------#
 
 def addAttr(tmp):
     attr_text = cmds.textField(attr_tx, q=True, tx=True)
@@ -550,18 +554,45 @@ def changeAttrOder(updown, tmp=True):
 
 #--------------------------------------------------------------------------------------------#
 
-# ing
 def const():
-    a = cmds.ls(sl=True)
-    for x in range(0, len(a)):
-        if x == 0:
-            constrains(a[0], a[1], 1)
-        if x == 1:
-            pass
-        if x % 2 == 0:
-            constrains(a[x], a[x+1], 1)
+    objs = cmds.ls(sl=True)
+    if len(objs) == 1:
+        cmds.warning("Select only one obj!")
+    if cmds.checkBoxGrp(mo_quick_check, q=True, v1=True):
+        if len(objs) % 2 != 0:
+            cmds.warning("Select even numbers of objs!")
         else:
-            pass
+            for x in range(0, len(objs), 2):
+                constrains(objs[x], objs[x+1], 1)
+    else:
+        for x in range(0, len(objs)-1):
+            constrains(objs[x], objs[len(objs)-1], 1)
+
+
+def constrains(con, obj, i):
+    if i == 0:
+        a = const_check
+    else:
+        a = mo_const_check
+        if cmds.radioButtonGrp(mo, q=True, sl=1) == 2:
+            if cmds.checkBoxGrp(a, q=True, v1=True):
+                cmds.parentConstraint(con, obj)
+            if cmds.checkBoxGrp(a, q=True, v2=True):
+                cmds.pointConstraint(con, obj)
+            if cmds.checkBoxGrp(a, q=True, v3=True):
+                cmds.orientConstraint(con, obj)
+            if cmds.checkBoxGrp(a, q=True, v4=True):
+                cmds.scaleConstraint(con, obj)
+            return
+    if cmds.checkBoxGrp(a, q=True, v1=True):
+        cmds.parentConstraint(con, obj, mo=True)
+    if cmds.checkBoxGrp(a, q=True, v2=True):
+        cmds.pointConstraint(con, obj, mo=True)
+    if cmds.checkBoxGrp(a, q=True, v3=True):
+        cmds.orientConstraint(con, obj, mo=True)
+    if cmds.checkBoxGrp(a, q=True, v4=True):
+        cmds.scaleConstraint(con, obj, mo=True)
+    cmds.DeleteHistory(con)
 
 
 def createController():
@@ -603,32 +634,6 @@ def selectShape(obj):
     cmds.delete("ex")
     if cmds.radioButtonGrp(ctrl_make, q=True, sl=1) == 1:
         constrains(c, obj, 0)
-
-
-def constrains(con, obj, i):
-    if i == 0:
-        a = const_check
-    else:
-        a = mo_const_check
-        if cmds.radioButtonGrp(mo, q=True, sl=1) == 2:
-            if cmds.checkBoxGrp(a, q=True, v1=True):
-                cmds.parentConstraint(con, obj)
-            if cmds.checkBoxGrp(a, q=True, v2=True):
-                cmds.pointConstraint(con, obj)
-            if cmds.checkBoxGrp(a, q=True, v3=True):
-                cmds.orientConstraint(con, obj)
-            if cmds.checkBoxGrp(a, q=True, v4=True):
-                cmds.scaleConstraint(con, obj)
-            return
-    if cmds.checkBoxGrp(a, q=True, v1=True):
-        cmds.parentConstraint(con, obj, mo=True)
-    if cmds.checkBoxGrp(a, q=True, v2=True):
-        cmds.pointConstraint(con, obj, mo=True)
-    if cmds.checkBoxGrp(a, q=True, v3=True):
-        cmds.orientConstraint(con, obj, mo=True)
-    if cmds.checkBoxGrp(a, q=True, v4=True):
-        cmds.scaleConstraint(con, obj, mo=True)
-    cmds.DeleteHistory(con)
 
 #--------------------------------------------------------------------------------------------#
 

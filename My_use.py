@@ -100,7 +100,7 @@ createBtn(
 )
 createBtn(
     "  Handle : ",
-    [["IK", "cmds.IKHandleTool()"], ["IK Spline", "cmds.ikHandle(sol='ikSplineSolver', ns=4)"]]
+    [["IK", "cmds.IKHandleToolOptions()"], ["IK Spline", "cdms.IKSplineHandleToolOptions()"]]
 )
 createBtn(
     "      Skin : ",
@@ -108,7 +108,11 @@ createBtn(
 )
 createBtn(
     " Weights: ",
-    [["Paint", "cmds.ArtPaintSkinWeightsToolOptions()"], ["Mirror", "cmds.MirrorSkinWeightsOptions()"]]
+    [["Paint", "cmds.ArtPaintSkinWeightsToolOptions()"], ["WH", "cmds.WeightHammer()"]]
+)
+createBtn(
+    "",
+    [["CpEd", "cmds.ComponentEditor()"], ["Mirror", "cmds.MirrorSkinWeightsOptions()"]]
 )
 cmds.separator(h=1)
 
@@ -136,7 +140,7 @@ endSpace()
 frame("TRS")
 
 cmds.rowLayout(nc=1)
-match_check = cmds.checkBoxGrp(l="Attr : ", ncb=4, cw5=(40,58,52,55,10), la4=["Trans","Rot","Scale","Pivots"], v1=True, v2=True, h=25)
+match_check = cmds.checkBoxGrp(l="Attr : ", ncb=4, cw5=(40,58,52,55,10), la4=["Trans","Rot","Scale","Pivots"], v1=True, v2=True, v3=True, h=25)
 cmds.setParent("..")
 
 btnLayout(1)
@@ -144,7 +148,7 @@ cmds.button(l="Match", c="matchFreeze()", w=WI01[1], h=30)
 cmds.setParent("..")
 
 btnLayout(1)
-cmds.button(l="Freeze", c="matchFreeze(0)", w=WI01[1], h=30)
+cmds.button(l="Freeze", c="matchFreeze(False)", w=WI01[1], h=30)
 cmds.setParent("..")
 cmds.separator(h=1)
 
@@ -250,7 +254,7 @@ endSpace()
 
 #--------------------------------------------------------------------------------------------#
 
-# 3: Attribute
+# 3: Attr
 cmds.setParent(WINDOW)
 ch3 = cmds.rowColumnLayout(w=285, nc=1)
 
@@ -320,15 +324,15 @@ cmds.setParent("..")
 wi=(1,67,67,67,67)
 cmds.rowLayout(nc=5, cw5=wi)
 cmds.text("")
-cmds.button(l="UUP", c="changeAttrOder(up, 0)", w=wi[1], h=30)
-cmds.button(l="UP", c="changeAttrOder(up)", w=wi[2], h=30)
-cmds.button(l="DOWN", c="changeAttrOder(down)", w=wi[3], h=30)
-cmds.button(l="DDOWN", c="changeAttrOder(down, 0)", w=wi[4], h=30)
+cmds.button(l="UUP", c="deleteAttr(True, True)", w=wi[1], h=30)
+cmds.button(l="UP", c="changeAttrOder(True)", w=wi[2], h=30)
+cmds.button(l="DOWN", c="changeAttrOder(False)", w=wi[3], h=30)
+cmds.button(l="DDOWN", c="deleteAttr(False, True)", w=wi[4], h=30)
 endSpace()
 
 #--------------------------------------------------------------------------------------------#
 
-# 4: Rigging
+# 4: Ctrl
 cmds.setParent(WINDOW)
 ch4 = cmds.rowColumnLayout(w=285, nc=1)
 
@@ -387,7 +391,7 @@ mo_quick_check = cmds.checkBoxGrp(l=" Quick: ", ncb=1, cw2=(60,10), h=25)
 cmds.setParent("..")
 
 cmds.rowLayout(nc=1)
-mo_const_check = cmds.checkBoxGrp(l=" Constrain: ", ncb=4, cw5=(60,55,48,55,10), la4=["Parent","Point","Orient","Scale"], v1=True, h=25)
+mo_const_check = cmds.checkBoxGrp(l=" Constrain: ", ncb=4, cw5=(60,55,48,55,10), la4=["Parent","Point","Orient","Scale"], v2=True, v3=True, h=25)
 cmds.setParent("..")
 
 cmds.rowLayout(nc=1)
@@ -435,7 +439,18 @@ endSpace()
 
 #--------------------------------------------------------------------------------------------#
 
-cmds.tabLayout(tabs, edit=True, tabLabel=((ch1, "Create"), (ch2, "Naming"), (ch3, "Attribute"), (ch4, "Rigging")))
+# 4: Weight
+cmds.setParent(WINDOW)
+ch5 = cmds.rowColumnLayout(w=285, nc=1)
+
+# ing
+# Copy Weight
+
+
+
+#--------------------------------------------------------------------------------------------#
+
+cmds.tabLayout(tabs, edit=True, tabLabel=((ch1, "Create"), (ch2, "Naming"), (ch3, "Attr"), (ch4, "Ctrl"), (ch5, "Weight")))
 
 cmds.showWindow(TOOLNAME)
 
@@ -538,19 +553,68 @@ def addAttr(tmp):
                     pm.setAttr(obj+"."+cnt_str, cb=True)
                     flag = False
 
-# ing
-#catch (`deleteAttr -attribute "sdf" "locator1"`);
-def deleteAttr():
-    obj = pm.ls(sl=True)
-    print pm.listAttr(obj, ud=True)
-#    pm.deleteAttr (pm.ls(sl=True), at="separator4")
+
+def deleteAttr(up=False, tmp=False):
+    objs = pm.ls(sl=True)
+    attrs = pm.channelBox("mainChannelBox", q=True, sma=True)
+    sl_attrs = pm.channelBox("mainChannelBox", q=True, sma=True)
+    
+    for obj in objs:
+        if up:
+            attrs = pm.listAttr(obj, ud=True)
+            for attr in sl_attrs:
+                attrs.remove(attr)
+        for attr in attrs:
+            try:
+                pm.deleteAttr (obj, at=attr)
+                if tmp:
+                    pm.undo()
+            except:
+                pass
+
 
 # ing
-def changeAttrOder(updown, tmp=True):
-    if updown == "up":
-        pass
+def changeAttrOder(updown):
+    if updown:
+        objs = pm.ls(sl=True)
+        sl_attrs = pm.channelBox("mainChannelBox", q=True, sma=True)
+        
+        for obj in objs:
+            attrs = pm.listAttr(obj, ud=True)
+            print attrs, len(attrs), attrs[0]
+            flag = False
+            attr_list = []
+            for x in range(0, len(attrs)):
+                print attrs[x]
+                if flag:
+                    attr_list += attrs[x]
+                elif attrs[x] == sl_attrs[0]:
+                    attr_list += attrs[x-1]
+                elif attrs[x] == sl_attrs[-1]:
+                    flag = True
+                elif attrs in sl_attrs:
+                    continue
+            print "ls: ", attr_list
+            for attr in attr_list:
+                pm.deleteAttr(obj, at=attr)
+                pm.undo()
     else:
-        pass
+        objs = pm.ls(sl=True)
+        sl_attrs = pm.channelBox("mainChannelBox", q=True, sma=True)
+        
+        for obj in objs:
+            attrs = pm.listAttr(obj, ud=True)
+            flag = False
+            for x in range(0, len(attrs)):
+                print attrs[x]
+                if attrs[x] == sl_attrs[0]:
+                    pm.deleteAttr(obj, at=attrs[x-1])
+                    pm.undo()
+                    x += len(attrs)
+                    flag = True
+                elif flag == True:
+                    pm.deleteAttr(obj, at=attrs[x])
+                    pm.undo()
 
 #--------------------------------------------------------------------------------------------#
 

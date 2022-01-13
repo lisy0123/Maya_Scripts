@@ -316,7 +316,6 @@ cmds.separator(h=1)
 
 btnLayout(2)
 cmds.button(l="Separator Attr", c="addAttr(2)", w=WI02[1], h=30)
-# ing
 cmds.button(l="Delete Attr", c="deleteAttr()", w=WI02[2], h=30)
 cmds.setParent("..")
 
@@ -573,48 +572,32 @@ def deleteAttr(up=False, tmp=False):
                 pass
 
 
-# ing
 def changeAttrOder(updown):
+    objs = pm.ls(sl=True)
+    sl_attrs = pm.channelBox("mainChannelBox", q=True, sma=True)
     if updown:
-        objs = pm.ls(sl=True)
-        sl_attrs = pm.channelBox("mainChannelBox", q=True, sma=True)
-        
-        for obj in objs:
-            attrs = pm.listAttr(obj, ud=True)
-            print attrs, len(attrs), attrs[0]
-            flag = False
-            attr_list = []
-            for x in range(0, len(attrs)):
-                print attrs[x]
-                if flag:
-                    attr_list += attrs[x]
-                elif attrs[x] == sl_attrs[0]:
-                    attr_list += attrs[x-1]
-                elif attrs[x] == sl_attrs[-1]:
-                    flag = True
-                elif attrs in sl_attrs:
-                    continue
-            print "ls: ", attr_list
-            for attr in attr_list:
-                pm.deleteAttr(obj, at=attr)
-                pm.undo()
-    else:
-        objs = pm.ls(sl=True)
-        sl_attrs = pm.channelBox("mainChannelBox", q=True, sma=True)
-        
         for obj in objs:
             attrs = pm.listAttr(obj, ud=True)
             flag = False
             for x in range(0, len(attrs)):
-                print attrs[x]
                 if attrs[x] == sl_attrs[0]:
                     pm.deleteAttr(obj, at=attrs[x-1])
                     pm.undo()
-                    x += len(attrs)
+                    x += len(sl_attrs)
                     flag = True
+                elif attrs[x] in sl_attrs:
+                    if x+len(sl_attrs)-1 < len(attrs):
+                        pm.deleteAttr(obj, at=attrs[x+len(sl_attrs)-1])
+                        pm.undo()
+                        x += 1
                 elif flag == True:
                     pm.deleteAttr(obj, at=attrs[x])
                     pm.undo()
+    # ing
+    else:
+        for obj in objs:
+            pass
+            
 
 #--------------------------------------------------------------------------------------------#
 

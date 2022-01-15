@@ -100,7 +100,7 @@ createBtn(
 )
 createBtn(
     "  Handle : ",
-    [["IK", "cmds.IKHandleToolOptions()"], ["IK Spline", "cdms.IKSplineHandleToolOptions()"]]
+    [["IK", "cmds.IKHandleToolOptions()"], ["IK Spline", "cmds.IKSplineHandleToolOptions()"]]
 )
 createBtn(
     "      Skin : ",
@@ -596,7 +596,22 @@ def changeAttrOder(updown):
     # ing
     else:
         for obj in objs:
-            pass
+            attrs = pm.listAttr(obj, ud=True)
+            flag = False
+            for x in range(0, len(attrs)):
+                if attrs[x] == sl_attrs[0]:
+                    pm.deleteAttr(obj, at=attrs[x-1])
+                    pm.undo()
+                    x += len(sl_attrs)
+                    flag = True
+                elif attrs[x] in sl_attrs:
+                    if x+len(sl_attrs)-1 < len(attrs):
+                        pm.deleteAttr(obj, at=attrs[x+len(sl_attrs)-1])
+                        pm.undo()
+                        x += 1
+                elif flag == True:
+                    pm.deleteAttr(obj, at=attrs[x])
+                    pm.undo()
             
 
 #--------------------------------------------------------------------------------------------#

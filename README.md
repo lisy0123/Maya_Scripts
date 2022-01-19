@@ -64,8 +64,9 @@ print cir1, cir2
 - [x] namer(after): Exclude *shape => Include joint, transform
 - [x] set in order => Solved by ordering it from the bottom, not from the top.
 - [x] text didn't work well (123..,[]!@#$%%^&*)
-- [ ] add/delete attribute
-- [ ] change attribute order
+- [x] add/delete attribute
+- [x] change attribute order
+- [ ] constrain
 - [ ] rivet (Each/Sum)
 - [ ] motion path (Basic/Advance)
 - [ ] joint copy for ik spline

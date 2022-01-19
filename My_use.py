@@ -319,7 +319,6 @@ cmds.button(l="Separator Attr", c="addAttr(2)", w=WI02[1], h=30)
 cmds.button(l="Delete Attr", c="deleteAttr()", w=WI02[2], h=30)
 cmds.setParent("..")
 
-# ing
 wi=(1,67,67,67,67)
 cmds.rowLayout(nc=5, cw5=wi)
 cmds.text("")
@@ -385,16 +384,18 @@ endSpace()
 # Constrain
 frame("Constrain")
 
+btnLayout(2)
+mo_quick_check = cmds.checkBoxGrp(l="Quick : ", ncb=1, cw2=(60,10), h=25)
+mo_check = cmds.checkBoxGrp(l="Maintain offset : ", ncb=1, v1=True, cw2=(90,10), h=25)
+cmds.setParent("..")
+
+# ing
 cmds.rowLayout(nc=1)
-mo_quick_check = cmds.checkBoxGrp(l=" Quick: ", ncb=1, cw2=(60,10), h=25)
+mo_const_check = cmds.checkBoxGrp(l=" Vector: ", ncb=4, cw5=(60,50,50,50,10), la4=["All","X","Y","Z"], v2=True, v3=True, h=25)
 cmds.setParent("..")
 
 cmds.rowLayout(nc=1)
 mo_const_check = cmds.checkBoxGrp(l=" Constrain: ", ncb=4, cw5=(60,55,48,55,10), la4=["Parent","Point","Orient","Scale"], v2=True, v3=True, h=25)
-cmds.setParent("..")
-
-cmds.rowLayout(nc=1)
-mo = cmds.radioButtonGrp(l="Maintain offset : ", cw3=(93,80,50), la2=["On","Off"], nrb=2, sl=1, h=25)
 cmds.setParent("..")
 
 btnLayout(1)
@@ -572,48 +573,48 @@ def deleteAttr(up=False, tmp=False):
                 pass
 
 
+def subDelAttr(obj, string):
+    pm.deleteAttr(obj, at=string)
+    pm.undo()
+
+
 def changeAttrOder(updown):
     objs = pm.ls(sl=True)
     sl_attrs = pm.channelBox("mainChannelBox", q=True, sma=True)
+    
     if updown:
         for obj in objs:
             attrs = pm.listAttr(obj, ud=True)
             flag = False
-            for x in range(0, len(attrs)):
+            for x in range(len(attrs)):
                 if attrs[x] == sl_attrs[0]:
-                    pm.deleteAttr(obj, at=attrs[x-1])
-                    pm.undo()
+                    subDelAttr(obj, attrs[x-1])
                     x += len(sl_attrs)
                     flag = True
                 elif attrs[x] in sl_attrs:
                     if x+len(sl_attrs)-1 < len(attrs):
-                        pm.deleteAttr(obj, at=attrs[x+len(sl_attrs)-1])
-                        pm.undo()
+                        subDelAttr(obj, attrs[x+len(sl_attrs)-1])
                         x += 1
                 elif flag == True:
-                    pm.deleteAttr(obj, at=attrs[x])
-                    pm.undo()
-    # ing
+                    subDelAttr(obj, attrs[x])
     else:
         for obj in objs:
             attrs = pm.listAttr(obj, ud=True)
             flag = False
-            for x in range(0, len(attrs)):
+            for x in range(len(attrs)):
                 if attrs[x] == sl_attrs[0]:
-                    pm.deleteAttr(obj, at=attrs[x-1])
-                    pm.undo()
-                    x += len(sl_attrs)
-                    flag = True
+                    if x+len(sl_attrs) < len(attrs):
+                        tmp = attrs[x+len(sl_attrs)]
+                        subDelAttr(obj, tmp)
+                        subDelAttr(obj, attrs[x])
+                        x += len(sl_attrs)
+                        flag = True
                 elif attrs[x] in sl_attrs:
-                    if x+len(sl_attrs)-1 < len(attrs):
-                        pm.deleteAttr(obj, at=attrs[x+len(sl_attrs)-1])
-                        pm.undo()
-                        x += 1
-                elif flag == True:
-                    pm.deleteAttr(obj, at=attrs[x])
-                    pm.undo()
+                    subDelAttr(obj, attrs[x])
+                    x += 1
+                elif flag == True and attrs[x] != tmp:
+                    subDelAttr(obj, attrs[x])
             
-
 #--------------------------------------------------------------------------------------------#
 
 def const():
@@ -636,7 +637,16 @@ def constrains(con, obj, i):
         a = const_check
     else:
         a = mo_const_check
-        if cmds.radioButtonGrp(mo, q=True, sl=1) == 2:
+        if cmds.checkBoxGrp(mo_check, q=True, v1=True):
+            if cmds.checkBoxGrp(a, q=True, v1=True):
+                cmds.parentConstraint(con, obj, mo=True)
+            if cmds.checkBoxGrp(a, q=True, v2=True):
+                cmds.pointConstraint(con, obj, mo=True)
+            if cmds.checkBoxGrp(a, q=True, v3=True):
+                cmds.orientConstraint(con, obj, mo=True)
+            if cmds.checkBoxGrp(a, q=True, v4=True):
+                cmds.scaleConstraint(con, obj, mo=True)
+        else:
             if cmds.checkBoxGrp(a, q=True, v1=True):
                 cmds.parentConstraint(con, obj)
             if cmds.checkBoxGrp(a, q=True, v2=True):
@@ -645,15 +655,6 @@ def constrains(con, obj, i):
                 cmds.orientConstraint(con, obj)
             if cmds.checkBoxGrp(a, q=True, v4=True):
                 cmds.scaleConstraint(con, obj)
-            return
-    if cmds.checkBoxGrp(a, q=True, v1=True):
-        cmds.parentConstraint(con, obj, mo=True)
-    if cmds.checkBoxGrp(a, q=True, v2=True):
-        cmds.pointConstraint(con, obj, mo=True)
-    if cmds.checkBoxGrp(a, q=True, v3=True):
-        cmds.orientConstraint(con, obj, mo=True)
-    if cmds.checkBoxGrp(a, q=True, v4=True):
-        cmds.scaleConstraint(con, obj, mo=True)
     cmds.DeleteHistory(con)
 
 

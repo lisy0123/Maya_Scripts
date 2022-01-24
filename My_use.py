@@ -1,6 +1,6 @@
 import maya.cmds as cmds
 import pymel.core as pm
-import re
+import copy, re
 
 TOOLNAME = "MyUse"
 TOOLTITLE = "My Use"
@@ -342,6 +342,10 @@ cmds.setParent("..")
 btnLayout(1)
 cmds.button(l="Add Bool Attr", c="addAttr(1)", w=WI01[1], h=30)
 cmds.setParent("..")
+
+btnLayout(1)
+cmds.button(l="Change Attr Name", c="changeAttrName()", w=WI01[1], h=30)
+cmds.setParent("..")
 cmds.separator(h=1)
 
 btnLayout(2)
@@ -547,7 +551,7 @@ def setInOrder():
     for obj in objs:
         num_list.append(int(re.sub(r"[^0-9]", "", obj.name())))
     for x in range(min(num_list), max(num_list)+1):
-        for y in range(0, len(num_list)):
+        for y in range(len(num_list)):
             if x == num_list[y]:
                 pm.reorder(objs[y], b=True)
                 break
@@ -611,10 +615,20 @@ def addAttr(tmp):
                     flag = False
 
 
+# ing
+def changeAttrName():
+    attr_text = cmds.textField(attr_tx, q=True, tx=True)
+    objs = pm.ls(sl=True)
+    for obj in objs:
+        sl_attr = pm.channelBox("mainChannelBox", q=True, sma=True)
+        print sl_attr, attr_text
+        
+    
+
 def deleteAttr(up=False, tmp=False):
     objs = pm.ls(sl=True)
     attrs = pm.channelBox("mainChannelBox", q=True, sma=True)
-    sl_attrs = pm.channelBox("mainChannelBox", q=True, sma=True)
+    sl_attrs = copy.deepcopy(attrs)
     
     for obj in objs:
         if up:
@@ -674,32 +688,80 @@ def changeAttrOder(updown):
             
 #--------------------------------------------------------------------------------------------#
 
+def subSpread(obj, num):
+    pm.addAttr(obj, ln="separator", nn="----------", at="enum", en="--------:")
+    pm.setAttr(obj+"."+"separator", cb=True)
+    pm.addAttr(obj, ln="spread", at="double", dv=0, min=0, max=num)
+    pm.setAttr(obj+".spread", k=True)
+
+
 # ing
 def spread():
-    const(True)
-#spread_const_check
+    tmp = const(True)
+    if tmp:
+        objs = pm.ls(sl=True)
+        cons = []
+        if cmds.checkBoxGrp(spread_quick_check, q=True, v1=True):
+            for nb in range(2, len(objs), 3):
+                subSpread(objs[nb], 1)
+                cons += pm.listRelatives(pm.ls(objs[nb]), ad=True, typ='constraint')
+        else:
+            subSpread(objs[-1], len(objs)-2)
+            cons += pm.listRelatives(pm.ls(objs[-1]), ad=True, typ='constraint')
+        attrs = []
+        sel = -1
+        for con in cons:
+            attrs.append(pm.listAttr(con, ud=True))
+        for con_count in range(len(cons)):
+            if tmp:
+                if sel+3 < len(objs) and con_count < len(objs)-1:
+                    if objs[sel] != cons[con_count].split("_")[0]:
+                        sel += 3
+            attr = attrs[con_count]
+            for x in range(len(attr)):
+                pm.setAttr(objs[sel]+".spread", x)
+                pm.setAttr(cons[con_count]+"."+attr[x], 1)
+                for y in range(len(attr)):
+                    if x != y:
+                        pm.setAttr(cons[con_count]+"."+attr[y], 0)
+                for z in range(len(attr)):
+                    pm.setDrivenKeyframe(cons[con_count]+"."+attr[z], cd=objs[sel]+".spread")
                     
 #--------------------------------------------------------------------------------------------#
+
+def subConst(objs, num):
+    for x in range(len(objs)-1):
+        constrains(objs[x], objs[-1], num)
+
 
 def const(tmp=False):
     objs = cmds.ls(sl=True)
     if len(objs) == 1:
         cmds.warning("Select only one obj!")
     if tmp:
-        quick = spread_quick_check
         num = 1
-    else:
-        quick = mo_quick_check
-        num = 2
-    if cmds.checkBoxGrp(quick, q=True, v1=True):
-        if len(objs) % 2 != 0:
-            cmds.warning("Select even numbers of objs!")
+        if cmds.checkBoxGrp(spread_quick_check, q=True, v1=True):
+            if len(objs) % 3 != 0:
+                cmds.warning("Select an obj as a multiple of 3! Objs nums: {}".format(len(objs)))
+                return False
+            else:
+                for x in range(0, len(objs), 3):
+                    constrains(objs[x], objs[x+2], num)
+                    constrains(objs[x+1], objs[x+2], num)
+                return True
         else:
-            for x in range(0, len(objs), 2):
-                constrains(objs[x], objs[x+1], num)
+            subConst(objs, num)
+            return True
     else:
-        for x in range(0, len(objs)-1):
-            constrains(objs[x], objs[len(objs)-1], num)
+        num = 2
+        if cmds.checkBoxGrp(mo_quick_check, q=True, v1=True):
+            if len(objs) % 2 != 0:
+                cmds.warning("Select even numbers of objs! Objs nums: {}".format(len(objs)))
+            else:
+                for x in range(0, len(objs), 2):
+                    constrains(objs[x], objs[x+1], num)
+        else:
+            subConst(objs, num)
 
 
 def constrains(con, obj, i):
@@ -746,7 +808,7 @@ def constrains(con, obj, i):
 def createController():
     objs = cmds.ls(sl=True)
     if cmds.radioButtonGrp(ctrl_make, q=True, sl=1) == 1:
-        for x in range(0,len(objs)):
+        for x in range(len(objs)):
             obj = objs[x]
             selectShape(obj)
     else:
@@ -814,7 +876,7 @@ def hashRenamer():
         hb_text = "_"+hb_text
     
     objs = pm.ls(sl=True)
-    for x in range(0, len(objs)):
+    for x in range(len(objs)):
         if len(objs) == 1:
             name = hf_text+hb_text
         elif x < 9:

@@ -66,11 +66,12 @@ print cir1, cir2
 - [x] text didn't work well (123..,[]!@#$%%^&*)
 - [x] add/delete attribute
 - [x] change attribute order
-- [ ] constrain
+- [x] spead constrain
 - [ ] rivet (Each/Sum)
 - [ ] motion path (Basic/Advance)
 - [ ] joint copy for ik spline
 - [ ] copy weight
+- [ ] ribbon
 
 :label: Updating...
 

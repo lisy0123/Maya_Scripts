@@ -107,7 +107,7 @@ frame("Create")
 
 btnLayout(2)
 cmds.button(l="Loc", c="cmds.CreateLocator()", w=WI02[1], h=25)
-cmds.button(l="Curve", c="cmds.EPCurveTool()", w=WI02[2], h=25)
+cmds.button(l="Curve", c="cmds.EPCurveToolOptions()", w=WI02[2], h=25)
 cmds.setParent("..")
 
 createBtn(
@@ -363,8 +363,8 @@ cmds.button(l="DDOWN", c="deleteAttr(False, True)", w=wi[4], h=30)
 endSpace()
 
 
-# Spread Constrain
-frame("Spread Constrain")
+# Spread Constraint
+frame("Spread Constraint")
 
 btnLayout(1)
 spread_quick_check = cmds.checkBoxGrp(l="Quick: ", ncb=1, cw2=(55,10), h=25)
@@ -375,7 +375,7 @@ spread_axes_check = cmds.checkBoxGrp(l=" Axes: ", ncb=3, cw4=(60,60,60,10), la3=
 cmds.setParent("..")
 
 cmds.rowLayout(nc=1)
-spread_const_check = cmds.checkBoxGrp(l=" Constrain: ", ncb=4, cw5=(60,55,48,55,10), la4=["Parent","Point","Orient","Scale"], v2=True, v3=True, h=25)
+spread_const_check = cmds.checkBoxGrp(l=" Constraint: ", ncb=4, cw5=(63,55,48,55,10), la4=["Parent","Point","Orient","Scale"], v2=True, v3=True, h=25)
 cmds.setParent("..")
 
 btnLayout(1)
@@ -403,14 +403,13 @@ shapes = cmds.optionMenu(w=wi[1], h=25)
 cmds.menuItem(l="  Circle")
 cmds.menuItem(l="  Box")
 cmds.menuItem(l="  Ball")
-cmds.menuItem(l="  Line Cross")
-cmds.menuItem(l="  Double Cross")
+cmds.menuItem(l="  Cross 1")
+cmds.menuItem(l="  Cross 2")
 cmds.menuItem(l="  Eyes")
-# ing
 cmds.menuItem(l="  Handle")
-cmds.menuItem(l="  Arrow1")
-cmds.menuItem(l="  Arrow2")
-cmds.menuItem(l="  Arrow4")
+cmds.menuItem(l="  Arrow 1")
+cmds.menuItem(l="  Arrow 2")
+cmds.menuItem(l="  Arrow 4")
 cmds.setParent("..")
 
 cmds.rowLayout(nc=1)
@@ -418,7 +417,7 @@ axes = cmds.radioButtonGrp(l="Axes : ", la3=["X","Y","Z"], nrb=3, cw4=(60,70,70,
 cmds.setParent("..")
 
 cmds.rowLayout(nc=1)
-const_check = cmds.checkBoxGrp(l=" Constrain: ", ncb=4, cw5=(60,55,48,55,10), la4=["Parent","Point","Orient","Scale"], v2=True, v3=True, h=25)
+const_check = cmds.checkBoxGrp(l=" Constraint: ", ncb=4, cw5=(63,55,48,55,10), la4=["Parent","Point","Orient","Scale"], v2=True, v3=True, h=25)
 cmds.setParent("..")
 
 btnLayout(1)
@@ -436,8 +435,8 @@ cmds.button(l="Create", c="text()", w=wi[3], h=25)
 endSpace()
 
 
-# Constrain
-frame("Constrain")
+# Constraint
+frame("Constraint")
 
 btnLayout(2)
 mo_quick_check = cmds.checkBoxGrp(l="Quick: ", ncb=1, cw2=(55,10), h=25)
@@ -449,11 +448,17 @@ axes_check = cmds.checkBoxGrp(l=" Axes: ", ncb=3, cw4=(60,60,60,10), la3=["X","Y
 cmds.setParent("..")
 
 cmds.rowLayout(nc=1)
-mo_const_check = cmds.checkBoxGrp(l=" Constrain: ", ncb=4, cw5=(60,55,48,55,10), la4=["Parent","Point","Orient","Scale"], v2=True, v3=True, h=25)
+mo_const_check = cmds.checkBoxGrp(l=" Constraint: ", ncb=4, cw5=(63,55,48,55,10), la4=["Parent","Point","Orient","Scale"], v2=True, v3=True, h=25)
 cmds.setParent("..")
 
 btnLayout(1)
-cmds.button(l="Constrain", c="const()", w=WI01[1], h=30)
+cmds.button(l="Constraint", c="const()", w=WI01[1], h=30)
+cmds.setParent("..")
+cmds.separator(h=1)
+
+btnLayout(2)
+cmds.button(l="Aim Constraint", c="cmds.AimConstraintOptions()", w=WI02[1], h=30)
+cmds.button(l="PoleVector Constraint", c="cmds.poleVectorConstraint(w=1)", w=WI02[1], h=30)
 endSpace()
 
 
@@ -815,16 +820,15 @@ def createController():
         selectShape(objs)
 
 
-# add check options
 def selectShape(obj):
     # circle
     if cmds.optionMenu(shapes, q=True, sl=1) == 1:
         if cmds.radioButtonGrp(axes, q=True, sl=1) == 1:
-            c = cmds.circle(nr=(1,0,0))
+            c = cmds.circle(nr=(1,0,0))[0]
         elif cmds.radioButtonGrp(axes, q=True, sl=2) == 2:
-            c = cmds.circle(nr=(0,1,0))
+            c = cmds.circle(nr=(0,1,0))[0]
         else:
-            c = cmds.circle(nr=(0,0,1))
+            c = cmds.circle(nr=(0,0,1))[0]
     # box
     elif cmds.optionMenu(shapes, q=True, sl=2) == 2:
         c = cmds.curve(d=1, p=[(1,1,1),(1,-1,1), (1,-1,-1),(1,1,-1),(-1,1,-1),(-1,-1,-1),(1,-1,-1),(1,1,-1),(1,1,1),(-1,1,1),(-1,-1,1),(1,-1,1),(-1,-1,1),(-1,-1,-1),(-1,1,-1),(-1,1,1)])
@@ -840,39 +844,85 @@ def selectShape(obj):
         cmds.delete(cmds.ls(tmp2))
         cmds.delete(cmds.ls(tmp3))
         c = cmds.ls(tmp1)[0]
-    # line cross
+    # cross 1
     elif cmds.optionMenu(shapes, q=True, sl=4) == 4:
         c = cmds.curve(d=1, p=[(0,0,-2),(0,0,2),(0,0,0),(-2,0,0),(2,0,0)])
-        if cmds.radioButtonGrp(axes, q=True, sl=1) == 1:
-            cmds.setAttr(c+".rotateZ", 90)
-        elif cmds.radioButtonGrp(axes, q=True, sl=2) == 3:
-            cmds.setAttr(c+".rotateX", 90)
-        pm.makeIdentity(c, a=True, t=1, r=1, s=1, n=0, pn=1)
-    # double cross
+    # cross 2
     elif cmds.optionMenu(shapes, q=True, sl=5) == 5:
         c = cmds.curve(d=1, p=[(-1,0,-3),(1,0,-3),(1,0,-1),(3,0,-1),(3,0,1),(1,0,1),(1,0,3),(-1,0,3),(-1,0,1),(-3,0,1),(-3,0,-1),(-1,0,-1),(-1,0,-3)])
-        if cmds.radioButtonGrp(axes, q=True, sl=1) == 1:
-            cmds.setAttr(c+".rotateZ", 90)
-        elif cmds.radioButtonGrp(axes, q=True, sl=2) == 3:
-            cmds.setAttr(c+".rotateX", 90)
-        pm.makeIdentity(c, a=True, t=1, r=1, s=1, n=0, pn=1)
     # eye
-    # ing
     elif cmds.optionMenu(shapes, q=True, sl=6) == 6:
         tmp1 = cmds.circle(nr=(0,1,0))
         tmp2 = cmds.curve(d=3, p=[(-2.05541,0,-0.0124173),(-1.365656,0,-0.507243),(0.0138526,0,-1.496896),(1.337951,0,-0.498965),(2,0,0)])
         tmp3 = cmds.curve(d=3, p=[(-2.05541,0,-0.0124173),(-1.365656,0,-0.507243),(0.0138526,0,-1.496896),(1.337951,0,-0.498965),(2,0,0)])
         cmds.setAttr(tmp3+".scaleZ", -1)
-        pm.makeIdentity(tmp3, a=True, st=1, r=1, s=1, n=0, pn=1)
-        sh2 = cmds.listRelatives(tmp2[0], ad=True)[0]
-        sh3 = cmds.listRelatives(tmp3[0], ad=True)[0]
-        cmds.parent(sh2, tmp1, r=True, s=True)
-        cmds.parent(sh3, tmp1, r=True, s=True)
+        pm.makeIdentity(tmp3, a=True, t=1, r=1, s=1, n=0, pn=1)
+        sh2 = cmds.listRelatives(tmp2, ad=True)[0]
+        sh3 = cmds.listRelatives(tmp3, ad=True)[0]
+        cmds.parent(sh2, tmp1[0], r=True, s=True)
+        cmds.parent(sh3, tmp1[0], r=True, s=True)
         cmds.delete(cmds.ls(tmp2))
         cmds.delete(cmds.ls(tmp3))
-        c = cmds.ls(tmp1)
+        c = cmds.ls(tmp1)[0]
+        
+        if cmds.radioButtonGrp(axes, q=True, sl=1) == 1:
+            cmds.setAttr(c+".rotateY", 90)
+            cmds.setAttr(c+".rotateZ", 90)
+        elif cmds.radioButtonGrp(axes, q=True, sl=2) == 3:
+            cmds.setAttr(c+".rotateX", 90)
+        pm.makeIdentity(c, a=True, t=1, r=1, s=1, n=0, pn=1)
+    # handle
+    elif cmds.optionMenu(shapes, q=True, sl=7) == 7:
+        tmp1 = cmds.circle(nr=(1,0,0))
+        tmp2 = cmds.circle(nr=(0,1,0))
+        tmp3 = cmds.circle(nr=(0,0,1))
+        sh2 = cmds.listRelatives(tmp2[0], ad=True)[0]
+        sh3 = cmds.listRelatives(tmp3[0], ad=True)[0]
+        cmds.parent(sh2, tmp1[0], r=True, s=True)
+        cmds.parent(sh3, tmp1[0], r=True, s=True)
+        cmds.delete(cmds.ls(tmp2))
+        cmds.delete(cmds.ls(tmp3))
+        cmds.setAttr(tmp1[0]+".translateY", 4)
+        cmds.makeIdentity(tmp1[0], a=True, t=1, n=0, pn=1)
+
+        tmp = cmds.curve(d=1, p=[(0,0,0),(0,3,0)])
+        sh = cmds.listRelatives(tmp, ad=True)[0]
+        cmds.parent(sh, tmp1[0], r=True, s=True)
+        cmds.delete(cmds.ls(tmp))
+        c = cmds.ls(tmp1)[0]
+    # arrow 1
+    elif cmds.optionMenu(shapes, q=True, sl=8) == 8:
+        c = cmds.curve(d=1, p=[(-2,0,-1),(1,0,-1),(1,0,-2),(3,0,0),(1,0,2),(1,0,1),(-2,0,1),(-2,0,-1)])
+    # arrow 2
+    elif cmds.optionMenu(shapes, q=True, sl=9) == 9:
+        c = cmds.curve(d=1, p=[(-1,0,-1),(1,0,-1),(1,0,-2),(3,0,0),(1,0,2),(1,0,1),(-1,0,1),(-1,0,2),(-3,0,0),(-1,0,-2),(-1,0,-1)])
+    # arrow 4
+    elif cmds.optionMenu(shapes, q=True, sl=10) == 10:
+        c = cmds.curve(d=1, p=[(-1,0,-1),(-1,0,-3),(-2,0,-3),(0,0,-5),(2,0,-3),(1,0,-3),(1,0,-1),(3,0,-1),(3,0,-2),(5,0,0),(3,0,2),(3,0,1),(1,0,1),(1,0,3),(2,0,3),(0,0,5),(-2,0,3),(-1,0,3),(-1,0,1),(-3,0,1),(-3,0,2),(-5,0,0),(-3,0,-2),(-3,0,-1),(-1,0,-1)])
+        
     grp = cmds.group(em=True)
     cmds.parent(c,grp)
+    cmds.ResetTransformations(c)
+
+    if cmds.optionMenu(shapes, q=True, sl=4) == 4 or cmds.optionMenu(shapes, q=True, sl=5) == 5:
+        if cmds.radioButtonGrp(axes, q=True, sl=1) == 1:
+            cmds.setAttr(c+".rotateZ", 90)
+        elif cmds.radioButtonGrp(axes, q=True, sl=2) == 3:
+            cmds.setAttr(c+".rotateX", 90)
+        pm.makeIdentity(c, a=True, t=1, r=1, s=1, n=0, pn=1)
+    elif cmds.optionMenu(shapes, q=True, sl=7) == 7:
+        if cmds.radioButtonGrp(axes, q=True, sl=1) == 1:
+            cmds.setAttr(c+".rotateZ", -90)
+        elif cmds.radioButtonGrp(axes, q=True, sl=2) == 3:
+            cmds.setAttr(c+".rotateX", 90)
+    elif cmds.optionMenu(shapes, q=True, sl=8) == 8 or cmds.optionMenu(shapes, q=True, sl=9) == 9:
+        if cmds.radioButtonGrp(axes, q=True, sl=2) == 2:
+            cmds.setAttr(c+".rotateX", 90)
+            cmds.setAttr(c+".rotateZ", 90)
+        elif cmds.radioButtonGrp(axes, q=True, sl=2) == 3:
+            cmds.setAttr(c+".rotateY", -90)
+            
+    pm.makeIdentity(c, a=True, t=1, r=1, s=1, n=0, pn=1)
     cmds.parentConstraint(obj, grp, mo=False, n="ex")
     cmds.delete("ex")
     if cmds.radioButtonGrp(ctrl_make, q=True, sl=1) == 1:

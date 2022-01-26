@@ -57,8 +57,8 @@ print cir1, cir2
 ![My_use](https://github.com/lisy0123/Maya_Scripts/blob/master/My_use.png)
 
 - [x] joint, ik, weights options, set driven key, etc...
-- [x] constrain: maintain offset toggle
-- [x] quick constrain (1:1, M:1)
+- [x] constraint: maintain offset toggle
+- [x] quick constraint (1:1, M:1)
 - [x] quick add, lock, unlock attribute
 - [x] rename: search and replace
 - [x] namer(after): Exclude *shape => Include joint, transform
@@ -66,12 +66,14 @@ print cir1, cir2
 - [x] text didn't work well (123..,[]!@#$%%^&*)
 - [x] add/delete attribute
 - [x] change attribute order
-- [x] spead constrain
+- [x] spead constraint (normal,  quick)
+- [x] controllers
 - [ ] rivet (Each/Sum)
 - [ ] motion path (Basic/Advance)
 - [ ] joint copy for ik spline
 - [ ] copy weight
 - [ ] ribbon
+- [ ] refactoring
 
 :label: Updating...
 
@@ -94,3 +96,4 @@ YET
 
 
 [↩️ Go Back](https://github.com/lisy0123/Study)
+

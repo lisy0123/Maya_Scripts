@@ -198,6 +198,17 @@ cmds.setParent(WINDOW)
 ch2 = cmds.rowColumnLayout(w=285, nc=1)
 
 
+# Outline
+frame("Outline")
+btnLayout(1)
+cmds.button(l="Set in order", c="setInOrder()", w=WI01[1], h=30)
+cmds.setParent("..")
+
+btnLayout(1)
+cmds.button(l="Copy and New Group", c="newGroup()", w=WI01[1], h=30)
+endSpace()
+
+
 # Rename
 frame("Rename")
 
@@ -212,11 +223,6 @@ cmds.setParent("..")
 
 btnLayout(1)
 cmds.button(l="Rename", c="hashRenamer()", w=WI01[1], h=30)
-cmds.setParent("..")
-cmds.separator(h=1)
-
-btnLayout(1)
-cmds.button(l="Set in order", c="setInOrder()", w=WI01[1], h=25)
 endSpace()
 
 
@@ -325,14 +331,18 @@ cmds.rowLayout(nc=5, cw5=wi)
 cmds.text(l="   Reset :  ", w=wi[0])
 attr_check = cmds.checkBox(l="", w=wi[1], h=25)
 cmds.text(l="  Min/Max :", w=wi[2])
-min_attr = cmds.textField(w=wi[3], tx=-1.0, h=25)
+min_attr = cmds.textField(w=wi[3], tx=0.0, h=25)
 max_attr = cmds.textField(w=wi[4], tx=1.0, h=25)
 cmds.setParent("..")
 
 wi=(65,210)
 cmds.rowLayout(nc=2, cw2=wi)
 cmds.text(l="  Enum List : ", w=wi[0])
-en01_tx = cmds.textField(w=wi[1], tx="ON:OFF", h=25)
+en01_tx = cmds.textField(w=wi[1], tx="OFF:ON", h=25)
+cmds.setParent("..")
+
+btnLayout(1)
+cmds.button(l="Change Attr Name", c="changeAttrName()", w=WI01[1], h=30)
 cmds.setParent("..")
 
 btnLayout(1)
@@ -343,15 +353,11 @@ btnLayout(1)
 cmds.button(l="Add Bool Attr", c="addAttr(1)", w=WI01[1], h=30)
 cmds.setParent("..")
 
-btnLayout(1)
-cmds.button(l="Change Attr Name", c="changeAttrName()", w=WI01[1], h=30)
-cmds.setParent("..")
-cmds.separator(h=1)
-
 btnLayout(2)
 cmds.button(l="Separator Attr", c="addAttr(2)", w=WI02[1], h=30)
 cmds.button(l="Delete Attr", c="deleteAttr()", w=WI02[2], h=30)
 cmds.setParent("..")
+cmds.separator(h=1)
 
 wi=(1,67,67,67,67)
 cmds.rowLayout(nc=5, cw5=wi)
@@ -476,6 +482,12 @@ cmds.button(l="More", w=wi[5], c="color()", h=30)
 cmds.setParent("..")
 cmds.setParent("..")
 
+#--------------------------------------------------------------------------------------------#
+
+# 4: Advance
+cmds.setParent(WINDOW)
+ch5 = cmds.rowColumnLayout(w=285, nc=1)
+
 
 # ing
 # Rivet
@@ -496,12 +508,6 @@ frame("Motion path")
 
 endSpace()
 
-#--------------------------------------------------------------------------------------------#
-
-# 4: Weight
-cmds.setParent(WINDOW)
-ch5 = cmds.rowColumnLayout(w=285, nc=1)
-
 # ing
 # Copy Weight
 
@@ -509,7 +515,7 @@ ch5 = cmds.rowColumnLayout(w=285, nc=1)
 
 #--------------------------------------------------------------------------------------------#
 
-cmds.tabLayout(tabs, edit=True, tabLabel=((ch1, "Create"), (ch2, "Naming"), (ch3, "Attr"), (ch4, "Ctrl"), (ch5, "Weight")))
+cmds.tabLayout(tabs, edit=True, tabLabel=((ch1, "Create"), (ch2, "Naming"), (ch3, "Attr"), (ch4, "Ctrl"), (ch5, "Advance")))
 
 cmds.showWindow(TOOLNAME)
 
@@ -549,20 +555,6 @@ def matchFreeze(tmp=True):
             cmds.makeIdentity(a=True, t=0, r=0, s=1, n=0, pn=1)
 
 
-def setInOrder():
-    objs = pm.listRelatives(ad=True, typ='joint')
-    objs += pm.listRelatives(ad=True, typ='transform')
-    objs += pm.ls(sl=True)
-    num_list = []
-    for obj in objs:
-        num_list.append(int(re.sub(r"[^0-9]", "", obj.name())))
-    for x in range(min(num_list), max(num_list)+1):
-        for y in range(len(num_list)):
-            if x == num_list[y]:
-                pm.reorder(objs[y], b=True)
-                break
-
-
 def lockUnlock(i, j, tmp=False):
     ranges = []
     objs = cmds.ls(sl=True)
@@ -587,6 +579,147 @@ def lockUnlock(i, j, tmp=False):
                     cmds.setAttr(obj+attr1+attr2, l=i, k=j)
             if cmds.checkBoxGrp(lock_check, q=True, v4=True):
                 cmds.setAttr(obj+".visibility", l=i, k=j)
+
+#--------------------------------------------------------------------------------------------#
+
+# ing
+def newGroup():
+    objs = pm.ls(sl=True)
+    tmps = pm.duplicate(rr=True)
+    print tmps.reverse()
+    for x in range(len(tmps)):
+        tmp = pm.ls(tmps[x])
+        print tmp
+#        pm.parent(tmp, w=True)
+        grp = pm.group(em=True)
+        pm.parentConstraint(tmp, grp, mo=False, n="ex")
+        pm.delete("ex")
+        pm.parent(tmp, grp)
+        pm.parent(pm.ls(tmps[x+1]), pm.ls(tmps[x]))
+        
+#    for x in range(len(tmp), 0):
+#        print tmp[x]
+#        grp = cmds.group(em=True)
+#        lst.append(grp)
+#        cmds.parentConstraint(tmp[x], grp, mo=False, n="ex")
+#        cmds.delete("ex")
+#        cmds.parent(tmp[x].split("|")[-1], grp)
+#        cmds.parent(grp, tmp[x-1])
+
+
+def setInOrder():
+    objs = pm.listRelatives(ad=True, typ='joint')
+    objs += pm.listRelatives(ad=True, typ='transform')
+    objs += pm.ls(sl=True)
+    num_list = []
+    for obj in objs:
+        num_list.append(int(re.sub(r"[^0-9]", "", obj.name())))
+    for x in range(min(num_list), max(num_list)+1):
+        for y in range(len(num_list)):
+            if x == num_list[y]:
+                pm.reorder(objs[y], b=True)
+                break
+
+#--------------------------------------------------------------------------------------------#
+
+def text():
+    t = pm.textField(tx, q=True, tx=True)
+    
+    pm.textCurves(t=t, ch=True)
+    objs = pm.listRelatives(ad=True, typ='transform')
+    for obj in objs:
+        if "Char_" in obj.name():
+            objs.remove(obj)
+    pm.parent(objs, "Text_*")
+    pm.makeIdentity(objs, a=True, t=1, r=1, s=1, n=0, pn=1)
+    cmds.ResetTransformations(pm.ls(objs))
+    pm.delete(objs, ch=True)
+    pm.parent(pm.listRelatives(objs, ad=True), "Text_*", r=True, s=True)
+    pm.delete("Char_*", objs)
+    pm.ls("Text_*")[0].rename(t+"_crv")
+
+
+def hashRenamer():
+    hf_text = cmds.textField(hf, q=True, tx=True)
+    hb_text = cmds.textField(hb, q=True, tx=True)
+    
+    if cmds.radioButtonGrp(pos_check, q=True, sl=1) == 1:
+        hf_text = "rt_"+hf_text
+    elif cmds.radioButtonGrp(pos_check, q=True, sl=1) == 2:
+        hf_text = "lf_"+hf_text
+    if hb_text != "":
+        hb_text = "_"+hb_text
+    
+    objs = pm.ls(sl=True)
+    for x in range(len(objs)):
+        if len(objs) == 1:
+            name = hf_text+hb_text
+        elif x < 9:
+            name = hf_text+"_0"+str(x+1)+hb_text
+        else:
+            name = hf_text+"_"+str(x+1)+hb_text
+        objs[x].rename(name)
+
+
+def SearchReplace():
+    search_wd = cmds.textField(search_w, q=True, tx=True)
+    replace_wd = cmds.textField(replace_w, q=True, tx=True)
+    
+    if cmds.radioButtonGrp(replace_check, q=True, sl=1) == 2:
+        objs = pm.listRelatives(ad=True)
+        objs += pm.ls(sl=True)
+    else:
+        objs = pm.ls(sl=True)
+    for obj in objs:
+        obj.rename(obj.name().replace(search_wd, replace_wd))
+
+
+def namer(i, objs, tmp):
+    if tmp:
+        arn_text = tmp
+    else:
+        brn_text = cmds.textField(brn, q=True, tx=True)
+        arn_text = cmds.textField(arn, q=True, tx=True)
+
+    for obj in objs:
+        if i == 1:
+            blen = len(brn_text)
+            bcheck=""
+            for x in range(blen+1):
+                bcheck += obj[x]
+            if bcheck != brn_text+"_":
+                name = brn_text+"_"+obj
+                obj.rename(name)
+        else:
+            alen = len(arn_text)
+            acheck=""
+            for x in range(alen+1):
+                tmp = len(obj.name())-len(arn_text)+x-1
+                acheck += obj[tmp]
+            if acheck != "_"+arn_text:
+                name = obj+"_"+arn_text
+                obj.rename(name)
+
+
+def renamer(i):
+    if cmds.radioButtonGrp(add_check, q=True, sl=1) == 2:
+        objs = pm.listRelatives(ad=True, typ='joint')
+        objs += pm.listRelatives(ad=True, typ='transform')
+        objs += pm.ls(sl=True)
+        print objs
+    else:
+        objs = pm.ls(sl=True)
+    namer(i, objs, None)
+
+
+def add(tail):
+    tails = [
+        "grp", "jnt", "ctrl",
+        "extra", "loc", "drv",
+    ]
+    objs = pm.ls(sl=True)
+    text = tails[tail-1]
+    namer(0, objs, text)
 
 #--------------------------------------------------------------------------------------------#
 
@@ -927,107 +1060,6 @@ def selectShape(obj):
     cmds.delete("ex")
     if cmds.radioButtonGrp(ctrl_make, q=True, sl=1) == 1:
         constrains(c, obj, 0)
-
-#--------------------------------------------------------------------------------------------#
-
-def text():
-    t = pm.textField(tx, q=True, tx=True)
-    
-    pm.textCurves(t=t, ch=True)
-    objs = pm.listRelatives(ad=True, typ='transform')
-    for obj in objs:
-        if "Char_" in obj.name():
-            objs.remove(obj)
-    pm.parent(objs, "Text_*")
-    pm.makeIdentity(objs, a=True, t=1, r=1, s=1, n=0, pn=1)
-    cmds.ResetTransformations(pm.ls(objs))
-    pm.delete(objs, ch=True)
-    pm.parent(pm.listRelatives(objs, ad=True), "Text_*", r=True, s=True)
-    pm.delete("Char_*", objs)
-    pm.ls("Text_*")[0].rename(t+"_crv")
-
-
-def hashRenamer():
-    hf_text = cmds.textField(hf, q=True, tx=True)
-    hb_text = cmds.textField(hb, q=True, tx=True)
-    
-    if cmds.radioButtonGrp(pos_check, q=True, sl=1) == 1:
-        hf_text = "rt_"+hf_text
-    elif cmds.radioButtonGrp(pos_check, q=True, sl=1) == 2:
-        hf_text = "lf_"+hf_text
-    if hb_text != "":
-        hb_text = "_"+hb_text
-    
-    objs = pm.ls(sl=True)
-    for x in range(len(objs)):
-        if len(objs) == 1:
-            name = hf_text+hb_text
-        elif x < 9:
-            name = hf_text+"_0"+str(x+1)+hb_text
-        else:
-            name = hf_text+"_"+str(x+1)+hb_text
-        objs[x].rename(name)
-
-
-def SearchReplace():
-    search_wd = cmds.textField(search_w, q=True, tx=True)
-    replace_wd = cmds.textField(replace_w, q=True, tx=True)
-    
-    if cmds.radioButtonGrp(replace_check, q=True, sl=1) == 2:
-        objs = pm.listRelatives(ad=True)
-        objs += pm.ls(sl=True)
-    else:
-        objs = pm.ls(sl=True)
-    for obj in objs:
-        obj.rename(obj.name().replace(search_wd, replace_wd))
-
-
-def namer(i, objs, tmp):
-    if tmp:
-        arn_text = tmp
-    else:
-        brn_text = cmds.textField(brn, q=True, tx=True)
-        arn_text = cmds.textField(arn, q=True, tx=True)
-
-    for obj in objs:
-        if i == 1:
-            blen = len(brn_text)
-            bcheck=""
-            for x in range(blen+1):
-                bcheck += obj[x]
-            if bcheck != brn_text+"_":
-                name = brn_text+"_"+obj
-                obj.rename(name)
-        else:
-            alen = len(arn_text)
-            acheck=""
-            for x in range(alen+1):
-                tmp = len(obj.name())-len(arn_text)+x-1
-                acheck += obj[tmp]
-            if acheck != "_"+arn_text:
-                name = obj+"_"+arn_text
-                obj.rename(name)
-
-
-def renamer(i):
-    if cmds.radioButtonGrp(add_check, q=True, sl=1) == 2:
-        objs = pm.listRelatives(ad=True, typ='joint')
-        objs += pm.listRelatives(ad=True, typ='transform')
-        objs += pm.ls(sl=True)
-        print objs
-    else:
-        objs = pm.ls(sl=True)
-    namer(i, objs, None)
-
-
-def add(tail):
-    tails = [
-        "grp", "jnt", "ctrl",
-        "extra", "loc", "drv",
-    ]
-    objs = pm.ls(sl=True)
-    text = tails[tail-1]
-    namer(0, objs, text)
 
 #--------------------------------------------------------------------------------------------#
 

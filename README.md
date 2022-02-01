@@ -66,8 +66,10 @@ print cir1, cir2
 - [x] text didn't work well (123..,[]!@#$%%^&*)
 - [x] add/delete attribute
 - [x] change attribute order
+- [ ] change attribute name
 - [x] spead constraint (normal,  quick)
 - [x] controllers
+- [ ] copy and new group
 - [ ] rivet (Each/Sum)
 - [ ] motion path (Basic/Advance)
 - [ ] joint copy for ik spline

@@ -372,9 +372,9 @@ endSpace()
 # Spread Constraint
 frame("Spread Constraint")
 
-btnLayout(1)
-spread_quick_check = cmds.checkBoxGrp(l="Quick: ", ncb=1, cw2=(55,10), h=25)
-cmds.setParent("..")
+#btnLayout(1)
+#spread_quick_check = cmds.checkBoxGrp(l="Quick: ", ncb=1, cw2=(55,10), h=25)
+#cmds.setParent("..")
 
 cmds.rowLayout(nc=1)
 spread_axes_check = cmds.checkBoxGrp(l=" Axes: ", ncb=3, cw4=(60,60,60,10), la3=["X","Y","Z"], v1=True, v2=True, v3=True, h=25)
@@ -839,13 +839,13 @@ def spread():
     if tmp:
         objs = pm.ls(sl=True)
         cons = []
-        if cmds.checkBoxGrp(spread_quick_check, q=True, v1=True):
-            for nb in range(2, len(objs), 3):
-                subSpread(objs[nb], 1)
-                cons += pm.listRelatives(pm.ls(objs[nb]), ad=True, typ='constraint')
-        else:
-            subSpread(objs[-1], len(objs)-2)
-            cons += pm.listRelatives(pm.ls(objs[-1]), ad=True, typ='constraint')
+#        if cmds.checkBoxGrp(spread_quick_check, q=True, v1=True):
+#            for nb in range(2, len(objs), 3):
+#                subSpread(objs[nb], 1)
+#                cons += pm.listRelatives(pm.ls(objs[nb]), ad=True, typ='constraint')
+#        else:
+        subSpread(objs[-1], len(objs)-2)
+        cons += pm.listRelatives(pm.ls(objs[-1]), ad=True, typ='constraint')
         attrs = []
         sel = -1
         for con in cons:
@@ -878,18 +878,18 @@ def const(tmp=False):
         cmds.warning("Select only one obj!")
     if tmp:
         num = 1
-        if cmds.checkBoxGrp(spread_quick_check, q=True, v1=True):
-            if len(objs) % 3 != 0:
-                cmds.warning("Select an obj as a multiple of 3! Objs nums: {}".format(len(objs)))
-                return False
-            else:
-                for x in range(0, len(objs), 3):
-                    constrains(objs[x], objs[x+2], num)
-                    constrains(objs[x+1], objs[x+2], num)
-                return True
-        else:
-            subConst(objs, num)
-            return True
+#        if cmds.checkBoxGrp(spread_quick_check, q=True, v1=True):
+#            if len(objs) % 3 != 0:
+#                cmds.warning("Select an obj as a multiple of 3! Objs nums: {}".format(len(objs)))
+#                return False
+#            else:
+#                for x in range(0, len(objs), 3):
+#                    constrains(objs[x], objs[x+2], num)
+#                    constrains(objs[x+1], objs[x+2], num)
+#                return True
+#        else:
+        subConst(objs, num)
+        return True
     else:
         num = 2
         if cmds.checkBoxGrp(mo_quick_check, q=True, v1=True):

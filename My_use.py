@@ -372,10 +372,6 @@ endSpace()
 # Spread Constraint
 frame("Spread Constraint")
 
-#btnLayout(1)
-#spread_quick_check = cmds.checkBoxGrp(l="Quick: ", ncb=1, cw2=(55,10), h=25)
-#cmds.setParent("..")
-
 cmds.rowLayout(nc=1)
 spread_axes_check = cmds.checkBoxGrp(l=" Axes: ", ncb=3, cw4=(60,60,60,10), la3=["X","Y","Z"], v1=True, v2=True, v3=True, h=25)
 cmds.setParent("..")
@@ -409,6 +405,7 @@ shapes = cmds.optionMenu(w=wi[1], h=25)
 cmds.menuItem(l="  Circle")
 cmds.menuItem(l="  Box")
 cmds.menuItem(l="  Ball")
+cmds.menuItem(l="  Diamond")
 cmds.menuItem(l="  Cross 1")
 cmds.menuItem(l="  Cross 2")
 cmds.menuItem(l="  Eyes")
@@ -586,25 +583,14 @@ def lockUnlock(i, j, tmp=False):
 def newGroup():
     objs = pm.ls(sl=True)
     tmps = pm.duplicate(rr=True)
-    print tmps.reverse()
     for x in range(len(tmps)):
         tmp = pm.ls(tmps[x])
         print tmp
-#        pm.parent(tmp, w=True)
         grp = pm.group(em=True)
         pm.parentConstraint(tmp, grp, mo=False, n="ex")
         pm.delete("ex")
         pm.parent(tmp, grp)
-        pm.parent(pm.ls(tmps[x+1]), pm.ls(tmps[x]))
-        
-#    for x in range(len(tmp), 0):
-#        print tmp[x]
-#        grp = cmds.group(em=True)
-#        lst.append(grp)
-#        cmds.parentConstraint(tmp[x], grp, mo=False, n="ex")
-#        cmds.delete("ex")
-#        cmds.parent(tmp[x].split("|")[-1], grp)
-#        cmds.parent(grp, tmp[x-1])
+#        pm.parent(pm.ls(tmps[x+1]), grp)
 
 
 def setInOrder():
@@ -839,11 +825,6 @@ def spread():
     if tmp:
         objs = pm.ls(sl=True)
         cons = []
-#        if cmds.checkBoxGrp(spread_quick_check, q=True, v1=True):
-#            for nb in range(2, len(objs), 3):
-#                subSpread(objs[nb], 1)
-#                cons += pm.listRelatives(pm.ls(objs[nb]), ad=True, typ='constraint')
-#        else:
         subSpread(objs[-1], len(objs)-2)
         cons += pm.listRelatives(pm.ls(objs[-1]), ad=True, typ='constraint')
         attrs = []
@@ -878,16 +859,6 @@ def const(tmp=False):
         cmds.warning("Select only one obj!")
     if tmp:
         num = 1
-#        if cmds.checkBoxGrp(spread_quick_check, q=True, v1=True):
-#            if len(objs) % 3 != 0:
-#                cmds.warning("Select an obj as a multiple of 3! Objs nums: {}".format(len(objs)))
-#                return False
-#            else:
-#                for x in range(0, len(objs), 3):
-#                    constrains(objs[x], objs[x+2], num)
-#                    constrains(objs[x+1], objs[x+2], num)
-#                return True
-#        else:
         subConst(objs, num)
         return True
     else:
@@ -977,14 +948,17 @@ def selectShape(obj):
         cmds.delete(cmds.ls(tmp2))
         cmds.delete(cmds.ls(tmp3))
         c = cmds.ls(tmp1)[0]
-    # cross 1
+    # diamond
     elif cmds.optionMenu(shapes, q=True, sl=4) == 4:
+        c = cmds.curve(d=1, p=[(0,1,0),(0,0,1),(0,-1,0),(0,0,-1),(0,1,0),(-1,0,0),(1,0,0),(0,-1,0),(-1,0,0),(0,0,-1),(1,0,0),(0,1,0),(0,-1,0),(0,0,1),(0,0,-1),(1,0,0),(0,0,1),(-1,0,0)])
+    # cross 1
+    elif cmds.optionMenu(shapes, q=True, sl=5) == 5:
         c = cmds.curve(d=1, p=[(0,0,-2),(0,0,2),(0,0,0),(-2,0,0),(2,0,0)])
     # cross 2
-    elif cmds.optionMenu(shapes, q=True, sl=5) == 5:
+    elif cmds.optionMenu(shapes, q=True, sl=6) == 6:
         c = cmds.curve(d=1, p=[(-1,0,-3),(1,0,-3),(1,0,-1),(3,0,-1),(3,0,1),(1,0,1),(1,0,3),(-1,0,3),(-1,0,1),(-3,0,1),(-3,0,-1),(-1,0,-1),(-1,0,-3)])
     # eye
-    elif cmds.optionMenu(shapes, q=True, sl=6) == 6:
+    elif cmds.optionMenu(shapes, q=True, sl=7) == 7:
         tmp1 = cmds.circle(nr=(0,1,0))
         tmp2 = cmds.curve(d=3, p=[(-2.05541,0,-0.0124173),(-1.365656,0,-0.507243),(0.0138526,0,-1.496896),(1.337951,0,-0.498965),(2,0,0)])
         tmp3 = cmds.curve(d=3, p=[(-2.05541,0,-0.0124173),(-1.365656,0,-0.507243),(0.0138526,0,-1.496896),(1.337951,0,-0.498965),(2,0,0)])
@@ -1005,7 +979,7 @@ def selectShape(obj):
             cmds.setAttr(c+".rotateX", 90)
         pm.makeIdentity(c, a=True, t=1, r=1, s=1, n=0, pn=1)
     # handle
-    elif cmds.optionMenu(shapes, q=True, sl=7) == 7:
+    elif cmds.optionMenu(shapes, q=True, sl=8) == 8:
         tmp1 = cmds.circle(nr=(1,0,0))
         tmp2 = cmds.circle(nr=(0,1,0))
         tmp3 = cmds.circle(nr=(0,0,1))
@@ -1024,36 +998,36 @@ def selectShape(obj):
         cmds.delete(cmds.ls(tmp))
         c = cmds.ls(tmp1)[0]
     # arrow 1
-    elif cmds.optionMenu(shapes, q=True, sl=8) == 8:
+    elif cmds.optionMenu(shapes, q=True, sl=9) == 9:
         c = cmds.curve(d=1, p=[(-2,0,-1),(1,0,-1),(1,0,-2),(3,0,0),(1,0,2),(1,0,1),(-2,0,1),(-2,0,-1)])
     # arrow 2
-    elif cmds.optionMenu(shapes, q=True, sl=9) == 9:
+    elif cmds.optionMenu(shapes, q=True, sl=10) == 10:
         c = cmds.curve(d=1, p=[(-1,0,-1),(1,0,-1),(1,0,-2),(3,0,0),(1,0,2),(1,0,1),(-1,0,1),(-1,0,2),(-3,0,0),(-1,0,-2),(-1,0,-1)])
     # arrow 4
-    elif cmds.optionMenu(shapes, q=True, sl=10) == 10:
+    elif cmds.optionMenu(shapes, q=True, sl=11) == 11:
         c = cmds.curve(d=1, p=[(-1,0,-1),(-1,0,-3),(-2,0,-3),(0,0,-5),(2,0,-3),(1,0,-3),(1,0,-1),(3,0,-1),(3,0,-2),(5,0,0),(3,0,2),(3,0,1),(1,0,1),(1,0,3),(2,0,3),(0,0,5),(-2,0,3),(-1,0,3),(-1,0,1),(-3,0,1),(-3,0,2),(-5,0,0),(-3,0,-2),(-3,0,-1),(-1,0,-1)])
-        
     grp = cmds.group(em=True)
     cmds.parent(c,grp)
     cmds.ResetTransformations(c)
 
-    if cmds.optionMenu(shapes, q=True, sl=4) == 4 or cmds.optionMenu(shapes, q=True, sl=5) == 5:
+    if cmds.optionMenu(shapes, q=True, sl=4) == 4 or cmds.optionMenu(shapes, q=True, sl=5) == 5 or cmds.optionMenu(shapes, q=True, sl=11) == 11:
         if cmds.radioButtonGrp(axes, q=True, sl=1) == 1:
             cmds.setAttr(c+".rotateZ", 90)
         elif cmds.radioButtonGrp(axes, q=True, sl=2) == 3:
             cmds.setAttr(c+".rotateX", 90)
         pm.makeIdentity(c, a=True, t=1, r=1, s=1, n=0, pn=1)
-    elif cmds.optionMenu(shapes, q=True, sl=7) == 7:
+    elif cmds.optionMenu(shapes, q=True, sl=8) == 8:
         if cmds.radioButtonGrp(axes, q=True, sl=1) == 1:
             cmds.setAttr(c+".rotateZ", -90)
         elif cmds.radioButtonGrp(axes, q=True, sl=2) == 3:
             cmds.setAttr(c+".rotateX", 90)
-    elif cmds.optionMenu(shapes, q=True, sl=8) == 8 or cmds.optionMenu(shapes, q=True, sl=9) == 9:
+    elif cmds.optionMenu(shapes, q=True, sl=9) == 9 or cmds.optionMenu(shapes, q=True, sl=10) == 10:
         if cmds.radioButtonGrp(axes, q=True, sl=2) == 2:
             cmds.setAttr(c+".rotateX", 90)
             cmds.setAttr(c+".rotateZ", 90)
         elif cmds.radioButtonGrp(axes, q=True, sl=2) == 3:
             cmds.setAttr(c+".rotateY", -90)
+
             
     pm.makeIdentity(c, a=True, t=1, r=1, s=1, n=0, pn=1)
     cmds.parentConstraint(obj, grp, mo=False, n="ex")

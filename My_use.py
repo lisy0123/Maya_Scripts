@@ -284,7 +284,7 @@ cmds.rowLayout(nc=4, cw4=wi)
 cmds.text("")
 cmds.button(l="extra", w=wi[1], c="add(4)", h=25)
 cmds.button(l="loc", w=wi[2], c="add(5)", h=25)
-cmds.button(l="drv", w=wi[3], c="add(6)", h=25)
+cmds.button(l="rig", w=wi[3], c="add(6)", h=25)
 endSpace()
 
 #--------------------------------------------------------------------------------------------#
@@ -583,15 +583,25 @@ def lockUnlock(i, j, tmp=False):
 def newGroup():
     objs = pm.ls(sl=True)
     tmps = pm.duplicate(rr=True)
+    lst = []
     for x in range(len(tmps)):
+        tmps[x].rename(objs[x])
         tmp = pm.ls(tmps[x])
-        print tmp
         grp = pm.group(em=True)
+        grp.rename(objs[x]+"_grp")
         pm.parentConstraint(tmp, grp, mo=False, n="ex")
         pm.delete("ex")
         pm.parent(tmp, grp)
-#        pm.parent(pm.ls(tmps[x+1]), grp)
-
+        lst.append(grp)
+        if x == 0:
+            tmps[x].rename(objs[x])
+            grp.rename(objs[x]+"_grp")
+            lst = []
+            lst.append(grp)
+    tmps = tmps[:-1]
+    lst = lst[1:]
+    for x in range(len(lst)):
+        pm.parent(lst[x], tmps[x])
 
 def setInOrder():
     objs = pm.listRelatives(ad=True, typ='joint')
@@ -701,7 +711,7 @@ def renamer(i):
 def add(tail):
     tails = [
         "grp", "jnt", "ctrl",
-        "extra", "loc", "drv",
+        "extra", "loc", "rig",
     ]
     objs = pm.ls(sl=True)
     text = tails[tail-1]

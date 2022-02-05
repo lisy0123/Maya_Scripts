@@ -579,7 +579,7 @@ def lockUnlock(i, j, tmp=False):
 
 #--------------------------------------------------------------------------------------------#
 
-# ing
+# ing check
 def newGroup():
     objs = pm.ls(sl=True)
     tmps = pm.duplicate(rr=True)

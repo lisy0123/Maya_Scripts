@@ -67,11 +67,13 @@ print cir1, cir2
 - [x] add/delete attribute
 - [x] change attribute order
 - [ ] change attribute name
-- [x] spead constraint (normal,  quick)
+- [x] spread constraint
+- [ ] spread constraint error: hi에서 꼬이는 경우 발생. 원인 찾기
 - [x] controllers
-- [ ] copy and new group
+- [x] copy and new group
 - [ ] rivet (Each/Sum)
 - [ ] motion path (Basic/Advance)
+- [ ] joint copy (fk, ik, rig)
 - [ ] joint copy for ik spline
 - [ ] copy weight
 - [ ] ribbon

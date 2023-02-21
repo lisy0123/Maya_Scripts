@@ -2,6 +2,112 @@
 
 Useful tools made with [**mel and pymel**](https://help.autodesk.com/cloudhelp/2020/ENU/Maya-Tech-Docs/PyMel/index.html) that helps you easily rigging something in **[Maya](https://www.autodesk.com/products/maya/overview?support=ADVANCED&plc=MAYA&term=3-YEAR&quantity=1)**.
 
+## :couple: Human auto rigging
+
+![Human_auto_rigging](https://github.com/lisy0123/Maya_Scripts/blob/master/Human_auto_rigging.png)
+
+- [ ] Warning: Cycle on 'IK_stretch_R_Arm1_messure_Divide.outputX' may not evaluate as expected.  (Use 'cycleCheck -e off' to disable this warning.)
+
+|    Part     | functions                                                 |
+| :---------: | --------------------------------------------------------- |
+| Spine, Neck | fk/ik (spline), ik hybrid, stretch, follow, stiff, volume |
+|  Arm, Leg   | Multiple/None, fk/ik,  stretch, follow, lock,             |
+|    Hand     |                                                           |
+|    Foot     |                                                           |
+|    Face     | fk, aim eye,                                              |
+
+**Spine, Neck**
+
+- [x] fk/ik (spline)
+- [x] ik hybrid
+- [x] twist
+- [x] stretch
+- [x] follow 
+- [x] stiff
+- [x] volume
+
+**Arm, Leg**
+
+- [x] Multiple, None
+
+- [x] fk/ik
+
+- [x] stretch
+- [x] follow
+- [x] lock
+- [ ] twist
+- [ ] ribbon
+
+**Foot**
+
+- [ ] rock
+- [ ] Roll
+- [ ] Swivel (each)
+- [ ] Roll (each)
+- [ ] sub ctrl
+
+**Finger**
+
+- [ ] fk/ik
+- [ ] each attr
+- [ ] cup
+- [ ] spread
+- [ ] relax
+
+**Face**
+
+- [x] fk, aim
+
+- [ ] mouth - ribbon
+- [ ] eye - ribbon
+- [ ]  eyebrow - ribbon
+- [ ] nose
+- [ ] ear
+- [ ]  cheek
+- [ ] forehead
+
+:label: Updating...
+
+---
+
+## :mag: My use
+
+![My_use](https://github.com/lisy0123/Maya_Scripts/blob/master/My_use.png)
+
+- [x] joint, ik, weights options, set driven key, etc...
+- [x] constraint: maintain offset toggle
+- [x] quick constraint (1:1, M:1)
+- [x] quick add, lock, unlock attribute
+- [x] rename: search and replace
+- [x] namer(after): Exclude *shape => Include joint, transform
+- [x] set in order => Solved by ordering it from the bottom, not from the top.
+- [x] text didn't work well (123..,[]!@#$%%^&*)
+- [x] add/delete attribute
+- [x] change attribute order
+- [ ] change attribute name
+- [ ] add attribute for target visibility
+- [x] spread constraint
+- [ ] spread constraint error: hi에서 꼬이는 경우 발생. 원인 찾기
+- [ ] replace, resize, select, rotate, mirror ctrl
+- [ ] add more ctrl shapes
+- [ ] add picot ctrl
+- [ ] cluster deformer(??)
+- [x] copy and new group
+- [ ] rivet (Each/Sum)
+- [ ] freeze skinned joint
+- [ ] motion path (Basic/Advance)
+- [ ] ribbon
+- [ ] joint copy (fk, ik, rig)
+- [ ] joint copy for ik spline
+- [ ] quick FK/IK rig
+- [ ] quick mouth/eye rig
+- [ ] copy/paste weight
+- [ ] refactoring
+
+:label: Updating...
+
+---
+
 ## :hand: Hand auto rigging
 
 ![Hand_auto_rigging](https://github.com/lisy0123/Maya_Scripts/blob/master/Hand_auto_rigging.png)
@@ -51,47 +157,6 @@ print cir1, cir2
 </details>
 
 ---
-
-## :mag: My use
- 
-![My_use](https://github.com/lisy0123/Maya_Scripts/blob/master/My_use.png)
-
-- [x] joint, ik, weights options, set driven key, etc...
-- [x] constraint: maintain offset toggle
-- [x] quick constraint (1:1, M:1)
-- [x] quick add, lock, unlock attribute
-- [x] rename: search and replace
-- [x] namer(after): Exclude *shape => Include joint, transform
-- [x] set in order => Solved by ordering it from the bottom, not from the top.
-- [x] text didn't work well (123..,[]!@#$%%^&*)
-- [x] add/delete attribute
-- [x] change attribute order
-- [ ] change attribute name
-- [x] spread constraint
-- [ ] spread constraint error: hi에서 꼬이는 경우 발생. 원인 찾기
-- [x] controllers
-- [x] copy and new group
-- [ ] rivet (Each/Sum)
-- [ ] motion path (Basic/Advance)
-- [ ] joint copy (fk, ik, rig)
-- [ ] joint copy for ik spline
-- [ ] copy weight
-- [ ] ribbon
-- [ ] refactoring
-
-:label: Updating...
-
----
-
-## :couple: Human auto rigging
-
-![Human_auto_rigging](https://github.com/lisy0123/Maya_Scripts/blob/master/Human_auto_rigging.png)
-
-- [ ] rename functions
-
-:label: Updating...
-
-----
 
 ## :bird: Wing auto rigging
 

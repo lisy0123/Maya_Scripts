@@ -429,12 +429,14 @@ cmds.setParent("..")
 cmds.separator(h=1)
 
 # Text
-wi = (45,175,1,50)
-cmds.rowLayout(nc=4, cw4=wi)
-cmds.text(l="   Text :  ", w=wi[0])
+wi=(45,230)
+cmds.rowLayout(nc=2, cw2=wi)
+cmds.text(l="  Text : ", w=wi[0])
 tx = cmds.textField(w=wi[1], h=25)
-cmds.text("")
-cmds.button(l="Create", c="text()", w=wi[3], h=25)
+cmds.setParent("..")
+
+btnLayout(1)
+cmds.button(l="Create", c="text()", w=WI01[1], h=25)
 endSpace()
 
 
@@ -903,7 +905,7 @@ def constrains(con, obj, i):
             skip.append("y")
         if not cmds.checkBoxGrp(axes_check, q=True, v3=True):
             skip.append("z")
-    if cmds.checkBoxGrp(mo_check, q=True, v1=True):
+    if cmds.checkBoxGrp(mo_check, q=True, v1=True) or a == spread_const_check:
         if cmds.checkBoxGrp(a, q=True, v1=True):
             cmds.parentConstraint(con, obj, mo=True, st=skip, sr=skip)
         if cmds.checkBoxGrp(a, q=True, v2=True):

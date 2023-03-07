@@ -1,70 +1,17 @@
 # Maya Scripts
 
-Useful tools made with [**mel and pymel**](https://help.autodesk.com/cloudhelp/2020/ENU/Maya-Tech-Docs/PyMel/index.html) that helps you easily rigging something in **[Maya](https://www.autodesk.com/products/maya/overview?support=ADVANCED&plc=MAYA&term=3-YEAR&quantity=1)**.
+Useful tools made with [**Maya commands**](https://help.autodesk.com/cloudhelp/2023/ENU/Maya-Tech-Docs/CommandsPython/index.html) and [**pymel**](https://help.autodesk.com/cloudhelp/2023/ENU/Maya-Tech-Docs/PyMel/index.html#) that helps you easily rigging something in **[Maya](https://www.autodesk.com/products/maya/overview?support=ADVANCED&plc=MAYA&term=3-YEAR&quantity=1)**.
 
 ## :couple: Human auto rigging
 
 ![Human_auto_rigging](https://github.com/lisy0123/Maya_Scripts/blob/master/Human_auto_rigging.png)
 
-- [ ] Warning: Cycle on 'IK_stretch_R_Arm1_messure_Divide.outputX' may not evaluate as expected.  (Use 'cycleCheck -e off' to disable this warning.)
-
-|    Part     | functions                                                 |
-| :---------: | --------------------------------------------------------- |
-| Spine, Neck | fk/ik (spline), ik hybrid, stretch, follow, stiff, volume |
-|  Arm, Leg   | Multiple/None, fk/ik,  stretch, follow, lock,             |
-|    Hand     |                                                           |
-|    Foot     |                                                           |
-|    Face     | fk, aim eye,                                              |
-
-**Spine, Neck**
-
-- [x] fk/ik (spline)
-- [x] ik hybrid
-- [x] twist
-- [x] stretch
-- [x] follow 
-- [x] stiff
-- [x] volume
-
-**Arm, Leg**
-
-- [x] Multiple, None
-
-- [x] fk/ik
-
-- [x] stretch
-- [x] follow
-- [x] lock
-- [ ] twist
-- [ ] ribbon
-
-**Foot**
-
-- [ ] rock
-- [ ] Roll
-- [ ] Swivel (each)
-- [ ] Roll (each)
-- [ ] sub ctrl
-
-**Finger**
-
-- [ ] fk/ik
-- [ ] each attr
-- [ ] cup
-- [ ] spread
-- [ ] relax
-
-**Face**
-
-- [x] fk, aim
-
-- [ ] mouth - ribbon
-- [ ] eye - ribbon
-- [ ]  eyebrow - ribbon
-- [ ] nose
-- [ ] ear
-- [ ]  cheek
-- [ ] forehead
+|    Part     | functions                                                    |
+| :---------: | ------------------------------------------------------------ |
+| Spine, Neck | fk/ik (spline), ik hybrid, stretch, follow, stiff, volume    |
+|  Arm, Leg   | Multiple/None, fk/ik, stretch, follow, snap, ribbon(twist, volume, sine) |
+|    Hand     | fk/ik, each attr, spread, relax, slide, scrunch              |
+|    Foot     | fk/ik, rock, roll, swivel, sub ctrl                          |
 
 :label: Updating...
 

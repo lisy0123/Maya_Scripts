@@ -90,8 +90,8 @@ jnt = cmds.floatSliderButtonGrp(l="Size   ", bl="Set", bc="JointSize()", cw4=(50
 cmds.setParent("..")
 
 
-# UI1: Rigging
-frame("Rigging")
+# UI1: Setting
+frame("Setting")
 
 wi = (10,56,60,80,60)
 cmds.rowLayout(nc=5, cw5=wi)
@@ -119,22 +119,37 @@ cmds.button(l="Mirror / Orient Joints", c="JntMirror()", w=WI01[1], h=30)
 cmds.setParent("..")
 
 btn_layout(1)
-cmds.button(l="Setting Rigs", c="Setting()", w=WI01[1], h=30)
+cmds.button(l="Setting", c="Setting()", w=WI01[1], h=30)
 cmds.setParent("..")
 cmds.separator(h=1)
 
 btn_layout(2)
 cmds.button(l="Select Skin Joints", c="SelectJnt()", w=WI02[1], h=30)
 cmds.button(l="Bind Skin Options", c="cmds.SmoothBindSkinOptions()", w=WI02[2], h=30)
+cmds.setParent("..")
+
+btn_layout(1)
+cmds.button(l="Component Editor", c="cmds.ComponentEditor()", w=WI01[1], h=30)
+cmds.setParent("..")
+cmds.separator(h=1)
+
+wi=(70,250)
+cmds.rowLayout(nc=2, cw2=wi)
+cmds.text(l="  Direction : ", w=wi[0])
+skin_check = cmds.checkBox(l="Positive to negative (+X to -X)", w=wi[1], v=True, h=25)
+cmds.setParent("..")
+
+btn_layout(1)
+cmds.button(l="Mirror Skin Weights", c="MirrorSkinWeights()", w=WI01[1], h=30)
 endspace()
 
 
-# UI2: Tools
-frame("Tools")
+# UI2: Tool
+frame("Tool")
 
 btn_layout(2)
-cmds.button(l="Loc", c="cmds.CreateLocator()", w=WI02[1], h=30)
-cmds.button(l="LBA", c="cmds.ToggleLocalRotationAxes()", w=WI02[2], h=30)
+cmds.button(l="LBA", c="cmds.ToggleLocalRotationAxes()", w=WI02[1], h=30)
+cmds.button(l="Loc", c="cmds.CreateLocator()", w=WI02[2], h=30)
 cmds.setParent("..")
 
 cmds.rowLayout(nc=1)
@@ -143,53 +158,10 @@ cmds.setParent("..")
 
 btn_layout(1)
 cmds.button(l="Match", c="matchFreeze()", w=WI01[1], h=30)
-endspace()
-
-
-# UI3: Lock
-frame("Lock")
-
-cmds.rowLayout(nc=1)
-lock_check = cmds.checkBoxGrp(l="Attr : ", ncb=4, cw5=(40,60,60,60,10), la4=["Trans","Rot","Scale","Vis"], v1=True, v2=True, v3=True, h=25)
-cmds.setParent("..")
-
-btn_layout(2)
-cmds.button(l="Lock", c="lockUnlock(True, True)", w=WI02[1], h=30)
-cmds.button(l="UnKeyable", c="lockUnlock(True, False)", w=WI02[2], h=30)
 cmds.setParent("..")
 
 btn_layout(1)
-cmds.button(l="Unlock + Keyable", c="lockUnlock(False, True)", w=WI01[1], h=30)
-cmds.setParent("..")
-
-btn_layout(2)
-cmds.button(l="Lock Selected", c="lockUnlock(True, True, True)", w=WI02[1], h=30)
-cmds.button(l="Unlock Selected", c="lockUnlock(False, True, True)", w=WI02[2], h=30)
-endspace()
-
-
-# UI4: Animation
-frame("Animation")
-
-btn_layout(1)
-cmds.button(l="Back to Default Pose", c="DefaultPose()", w=WI01[1], h=30)
-cmds.setParent("..")
-cmds.separator(h=1)
-
-cmds.rowLayout(nc=1)
-save_check = cmds.radioButtonGrp(l="Check : ", cw3=(75,70,10), la2=["Once","Hierarchy"], nrb=2, sl=2, h=25)
-cmds.setParent("..")
-
-btn_layout(1)
-cmds.button(l="Save Keys", c="SaveKey()", w=WI01[1], h=30)
-cmds.setParent("..")
-
-btn_layout(1)
-mirrorkey = cmds.radioButtonGrp(l="    Mirror Keys : ", cw3=(75,70,10), la2=["L => R","R => L"], nrb=2, sl=1, w=295, h=25)
-cmds.setParent("..")
-
-btn_layout(1)
-cmds.button(l="Mirror Keys", c="MirrorKey()", w=WI01[1], h=30)
+cmds.button(l="Copy and New Group", c="newGroup()", w=WI01[1], h=30)
 endspace()
 
 
@@ -226,7 +198,9 @@ def JntHead():
     cmds.joint("Spine0", n="Spine", p=(0,11.5,-0.15))
     cmds.joint(n="Chest1", p=(0,13,-0.3))
     cmds.joint(n="Neck1", p=(0,14.1,-0.2))
+    cmds.select(cl=True)
     cmds.joint(n="Head1", p=(0,15.7,-0.1))
+    cmds.parent("Head1", "Neck1")
     cmds.joint(n="Head1_end", p=(0,17.1,-0.1))
     cmds.joint("Spine0", e=True, oj="xyz", sao="zup", ch=True, zso=True)
     
@@ -279,9 +253,9 @@ def JntLeg_sub(x,z,num):
     cmds.joint(n="L_Toes_end"+str(num), r=True, p=(0.3,-0.7,0))
     cmds.joint("L_Toes"+str(num), e=True, oj="xyz", sao="zdown", ch=True, zso=True)
     
-    cmds.joint("L_Ankle"+str(num), n="L_Heel"+str(num), r=True, p=(0.84,1,0))
-    cmds.joint("L_Toes_end"+str(num), n="L_FootSideInner"+str(num), r=True, p=(0,1,-0.5))
-    cmds.joint("L_Toes_end"+str(num), n="L_FootSideOuter"+str(num), r=True, p=(0,1,0.5))
+    cmds.joint("L_Ankle"+str(num), n="L_Heel_end"+str(num), r=True, p=(0.84,1,0))
+    cmds.joint("L_Toes_end"+str(num), n="L_FootSideInner_end"+str(num), r=True, p=(0,1,-0.5))
+    cmds.joint("L_Toes_end"+str(num), n="L_FootSideOuter_end"+str(num), r=True, p=(0,1,0.5))
     cmds.parent("L_FootSide*"+str(num), w=True)
     cmds.parent("L_FootSide*"+str(num), "L_Toes"+str(num))
 
@@ -392,42 +366,42 @@ def JntOrient():
     cmds.select("World_ctrl")
     cmds.FreezeTransformations()
     
-    if cmds.checkBox(leg_check, q=True, v=True):
-        for num in range(1, num_leg+1):
-            cmds.parent(["L_Toes"+str(num), "L_Heel"+str(num)], w=True)
-            cmds.joint("L_Ankle"+str(num), n="leg_tmp"+str(num), r=True, p=(2, 0, 0))
-
-    if cmds.checkBox(arm_check, q=True, v=True):
-        idx_finger = num_finger if num_finger < 3 else 3
-        for num in range(1, num_arm+1):
-            for i in range(1, idx_finger+1):
-                cmds.parent("L_Finger"+str(num)+"_"+str(i)+"_1", w=True)
-            if num_finger > 3:
-                cmds.parent("L_Finger"+str(num)+"_Cup", w=True)
-            cmds.joint("L_Wrist"+str(num), n="wrist_tmp"+str(num), r=True, p=(2, 0, 0))
-
-    cmds.joint("Spine0", e=True, oj="xyz", sao="zup", ch=True, zso=True)
-    cmds.joint("Jaw1", e=True, oj="xyz", sao="ydown", ch=True, zso=True)
-    cmds.joint("L_Eye1", e=True, oj="xyz", sao="zup", ch=True, zso=True)
-    print "Orient Head Jnts"
-    
-    if cmds.checkBox(leg_check, q=True, v=True):
-        for num in range(1, num_leg+1):
-            cmds.joint("L_Hip"+str(num), e=True, oj="xyz", sao="zdown", ch=True, zso=True)
-            cmds.joint("L_Toes"+str(num), e=True, oj="xyz", sao="zdown", ch=True, zso=True)
-            cmds.delete("leg_tmp"+str(num))
-            cmds.parent(["L_Toes"+str(num), "L_Heel"+str(num)], "L_Ankle"+str(num))
-        print "Orient Hip Jnts"
-
-    if cmds.checkBox(arm_check, q=True, v=True):
-        for num in range(1, num_arm+1):
-            cmds.joint("L_Clavicle" + str(num), e=True, oj="xyz", sao="ydown", ch=True, zso=True)
-            cmds.delete("wrist_tmp"+str(num))
-            for i in range(1, idx_finger+1):
-                cmds.parent("L_Finger"+str(num)+"_"+str(i)+"_1", "L_Wrist"+str(num))
-            if num_finger > 3:
-                cmds.parent("L_Finger"+str(num)+"_Cup", "L_Wrist"+str(num))
-        print "Orient Arm Jnts"
+#    if cmds.checkBox(leg_check, q=True, v=True):
+#        for num in range(1, num_leg+1):
+#            cmds.parent(["L_Toes"+str(num), "L_Heel_end"+str(num)], w=True)
+#            cmds.joint("L_Ankle"+str(num), n="leg_tmp"+str(num), r=True, p=(2, 0, 0))
+#
+#    if cmds.checkBox(arm_check, q=True, v=True):
+#        idx_finger = num_finger if num_finger < 3 else 3
+#        for num in range(1, num_arm+1):
+#            for i in range(1, idx_finger+1):
+#                cmds.parent("L_Finger"+str(num)+"_"+str(i)+"_1", w=True)
+#            if num_finger > 3:
+#                cmds.parent("L_Finger"+str(num)+"_Cup", w=True)
+#            cmds.joint("L_Wrist"+str(num), n="wrist_tmp"+str(num), r=True, p=(2, 0, 0))
+#
+#    cmds.joint("Spine0", e=True, oj="xyz", sao="zup", ch=True, zso=True)
+#    cmds.joint("Jaw1", e=True, oj="xyz", sao="ydown", ch=True, zso=True)
+#    cmds.joint("L_Eye1", e=True, oj="xyz", sao="zup", ch=True, zso=True)
+#    print "Orient Head Jnts"
+#
+#    if cmds.checkBox(leg_check, q=True, v=True):
+#        for num in range(1, num_leg+1):
+#            cmds.joint("L_Hip"+str(num), e=True, oj="xyz", sao="zdown", ch=True, zso=True)
+#            cmds.joint("L_Toes"+str(num), e=True, oj="xyz", sao="zdown", ch=True, zso=True)
+#            cmds.delete("leg_tmp"+str(num))
+#            cmds.parent(["L_Toes"+str(num), "L_Heel_end"+str(num)], "L_Ankle"+str(num))
+#        print "Orient Hip Jnts"
+#
+#    if cmds.checkBox(arm_check, q=True, v=True):
+#        for num in range(1, num_arm+1):
+#            cmds.joint("L_Clavicle" + str(num), e=True, oj="xzy", sao="zdown", ch=True, zso=True)
+#            cmds.delete("wrist_tmp"+str(num))
+#            for i in range(1, idx_finger+1):
+#                cmds.parent("L_Finger"+str(num)+"_"+str(i)+"_1", "L_Wrist"+str(num))
+#            if num_finger > 3:
+#                cmds.parent("L_Finger"+str(num)+"_Cup", "L_Wrist"+str(num))
+#        print "Orient Arm Jnts"
 
     cmds.makeIdentity("Root", a=True, r=True)
     cmds.DeleteHistory("Root")
@@ -466,22 +440,17 @@ def Setting():
     ikctrl_grp = "IK"+ctrlgrp(1)
     ikcluster_grp = "IK_cluster"+ctrlgrp(1)
     ikspline_grp = "IK_spline"+ctrlgrp(1)
-    ikstatic_grp = "IK_static"+ctrlgrp(1)
     ikfollow_grp = "IK_follow"+ctrlgrp(1)
     ikmessure_grp = "IK_messure"+ctrlgrp(1)
     
     grp_names = [rig_grp, world_grp, ik_grp, fk_grp, ribbon_grp, fkik_grp,
                 jnt_grp, extra_grp, ctrl_grp, ikjnt_grp, ikctrl_grp,
-                ikcluster_grp, ikspline_grp, ikstatic_grp, ikfollow_grp,
-                ikmessure_grp]
+                ikcluster_grp, ikspline_grp, ikfollow_grp, ikmessure_grp]
         
     for grp_name in grp_names:
         cmds.group(n=grp_name, em=True)
     cmds.parent(ikjnt_grp, ikctrl_grp, ikcluster_grp, ikspline_grp,
-                ikstatic_grp, ikfollow_grp, ikmessure_grp,
-                ik_grp)
-    cmds.parentConstraint("World_ctrl", ikstatic_grp, mo=True)
-    cmds.scaleConstraint("World_ctrl", ikstatic_grp, mo=True)
+                ikfollow_grp, ikmessure_grp, ik_grp)
 
     SettingRoot()
     SettingSpine()
@@ -505,6 +474,8 @@ def Setting():
     for grp_name in ["Root", ikjnt_grp, ikcluster_grp,
                     ikmessure_grp, extra_grp]:
         cmds.hide(grp_name)
+    print "Finish!!!"
+    cmds.warning("Finish!!!")
 
 
 #----------------------------------------------------------------------------#
@@ -753,13 +724,18 @@ def ClavicleFK():
             attr_num = -1 if lr == "L" else 1
             
             CtrlCreate(rig_clavicle, ARROW4, 9, fk_clavicle, YELLOW)
-            match_objs(rig_shoulder, fk_clavicle+ctrlgrp())
+            cmds.pointConstraint(rig_shoulder, fk_clavicle+ctrlgrp(), n="tmp")
+            cmds.delete("tmp")
             cmds.setAttr(fk_clavicle+ctrlgrp()+TRANSLATE+"Y", attr_num*world_scale)
             cmds.select(fk_clavicle+ctrlgrp())
             cmds.makeIdentity(a=True, t=1, r=1, n=0)
             cmds.ResetTransformations()
             cmds.parentConstraint(fk_clavicle+ctrlgrp(), rig_clavicle, mo=True)
             cmds.connectAttr(fk_clavicle+ctrlgrp()+SCALE, rig_clavicle+SCALE)
+            for trs in [TRANSLATE, SCALE]:
+                for axis in AXISES:
+                    cmds.setAttr(fk_clavicle+ctrlgrp()+trs+axis, l=True, k=False)
+            
 
 
 #----------------------------------------------------------------------------#
@@ -803,7 +779,7 @@ def FingerFK(lr):
             cmds.scale(0.3, 0.3, 0.3, cup+"_ctrl.cv[0:7]", r=True, ocp=True)
             cup_scale = cup+"_scale_Multiply"
             cmds.shadingNode(MULDIV, n=cup_scale, au=True)
-            cmds.connectAttr("RIG_L_Wrist1"+SCALE, cup_scale+".input1")
+            cmds.connectAttr(joint_name(0,lr+"_Wrist",num)+SCALE, cup_scale+".input1")
             cmds.connectAttr(cup+ctrlgrp()+SCALE, cup_scale+".input2")
             cmds.connectAttr(cup_scale+".output", cup+SCALE)
             for base in range(4, base_num+1):
@@ -844,7 +820,6 @@ def FingerIK(lr):
                 cmds.connectAttr(joint_name(0,lr+"_Wrist",num)+SCALE, ik_finger+"_"+str(sub)+SCALE)
         if base_num > 3:
             cmds.connectAttr(joint_name(0,lr+"_Wrist",num)+SCALE, joint_name(2, lr+"_Finger", num)+"_Cup"+SCALE)
-            
         if base_num > 3:
             cup = joint_name(2,lr+"_Finger",num)+"_Cup"
             CtrlCreate(cup, CIRCLE, 0, cup, SKYBLUE)
@@ -865,27 +840,7 @@ def FingerScale(lr):
         cmds.connectAttr(rig_wrist, joint_name(1,lr+"_Finger",num)+ctrlgrp(2)+SCALE)
         cmds.connectAttr(rig_wrist, joint_name(2,lr+"_Finger",num)+ctrlgrp(1)+SCALE)
         cmds.connectAttr(rig_wrist, "IK_PV_"+lr+"_Finger"+str(num)+ctrlgrp(1)+SCALE)
-        cmds.connectAttr(rig_wrist, "FKIK_"+lr+"_Finger"+str(num)+ctrlgrp(1)+SCALE)
         cmds.connectAttr(rig_wrist, joint_name(2,lr+"_Finger",num)+"_ikHandle"+ctrlgrp(2)+SCALE)
-
-        tmp = []
-        tmp.append(lr+"_Wrist"+str(num))
-        name = lr+"_Finger"+str(num)
-        for base in range(1, base_num+1):
-            for sub in range(1, sub_num+1):
-                tmp.append(name+"_"+str(base)+"_"+str(sub))
-        if base_num > 3:
-            tmp.append(name+"_Cup")
-
-    for grp_name in tmp:
-        cmds.shadingNode(BLENDCOLORS, n=grp_name+"_BlendColors", au=True)
-        cmds.connectAttr("IK_"+grp_name+SCALE, grp_name+"_BlendColors.color1")
-        cmds.connectAttr("FK_"+grp_name+SCALE, grp_name+"_BlendColors.color2")
-        if grp_name == lr+"_Wrist"+str(num):
-            cmds.connectAttr("FKIK_"+lr+"_Arm"+str(num)+ctrlgrp()+".FKIK", grp_name+"_BlendColors.blender")
-        else:
-            cmds.connectAttr("FKIK_"+lr+"_Finger"+str(num)+ctrlgrp()+".FKIK", grp_name+"_BlendColors.blender")
-        cmds.connectAttr(grp_name+"_BlendColors.output", "RIG_"+grp_name+SCALE)
 
 
 def FingerSub():
@@ -893,18 +848,11 @@ def FingerSub():
     
     for lr in LFRT:
         for num in range(1, end_num+1):
-            sub_ctrl = joint_name(1,lr+"_Finger",num)+"_sub"
-            CtrlCreate(joint_name(0,lr+"_Wrist",num), SUB, 9, sub_ctrl, YELLOW)
-            if lr == "R":
-                cmds.setAttr(sub_ctrl+ctrlgrp()+ROTATE+"Y", 180)
-                cmds.makeIdentity(sub_ctrl+ctrlgrp(), a=True, r=1, n=0, pn=1)
-            cmds.parent(sub_ctrl+ctrlgrp(1), joint_name(1,lr+"_Finger",num)+ctrlgrp(2))
+            sub_fkik(lr, num)
             sub_ctrls(lr, num)
-            sub_cup(lr, num)
+            sub_add_attrs(lr, num)
             sub_spread(lr, num)
-            sub_relax(lr, num)
-            sub_slide(lr, num)
-            sub_scrunch(lr, num)
+            sub_relax_slide_scrunch(lr, num)
     print "Create Finger Sub"
 
 
@@ -1008,30 +956,37 @@ def SettingVisibility():
     num_arm = cmds.intField(arm, q=True, v=True)
     num_leg = cmds.intField(leg, q=True, v=True)
     base_num = cmds.intField(basefinger, q=True, v=True)
-    sub_num = cmds.intField(subfinger, q=True, v=True)+1
-    grp_names = [joint_name(1,"Spine",1)+ctrlgrp(2), joint_name(2,"Spine",1),
-                joint_name(1,"Neck",1), joint_name(2,"Neck",1)]
     
+    cmds.hide("jnt_grp")
     for lr in LFRT:
         if cmds.checkBox(arm_check, q=True, v=True):
             for num in range(1, num_arm+1):
-                grp_names.append(joint_name(1,lr+"_Shoulder",num))
-                grp_names.append(joint_name(2,lr+"_Shoulder",num)+ctrlgrp(2))
-                if base_num > 3:
-                    grp_names.append(joint_name(1,lr+"_Finger",num)+"_Cup")
-                    grp_names.append(joint_name(2,lr+"_Finger",num)+"_Cup")
-                end_num = 4 if base_num > 3 else base_num+1
-                for base in range(1, end_num):
-                    for sub in range(1, sub_num+1):
-                        grp_names.append(joint_name(1,lr+"_Finger",num)+"_"+str(base)+"_"+str(sub))
-                        grp_names.append(joint_name(2,lr+"_Finger",num)+"_"+str(base)+"_"+str(sub))
+                cmds.hide(joint_name(6,lr+"_Arm",num)+"_skin*_jnt*")
+                cmds.hide(joint_name(6,lr+"_Arm",num)+"_geo")
         if cmds.checkBox(leg_check, q=True, v=True):
             for num in range(1, num_leg+1):
-                grp_names.append(joint_name(1,lr+"_Hip",num))
-                grp_names.append(joint_name(2,lr+"_Hip",num)+ctrlgrp(2))
-    
+                cmds.hide(joint_name(6,lr+"_Leg",num)+"_skin*_jnt*")
+                cmds.hide(joint_name(6,lr+"_Leg",num)+"_geo")
+                
+    grp_names = [joint_name(1,"Spine",1)+ctrlgrp(2), joint_name(2,"Spine",1),
+                joint_name(1,"Neck",1), joint_name(2,"Neck",1)]
     for grp_name in grp_names:
         cmds.hide(grp_name)
+    for lr in LFRT:
+        if cmds.checkBox(arm_check, q=True, v=True):
+            for num in range(1, num_arm+1):
+                cmds.hide(joint_name(1,lr+"_Shoulder",num))
+                cmds.hide(joint_name(2,lr+"_Shoulder",num)+ctrlgrp(2))
+                for idx in range(1, 3):
+                    if base_num > 3:
+                        cmds.hide(joint_name(idx,lr+"_Finger",num)+"_Cup")
+                    end_num = 4 if base_num > 3 else base_num+1
+                    for base in range(1, end_num):
+                        cmds.hide(joint_name(idx,lr+"_Finger",num)+"_"+str(base)+"_1")
+        if cmds.checkBox(leg_check, q=True, v=True):
+            for num in range(1, num_leg+1):
+                cmds.hide(joint_name(1,lr+"_Hip",num))
+                cmds.hide(joint_name(2,lr+"_Hip",num)+ctrlgrp(2))
 
 
 #----------------------------------------------------------------------------#
@@ -1156,6 +1111,9 @@ def Setting_FKIK(part):
     add_attrs(ctrl_name+ctrlgrp(), "FKIK", 2)
     for num in range(1, end_num+1):
         cmds.connectAttr(ctrl_name+ctrlgrp()+".FKIK", joint_name(0,part,num)+".spread")
+    for trs in [TRANSLATE, ROTATE, SCALE]:
+        for axis in AXISES:
+            cmds.setAttr(ctrl_name+ctrlgrp()+trs+axis, l=True, k=False)
      
 
 def Setting_FKIK_armleg(part):
@@ -1169,31 +1127,18 @@ def Setting_FKIK_armleg(part):
         attrs = [TRANSLATE+"X", TRANSLATE+"Y"]
         attr_num = [1, -1]
         mid_names = ["_Hip", "_Knee", "_Ankle"]
-    elif part == "Finger":
-        end_num = cmds.intField(arm, q=True, v=True)
-        base_num = cmds.intField(basefinger, q=True, v=True)
-        sub_num = cmds.intField(subfinger, q=True, v=True)+1
-        attrs = [TRANSLATE+"Y"]
-        attr_num = [1]
         
     world_scale = cmds.getAttr("scale_grp"+SCALE+"X")
     
     for num in range(1, end_num+1):
         if part == "Arm":
             l_obj = "RIG_L_Clavicle"+str(num)
-            r_obj = "RIG_R_Clavicle"+str(num)
             l_parent = l_obj
-            r_parent = r_obj
+            r_parent = "RIG_R_Clavicle"+str(num)
         elif part == "Leg":
             l_obj = "RIG_L_Hip"+str(num)
-            r_obj = "RIG_R_Hip"+str(num)
             l_parent = "RIG_Spine1"
             r_parent = l_parent
-        elif part == "Finger":
-            l_obj = "RIG_L_Wrist"+str(num)
-            r_obj = "RIG_R_Wrist"+str(num)
-            l_parent = l_obj
-            r_parent = r_obj
 
         l_ctrl_name = "FKIK_L_"+part+str(num)
         r_ctrl_name = "FKIK_R_"+part+str(num)
@@ -1226,17 +1171,11 @@ def Setting_FKIK_armleg(part):
         
         for lr in LFRT:
             ctrl_name = "FKIK_"+lr+"_"+part+str(num)+ctrlgrp()
-            if part == "Finger":
-                for base in range(1, base_num+1):
-                    for sub in range(1, sub_num+1):
-                        finger = lr+"_Finger"+str(num)+"_"+str(base)+"_"+str(sub)
-                        cmds.connectAttr(ctrl_name+".FKIK", "RIG_"+finger+".spread")
-                if base_num > 3:
-                    cup = lr+"_Finger"+str(num)+"_Cup"
-                    cmds.connectAttr(ctrl_name+".FKIK", "RIG_"+cup+".spread")
-            else:
-                for name in mid_names:
-                    cmds.connectAttr(ctrl_name+".FKIK", "RIG_"+lr+name+str(num)+".spread")
+            for name in mid_names:
+                cmds.connectAttr(ctrl_name+".FKIK", "RIG_"+lr+name+str(num)+".spread")
+            for trs in [TRANSLATE, ROTATE, SCALE]:
+                for axis in AXISES:
+                    cmds.setAttr(ctrl_name+trs+axis, l=True, k=False)
 
  
 #----------------------------------------------------------------------------#
@@ -1265,7 +1204,7 @@ def Setting_clavicle():
 
 
 def Setting_foot(lr, num):
-    foot_lists = [lr+"_Heel", lr+"_FootSideOuter", lr+"_FootSideInner"]
+    foot_lists = [lr+"_Heel_end", lr+"_FootSideOuter_end", lr+"_FootSideInner_end"]
     for idx in range(3):
         cmds.duplicate(lr+"_Toes"+str(num), n=joint_name(idx,lr+"_Toes",num), po=True)
         cmds.duplicate(lr+"_Toes_end"+str(num), n=joint_name(idx,lr+"_Toes_end",num), po=True)
@@ -1280,8 +1219,8 @@ def Setting_foot(lr, num):
         
     spread(joint_name(0,lr+"_Toes",num), joint_name(1,lr+"_Toes",num), joint_name(2,lr+"_Toes",num))
     spread(joint_name(0,foot_lists[0],num), joint_name(1,foot_lists[0],num), joint_name(2,foot_lists[0],num))
-    for name in [lr+"_Toes", lr+"_Toes_end", lr+"_Heel",
-                lr+"_FootSideOuter", lr+"_FootSideInner"]:
+    for name in [lr+"_Toes", lr+"_Toes_end", lr+"_Heel_end",
+                lr+"_FootSideOuter_end", lr+"_FootSideInner_end"]:
         cmds.connectAttr("FKIK_"+lr+"_Leg"+str(num)+"_ctrl.FKIK", joint_name(0,name,num)+".spread")
 
 
@@ -1330,7 +1269,6 @@ def Setting_finger():
             for base in range(1, end_num):
                 finger = lr+"_Finger"+str(num)+"_"+str(base)+"_1"
                 spread("RIG_"+finger, "FK_"+finger, "IK_"+finger)
-    Setting_FKIK_armleg("Finger")
 
 
 #----------------------------------------------------------------------------#
@@ -1359,20 +1297,22 @@ def Setting_vis_armleg(part):
     else:
         end_num = cmds.intField(arm, q=True, v=True)
     
-    final_ctrl = cmds.group(n="FKIK_"+part+ctrlgrp(2), em=True)
+    fkik_ctrl_grp = cmds.group(n="FKIK_"+part+ctrlgrp(2), em=True)
     for lr in LFRT:
         for num in range(1, end_num+1):
             mid = lr+"_"+part
             fk_grp = joint_name(1,mid,num)+ctrlgrp(2)
             ik_grp = joint_name(2,mid,num)+ctrlgrp(1)
             pv_grp = "IK_PV_"+mid+str(num)+ctrlgrp(1)
-            fkik_ctrl = "FKIK_"+mid+str(num)+ctrlgrp()
+            fkik_ctrl = "FKIK_"+mid+str(num)
+            if part == "Finger":
+                fkik_ctrl = "FKIK_"+lr+"_Finger"+str(num)+"_sub"
 
-            cmds.connectAttr(fkik_ctrl+".FKIK", ik_grp+".visibility")
-            cmds.connectAttr(fkik_ctrl+".FKIK", pv_grp+".visibility")
-            reverse_attr("FKIK_"+mid+str(num)+"_Reverse", fkik_ctrl+".FKIK", fk_grp+".visibility")
-            cmds.parent("FKIK_"+mid+str(num)+ctrlgrp(1), final_ctrl)
-    cmds.parent(final_ctrl, "FKIK_ctrl_grp")
+            cmds.connectAttr(fkik_ctrl+ctrlgrp()+".FKIK", ik_grp+".visibility")
+            cmds.connectAttr(fkik_ctrl+ctrlgrp()+".FKIK", pv_grp+".visibility")
+            reverse_attr("FKIK_"+mid+str(num)+"_Reverse", fkik_ctrl+ctrlgrp()+".FKIK", fk_grp+".visibility")
+            cmds.parent(fkik_ctrl+ctrlgrp(1), fkik_ctrl_grp)
+    cmds.parent(fkik_ctrl_grp, "FKIK_ctrl_grp")
 
 
 #----------------------------------------------------------------------------#
@@ -1417,7 +1357,7 @@ def spread(rig, fk, ik, tmp=0):
     ik_joints = cmds.ls(sl=True)
     
     spread_prepare(rig_joints, fk_joints, ik_joints, tmp)
-    constraints = cmds.listRelatives(rig_joints, ad=True, typ='constraint')[::-1]
+    constraints = cmds.listRelatives(rig_joints, ad=True, typ="constraint")[::-1]
     attrs = cmds.listAttr(constraints, ud=True)
 
     cons_idx = 0
@@ -2097,10 +2037,12 @@ def ik_pole_vector(part, lr, num):
     ik_handle_name = "IK_"+lr+"_"+part+str(num)+"_ikHandle"
     
     CtrlCreate(ik_mid, DIAMOND, 9, pole_vector, RED)
-    attr = pole_vector+ctrlgrp(1)+TRANSLATE+"Z"
-    tmp = -2 if part == "Arm" else 2
-    attr_num = cmds.getAttr(attr) + (tmp*world_scale)
-    cmds.setAttr(attr, attr_num)
+    if part == "Arm":
+        tmp = 2 if lr == "L" else -2
+        cmds.move(0, 0, tmp*world_scale, pole_vector+ctrlgrp(1), r=True, os=True, wd=True)
+    else:
+        tmp = -2 if lr == "L" else 2
+        cmds.move(0, tmp*world_scale, 0, pole_vector+ctrlgrp(1), r=True, os=True, wd=True)
     cmds.makeIdentity(pole_vector+ctrlgrp(1), a=True, t=1, r=1, s=1, n=0, pn=1)
     cmds.poleVectorConstraint(pole_vector+ctrlgrp(), ik_handle_name)
     
@@ -2679,10 +2621,16 @@ def ik_ribbon_sine(name):
     
     add_attrs(mid_ctrl)
     add_attrs(mid_ctrl, "sine_amplitude", 1)
+    add_attrs(mid_ctrl, "sine_wavelength", 1, 2)
+    add_attrs(mid_ctrl, "sine_offset", 1)
     add_attrs(mid_ctrl, "sine_twist", 1)
     
     cmds.connectAttr(mid_ctrl+".sine_amplitude", name+"_sine.amplitude")
+    cmds.connectAttr(mid_ctrl+".sine_wavelength", name+"_sine.wavelength")
+    cmds.connectAttr(mid_ctrl+".sine_offset", name+"_sine.offset")
     cmds.connectAttr(mid_ctrl+".sine_twist", name+"_sine_handle"+ROTATE+"Y")
+    
+    cmds.setAttr(name+"_sine.dropoff", 1)
 
 
 #----------------------------------------------------------------------------#
@@ -2722,6 +2670,8 @@ def ik_ribbon_fix_mid(name):
 def ik_ribbon_position(part, lr, num, bodies):
     name = joint_name(6,lr+"_"+part,num)
     grp_names = [name+"_upper", name+"_lower"]
+    grp_bc = name+"_BlendColors"
+    grp_div = name+"_10into1_Divide"
         
     tmp = ["_start", "_mid", "_end"]
     for idx, body in enumerate(bodies):
@@ -2733,19 +2683,31 @@ def ik_ribbon_position(part, lr, num, bodies):
     cmds.scaleConstraint(name+"_1_jnt", name+"_3_jnt", grp_names[0]+ctrlgrp(1))
     cmds.scaleConstraint(name+"_3_jnt", name+"_5_jnt", grp_names[1]+ctrlgrp(1))
     
+    cmds.shadingNode(BLENDCOLORS, n=grp_bc, au=True)
+    cmds.shadingNode(MULDIV, n=grp_div, au=True)
+    cmds.setAttr(grp_div+".operation", 2)
+    cmds.connectAttr("IK_PV_"+lr+"_"+part+str(num)+ctrlgrp()+".follow", grp_div+".input1X")
+    cmds.setAttr(grp_div+".input2X", 10)
+    cmds.connectAttr(grp_div+".outputX", grp_bc+".blender")
+    cmds.connectAttr(joint_name(2,lr+"_"+part,num)+ctrlgrp()+".swivel", grp_bc+".color1R")
+    
     for idx, grp_name in enumerate(grp_names):
         cmds.group(n=grp_name+"_aim", em=True)
         cmds.group(n=grp_name+"_aimpoint", em=True)
         match_objs(grp_name+ctrlgrp(1), grp_name+"_aim")
-        match_objs(grp_name+ctrlgrp(1), grp_name+"_aimpoint")
+        match_objs(name+"_"+str(3+idx*2)+"_jnt", grp_name+"_aimpoint")
         cmds.parent(grp_name+"_aim", grp_name+ctrlgrp(1))
         cmds.parent(grp_name+ctrlgrp(), grp_name+"_aim")
-        cmds.parent(grp_name+"_aimpoint", name+"_"+str(idx*2+1)+"_jnt")
-    
+        cmds.parent(grp_name+"_aimpoint", name+"_"+str(3+idx*2)+"_jnt")
+        cmds.duplicate(grp_name+"_aimpoint", n=grp_name+"_aimpoint"+ctrlgrp(2))
+        cmds.parent(grp_name+"_aimpoint", grp_name+"_aimpoint"+ctrlgrp(2))
+        cmds.connectAttr(grp_bc+".outputR", grp_name+"_aimpoint"+ROTATE+"X")
+        
     aimVector = [1, 0, 0] if lr == "L" else [-1, 0, 0]
-    upVector = [0, 1, 0] if lr == "L" else [0, -1, 0]
+    upVector = [0, 1, 0] if part == "Arm" else [0, 0, 1]
+    worldUp = [0, 1, 0] if part == "Arm" else [0, 0, 1]
     for idx in range(2):
-        cmds.aimConstraint(name+"_"+str(3+idx*2)+"_jnt", grp_names[idx]+"_aim", wut="objectrotation", aim=aimVector, u=upVector, wu=[0, 0, 1])
+        cmds.aimConstraint(name+"_"+str(3+idx*2)+"_jnt", grp_names[idx]+"_aim", wut="objectrotation", aim=aimVector, u=upVector, wu=worldUp)
         cmds.connectAttr(grp_names[idx]+"_aimpoint.worldMatrix[0]", grp_names[idx]+"_aim_aimConstraint1.worldUpMatrix")
     cmds.duplicate(name+"_skin4_jnt", n=name+"_skin4_jnt_sub")
     cmds.pointConstraint(name+"_skin5_jnt", name+"_skin4_jnt_sub")
@@ -2756,9 +2718,9 @@ def ik_ribbon_position(part, lr, num, bodies):
     for idx in range(1, 10, 4):
         cmds.connectAttr(joint_name(0,bodies[(idx-1)/3],num)+SCALE, name+"_"+str(idx)+ctrlgrp(2)+SCALE)
     for idx in range(2, 5):
-        cmds.scaleConstraint(name+"_"+str(1)+ctrlgrp(2), name+"_"+str(5)+ctrlgrp(2), name+"_"+str(idx)+ctrlgrp(2))
+        cmds.scaleConstraint(name+"_1"+ctrlgrp(2), name+"_5"+ctrlgrp(2), name+"_"+str(idx)+ctrlgrp(2))
     for idx in range(6, 9):
-        cmds.scaleConstraint(name+"_"+str(5)+ctrlgrp(2), name+"_"+str(9)+ctrlgrp(2), name+"_"+str(idx)+ctrlgrp(2))
+        cmds.scaleConstraint(name+"_5"+ctrlgrp(2), name+"_9"+ctrlgrp(2), name+"_"+str(idx)+ctrlgrp(2))
         
     cmds.setAttr(name+"_2"+ctrlgrp(2)+"_scaleConstraint1."+name+"_1"+ctrlgrp(2)+"W0", 2)
     cmds.setAttr(name+"_4"+ctrlgrp(2)+"_scaleConstraint1."+name+"_5"+ctrlgrp(2)+"W1", 2)
@@ -2766,6 +2728,30 @@ def ik_ribbon_position(part, lr, num, bodies):
     cmds.setAttr(name+"_8"+ctrlgrp(2)+"_scaleConstraint1."+name+"_9"+ctrlgrp(2)+"W1", 2)
     cmds.parent(name+ctrlgrp(2), "Ribbon_grp")
     cmds.connectAttr("World_ctrl"+SCALE, name+ctrlgrp(1)+SCALE)
+
+    cmds.duplicate(name+"_lower_aim", n=name+"_lower_x_grp", po=True)
+    cmds.duplicate(name+"_lower_aim", n=name+"_lower_z_grp", po=True)
+    cmds.parent(name+"_lower_ctrl", name+"_lower_x_grp")
+    cmds.parent(name+"_lower_x_grp", name+"_lower_z_grp")
+    cmds.parent(name+"_lower_z_grp", name+"_lower_aim")
+    
+    cmds.shadingNode(MULDIV, n=name+"_rot_Divide", au=True)
+    cmds.setAttr(name+"_rot_Divide.operation", 2)
+    cmds.connectAttr(name+"_9"+ctrlgrp(1)+ROTATE+"X", name+"_rot_Divide.input1X")
+    cmds.connectAttr(name+"_9"+ctrlgrp(1)+ROTATE+"X", name+"_rot_Divide.input1Y")
+    cmds.setAttr(name+"_rot_Divide.input2X", 2)
+    cmds.setAttr(name+"_rot_Divide.input2Y", -2)
+    cmds.connectAttr(name+"_rot_Divide.outputX", name+"_8"+ctrlgrp(1)+ROTATE+"X")
+    cmds.connectAttr(name+"_rot_Divide.outputY", name+"_lower_x_grp"+ROTATE+"X")
+
+    cmds.shadingNode(MULDIV, n=name+"_rot_Multiply", au=True)
+    cmds.connectAttr(name+"_9"+ctrlgrp(1)+ROTATE+"Z", name+"_rot_Multiply.input1X")
+    cmds.setAttr(name+"_rot_Multiply.input2X", -1)
+    cmds.connectAttr(name+"_rot_Multiply.outputX", name+"_lower_aimpoint"+ROTATE+"Z")
+
+    end_name = "_Wrist" if part == "Arm" else "_Ankle"
+    cmds.pointConstraint(joint_name(0,lr+end_name,num), name+"_9"+ctrlgrp(1))
+    cmds.connectAttr(joint_name(0,lr+end_name,num)+ROTATE, name+"_9"+ctrlgrp(1)+ROTATE)
 
     for idx in range(1, 6):
         cmds.hide(name+"_"+str(idx)+"_jnt")
@@ -2814,10 +2800,8 @@ def ik_finger_pole_vector(lr, num, base):
     
     CtrlCreate(pv_joint, DIAMOND, 9, pole_vector, RED)
     cmds.scale(0.15, 0.15, 0.15, pole_vector+ctrlgrp())
-    if lr == "L":
-        cmds.setAttr(pole_vector+ctrlgrp()+TRANSLATE+"Y", -0.3*world_scale)
-    else:
-        cmds.setAttr(pole_vector+ctrlgrp()+TRANSLATE+"Y", 0.3*world_scale)
+    tmp = -0.3 if lr == "L" else 0.3
+    cmds.move(0, tmp*world_scale, 0, pole_vector+ctrlgrp(1), r=True, os=True, wd=True)
     cmds.makeIdentity(pole_vector+ctrlgrp(), a=True, t=1, r=1, s=1, n=0, pn=1)
     cmds.poleVectorConstraint(pole_vector+ctrlgrp(), ik_handle_name)
     cmds.duplicate(pole_vector+ctrlgrp(1), n=pole_vector+ctrlgrp(1)+ctrlgrp(2), po=True)
@@ -2849,9 +2833,9 @@ def ik_foot_prepare(lr, num):
     ankle = joint_name(2, lr+"_Ankle", num)
     toe = joint_name(2, lr+"_Toes", num)
     toe_end = joint_name(2, lr+"_Toes_end", num)
-    rock_in = joint_name(2, lr+"_FootSideInner", num)
-    rock_out = joint_name(2, lr+"_FootSideOuter", num)
-    heel = joint_name(2,lr+"_Heel", num)
+    rock_in = joint_name(2, lr+"_FootSideInner_end", num)
+    rock_out = joint_name(2, lr+"_FootSideOuter_end", num)
+    heel = joint_name(2,lr+"_Heel_end", num)
     
     name = joint_name(2,lr+"_Leg",num)
     out_grp = name+"_rock_out"
@@ -3007,8 +2991,8 @@ def ik_foot_sub_ctrl(lr, num):
     
     for trs in [ROTATE, SCALE]:
         for axis in AXISES:
-            cmds.setAttr(sub_ctrl+trs+axis, l=True, k=False, cb=False)
-    cmds.setAttr(sub_ctrl+TRANSLATE+"Y", l=True, k=False, cb=False)
+            cmds.setAttr(sub_ctrl+trs+axis, l=True, k=False)
+    cmds.setAttr(sub_ctrl+TRANSLATE+"Y", l=True, k=False)
     
 
 def ik_foot_sub_prepare(name, world_scale):
@@ -3152,144 +3136,143 @@ def ik_foot_sub_roll_heel(name, sub_ctrl, world_scale):
 #----------------------------------------------------------------------------#
 
 
+def sub_fkik(lr, num):
+    base_num = cmds.intField(basefinger, q=True, v=True)
+    sub_num = cmds.intField(subfinger, q=True, v=True)+1
+    sub_ctrl = "FKIK_"+lr+"_Finger"+str(num)+"_sub"
+    
+    CtrlCreate(joint_name(0,lr+"_Wrist",num), SUB, 9, sub_ctrl, YELLOW)
+    if lr == "R":
+        cmds.setAttr(sub_ctrl+ctrlgrp()+ROTATE+"Y", 180)
+        cmds.makeIdentity(sub_ctrl+ctrlgrp(), a=True, r=1, n=0, pn=1)
+    cmds.parentConstraint(joint_name(0,lr+"_Wrist",num), sub_ctrl+ctrlgrp(1), mo=True)
+    cmds.connectAttr(joint_name(0,lr+"_Wrist",num)+SCALE, sub_ctrl+ctrlgrp(1)+SCALE)
+    for trs in [TRANSLATE, ROTATE, SCALE]:
+        for axis in AXISES:
+            cmds.setAttr(sub_ctrl+ctrlgrp()+trs+axis, l=True, k=False)
+            
+    add_attrs(sub_ctrl+ctrlgrp())
+    add_attrs(sub_ctrl+ctrlgrp(), "FKIK", 2)
+    tmp = [lr+"_Wrist"+str(num)]
+    name = lr+"_Finger"+str(num)
+    for base in range(1, base_num+1):
+        for sub in range(1, sub_num+1):
+            finger = lr+"_Finger"+str(num)+"_"+str(base)+"_"+str(sub)
+            cmds.connectAttr(sub_ctrl+ctrlgrp()+".FKIK", "RIG_"+finger+".spread")
+            tmp.append(name+"_"+str(base)+"_"+str(sub))
+    if base_num > 3:
+        cup = lr+"_Finger"+str(num)+"_Cup"
+        cmds.connectAttr(sub_ctrl+ctrlgrp()+".FKIK", "RIG_"+cup+".spread")
+        tmp.append(name+"_Cup")
+    for grp_name in tmp:
+        cmds.shadingNode(BLENDCOLORS, n=grp_name+"_BlendColors", au=True)
+        cmds.connectAttr("IK_"+grp_name+SCALE, grp_name+"_BlendColors.color1")
+        cmds.connectAttr("FK_"+grp_name+SCALE, grp_name+"_BlendColors.color2")
+        if grp_name == lr+"_Wrist"+str(num):
+            cmds.connectAttr("FKIK_"+lr+"_Finger"+str(num)+"_sub"+ctrlgrp()+".FKIK", grp_name+"_BlendColors.blender")
+        else:
+            cmds.connectAttr("FKIK_"+lr+"_Finger"+str(num)+"_sub"+ctrlgrp()+".FKIK", grp_name+"_BlendColors.blender")
+        cmds.connectAttr(grp_name+"_BlendColors.output", "RIG_"+grp_name+SCALE)
+
+
 def sub_ctrls(lr, num):
     base_num = cmds.intField(basefinger, q=True, v=True)
     sub_num = cmds.intField(subfinger, q=True, v=True)
-    sub_ctrl = joint_name(1,lr+"_Finger",num)+"_sub"+ctrlgrp()
+    sub_ctrl = "FKIK_"+lr+"_Finger"+str(num)+"_sub"+ctrlgrp()
     names = ["thumb", "index", "middle", "ring", "pinky", "extra"]
     
     add_attrs(sub_ctrl)
+    finger_duplicate(lr, num, "_sub", ctrlgrp(), 1)
     
     for base in range(1, base_num+1):
         name_ctrl = names[base-1] if base < 6 else names[5]+str(base-5)
-        add_attrs(sub_ctrl, name_ctrl, 2, 0, -2, 10)
+        add_attrs(sub_ctrl, "FK_"+name_ctrl, 2, 0, -5, 10)
         fk_grp = joint_name(1,lr+"_Finger",num)+"_"+str(base)
-        cmds.duplicate(fk_grp+"_1"+ctrlgrp(1), n=fk_grp+"_1"+ctrlgrp(2), po=True)
-        cmds.parent(fk_grp+"_1"+ctrlgrp(1), fk_grp+"_1"+ctrlgrp(2))
-        
-        sub_attr = sub_ctrl+"."+name_ctrl
-        sub_value = [10, -2, 0]
-        finger_value = [90, -10, 0]
         for sub in range(1, sub_num+1):
-            finger_attr = fk_grp+"_"+str(sub)+ctrlgrp(1)+ROTATE+"Z"
-            for idx in range(len(finger_value)):
-                cmds.setAttr(sub_attr, sub_value[idx])
-                cmds.setAttr(finger_attr, finger_value[idx])
-                cmds.setDrivenKeyframe(finger_attr, cd=sub_attr)
-    
-    
-def sub_cup(lr, num):
-    base_num = cmds.intField(basefinger, q=True, v=True)
-    sub_ctrl = joint_name(1,lr+"_Finger",num)+"_sub"+ctrlgrp()
-    
+            finger_attr = fk_grp+"_"+str(sub)+"_sub"+ctrlgrp(2)+ROTATE+"Z"
+            finger_set_driven_key([10, -5, 0], [90, -20, 0], sub_ctrl+".FK_"+name_ctrl, finger_attr)
+
     if base_num > 3:
-        add_attrs(sub_ctrl, "cup", 2, 0, 0, 10)
-        
-        finger_attr = joint_name(1,lr+"_Finger",num)+"_Cup"+ctrlgrp(1)+ROTATE+"X"
-        sub_attr = sub_ctrl+".cup"
-        sub_value = [10, 0]
-        finger_value = [-70, 0]
-        for idx in range(len(finger_value)):
-            cmds.setAttr(sub_attr, sub_value[idx])
-            cmds.setAttr(finger_attr, finger_value[idx])
-            cmds.setDrivenKeyframe(finger_attr, cd=sub_attr)
+        add_attrs(sub_ctrl, "FK_cup", 2, 0, 0, 10)
+        cup = joint_name(1,lr+"_Finger",num)+"_Cup"
+        cmds.duplicate(cup+ctrlgrp(1), n=cup+"_sub"+ctrlgrp(2), po=True)
+        cmds.parent(cup+"_sub"+ctrlgrp(2), cup+ctrlgrp(1))
+        cmds.parent(cup+ctrlgrp(), cup+"_sub"+ctrlgrp(2))
+        finger_attr = joint_name(1,lr+"_Finger",num)+"_Cup_sub"+ctrlgrp(2)+ROTATE+"X"
+        finger_set_driven_key([10, 0], [-70, 0], sub_ctrl+".FK_cup", finger_attr)
+
+
+def sub_add_attrs(lr, num):
+    sub_ctrl = "FKIK_"+lr+"_Finger"+str(num)+"_sub"+ctrlgrp()
+
+    add_attrs(sub_ctrl)
+    add_attrs(sub_ctrl, "FK_spread", 2, 0, -5, 10)
+    add_attrs(sub_ctrl, "FK_relax", 2, 0, 0, 10)
+    add_attrs(sub_ctrl, "FK_slide", 2, 0, 0, 10)
+    add_attrs(sub_ctrl, "FK_scrunch", 2, 0, -5, 10)
+    finger_duplicate(lr, num, "_relax",  "_sub"+ctrlgrp(2))
+    finger_duplicate(lr, num, "_slide", "_relax"+ctrlgrp(2))
+    finger_duplicate(lr, num, "_scrunch", "_slide"+ctrlgrp(2))
 
     
 def sub_spread(lr, num):
     base_num = cmds.intField(basefinger, q=True, v=True)
-    sub_ctrl = joint_name(1,lr+"_Finger",num)+"_sub"+ctrlgrp()
-    
-    add_attrs(sub_ctrl)
-    add_attrs(sub_ctrl, "spread", 2, 0, -5, 10)
+    sub_ctrl = "FKIK_"+lr+"_Finger"+str(num)+"_sub"+ctrlgrp()
     
     for base in range(2, base_num+1):
+        fk_grp = joint_name(1,lr+"_Finger",num)+"_"+str(base)+"_1"
+        cmds.duplicate(fk_grp+ctrlgrp(1), n=fk_grp+"_spread"+ctrlgrp(2), po=True)
+        cmds.parent(fk_grp+"_spread"+ctrlgrp(2), fk_grp+ctrlgrp(1))
+        cmds.parent(fk_grp+"_scrunch"+ctrlgrp(2), fk_grp+"_spread"+ctrlgrp(2))
+    
         if base != 3:
-            finger_attr = joint_name(1,lr+"_Finger",num)+"_"+str(base)+"_1"+ctrlgrp(1)+ROTATE+"Y"
-            sub_attr = sub_ctrl+".spread"
-            sub_value = [10, -5, 0]
+            finger_attr = joint_name(1,lr+"_Finger",num)+"_"+str(base)+"_1"+"_spread"+ctrlgrp(2)+ROTATE+"Y"
             if base == 2:
-                finger_value = [45, -15, 0]
+                finger_value = [25, -10, 0]
             else:
-                finger_value = [-30-15*(base-4), 12+8*(base-4), 0]
-            for idx in range(len(finger_value)):
-                cmds.setAttr(sub_attr, sub_value[idx])
-                cmds.setAttr(finger_attr, finger_value[idx])
-                cmds.setDrivenKeyframe(finger_attr, cd=sub_attr)
+                finger_value = [-25-10*(base-4), 10+5*(base-4), 0]
+            finger_set_driven_key([10, -5, 0], finger_value, sub_ctrl+".FK_spread", finger_attr)
     
     
-def sub_relax(lr, num):
+def sub_relax_slide_scrunch(lr, num):
+    def finger_attr(base, sub, attr):
+        return(joint_name(1,lr+"_Finger",num)+"_"+str(base)+"_"+str(sub)+"_"+attr+ctrlgrp(2)+ROTATE+"Z")
+        
     base_num = cmds.intField(basefinger, q=True, v=True)
     sub_num = cmds.intField(subfinger, q=True, v=True)
-    sub_ctrl = joint_name(1,lr+"_Finger",num)+"_sub"+ctrlgrp()
-    
-    add_attrs(sub_ctrl, "relax", 2, 0, 0, 10)
+    sub_ctrl = "FKIK_"+lr+"_Finger"+str(num)+"_sub"+ctrlgrp()
     
     for base in range(2, base_num+1):
         for sub in range(1, sub_num+1):
-            fk_grp = joint_name(1,lr+"_Finger",num)+"_"+str(base)+"_"+str(sub)
-            cmds.duplicate(fk_grp+ctrlgrp(1), n=fk_grp+"_relax"+ctrlgrp(2), po=True)
-            cmds.parent(fk_grp+ctrlgrp(1), fk_grp+"_relax"+ctrlgrp(2))
-            
-            finger_attr = fk_grp+"_relax"+ctrlgrp(2)+ROTATE+"Z"
-            sub_attr = sub_ctrl+".relax"
-            sub_value = [10, 0]
-            finger_value = [5*base, 0]
-            for idx in range(len(finger_value)):
-                cmds.setAttr(sub_attr, sub_value[idx])
-                cmds.setAttr(finger_attr, finger_value[idx])
-                cmds.setDrivenKeyframe(finger_attr, cd=sub_attr)
-
-
-def sub_slide(lr, num):
-    base_num = cmds.intField(basefinger, q=True, v=True)
-    sub_num = cmds.intField(subfinger, q=True, v=True)
-    sub_ctrl = joint_name(1,lr+"_Finger",num)+"_sub"+ctrlgrp()
-    
-    add_attrs(sub_ctrl, "slide", 2, 0, 0, 10)
-    
-    for base in range(2, base_num+1):
-        for sub in range(1, sub_num+1):
-            fk_grp = joint_name(1,lr+"_Finger",num)+"_"+str(base)+"_"+str(sub)
-            cmds.duplicate(fk_grp+ctrlgrp(1), n=fk_grp+"_slide"+ctrlgrp(2), po=True)
-            cmds.parent(fk_grp+ctrlgrp(1), fk_grp+"_slide"+ctrlgrp(2))
-            
-            finger_attr = fk_grp+"_slide"+ctrlgrp(2)+ROTATE+"Z"
-            sub_attr = sub_ctrl+".slide"
-            sub_value = [10, 0]
-            if sub == 1 or sub == sub_num:
-                finger_value = [-60, 0]
-            else:
-                finger_value = [int(120/(sub_num-2)), 0]
-            for idx in range(len(finger_value)):
-                cmds.setAttr(sub_attr, sub_value[idx])
-                cmds.setAttr(finger_attr, finger_value[idx])
-                cmds.setDrivenKeyframe(finger_attr, cd=sub_attr)
-
-
-def sub_scrunch(lr, num):
-    base_num = cmds.intField(basefinger, q=True, v=True)
-    sub_num = cmds.intField(subfinger, q=True, v=True)
-    sub_ctrl = joint_name(1,lr+"_Finger",num)+"_sub"+ctrlgrp()
-    
-    add_attrs(sub_ctrl, "scrunch", 2, 0, -2, 10)
-    
-    for base in range(2, base_num+1):
-        for sub in range(1, sub_num+1):
-            fk_grp = joint_name(1,lr+"_Finger",num)+"_"+str(base)+"_"+str(sub)
-            cmds.duplicate(fk_grp+ctrlgrp(1), n=fk_grp+"_scrunch"+ctrlgrp(2), po=True)
-            cmds.parent(fk_grp+ctrlgrp(1), fk_grp+"_scrunch"+ctrlgrp(2))
-
-            finger_attr = fk_grp+"_scrunch"+ctrlgrp(2)+ROTATE+"Z"
-            sub_attr = sub_ctrl+".scrunch"
-            sub_value = [10, -2, 0]
+            slide_value = [int(120/(sub_num-2)), 0]
+            scrunch_value = [90, -20, 0]
             if sub == 1:
-                finger_value = [-60, 0, 0]
-            else:
-                finger_value = [90, -10, 0]
-            for idx in range(len(finger_value)):
-                cmds.setAttr(sub_attr, sub_value[idx])
-                cmds.setAttr(finger_attr, finger_value[idx])
-                cmds.setDrivenKeyframe(finger_attr, cd=sub_attr)
+                slide_value = [-60, 0]
+                scrunch_value = [-60, 0, 0]
+            elif sub == sub_num:
+                slide_value = [-60, 0]
+            finger_set_driven_key([10, 0], [(2+base)*base, 0], sub_ctrl+".FK_relax", finger_attr(base, sub, "relax"))
+            finger_set_driven_key([10, 0], slide_value, sub_ctrl+".FK_slide", finger_attr(base, sub, "slide"))
+            finger_set_driven_key([10, -5, 0], scrunch_value, sub_ctrl+".FK_scrunch", finger_attr(base, sub, "scrunch"))
+
+
+def finger_duplicate(lr, num, attr, below, start_num=2):
+    base_num = cmds.intField(basefinger, q=True, v=True)
+    sub_num = cmds.intField(subfinger, q=True, v=True)
+
+    for base in range(start_num, base_num+1):
+        for sub in range(1, sub_num+1):
+            fk_grp = joint_name(1,lr+"_Finger",num)+"_"+str(base)+"_"+str(sub)
+            cmds.duplicate(fk_grp+ctrlgrp(1), n=fk_grp+attr+ctrlgrp(2), po=True)
+            cmds.parent(fk_grp+attr+ctrlgrp(2), fk_grp+ctrlgrp(1))
+            cmds.parent(fk_grp+below, fk_grp+attr+ctrlgrp(2))
+
+
+def finger_set_driven_key(sub_value, finger_value, sub_attr, finger_attr):
+    for idx in range(len(finger_value)):
+        cmds.setAttr(sub_attr, sub_value[idx])
+        cmds.setAttr(finger_attr, finger_value[idx])
+        cmds.setDrivenKeyframe(finger_attr, cd=sub_attr)
 
 
 #----------------------------------------------------------------------------#
@@ -3303,7 +3286,7 @@ def CtrlCreate(obj_name, shape, idx, ctrl_name, ctrl_color, ik_identity=0):
     if shape == CIRCLE:
         c = cmds.circle(nr=(1,0,0))[0]
     elif shape == SUB:
-        c = cmds.circle(r=1.5,nr=(0,1,0), sw=-180, cx=0.6+0.3*sub_num)[0]
+        c = cmds.circle(r=1.5,nr=(0,1,0), sw=-180, cx=0.6+0.2*sub_num)[0]
         cmds.scale(0.9, 1, 0.6, c)
         cmds.makeIdentity(c, a=True, t=1, r=1, s=1, n=0, pn=1)
     elif shape == SQUARE:
@@ -3482,23 +3465,42 @@ def reverse_attr(rev_name, input_attr, output_attr):
 
 # Select joints to bind skin
 def SelectJnt():
-    cmds.warning("SelectJnt")
+    num_arm = cmds.intField(arm, q=True, v=True)
+    num_leg = cmds.intField(leg, q=True, v=True)
+    sub_num = cmds.intField(subfinger, q=True, v=True)+1
+    
+    objs = cmds.ls("RIG_*", typ="joint")
+    tmp_lists = cmds.ls("RIG_*end*", typ="joint")
+    tmp_lists += cmds.ls("RIG_*Finger*_"+str(sub_num))
+    for body in ["Shoulder", "Elbow", "Wrist", "Hip", "Knee", "Ankle"]:
+        tmp_lists += cmds.ls("*"+body+"*")
+    for tmp in tmp_lists:
+        if tmp in objs:
+            objs.remove(tmp)
+    objs.remove("RIG_Root1")
+    
+    for lr in LFRT:
+        for num in range(1, num_arm+1):
+            objs += cmds.ls(joint_name(6,lr+"_Arm",num)+"_skin*", typ="joint")
+        for num in range(1, num_leg+1):
+            objs += cmds.ls(joint_name(6,lr+"_Leg",num)+"_skin*", typ="joint")
+    cmds.select(objs)
+    print "Select : "+str(objs)
 
 
-#----------------------------------------------------------------------------#
-
-
-# Go back to Default Pose
-def DefaultPose():
-    cmds.warning("Default Pose")
-
-# Save keys
-def SaveKey():
-    cmds.warning("Save Key")
-
-# Mirror keys
-def MirrorKey():
-    cmds.warning("Mirror Key")
+# Mirror Skin Weights
+def MirrorSkinWeights():
+    objs = cmds.ls(sl=True)[0]
+    cluster = cmds.ls(cmds.listHistory(objs, pdo=True), type="skinCluster")
+    if cluster == "":
+        cmds.warning("NO Skin Cluster!!!")
+    elif len(cluster) != 1:
+        cmds.warning("Too Many SKin Cluster!!!")
+    else:
+        if cmds.checkBox(skin_check, q=True, v=True):
+            cmds.copySkinWeights(ss=cluster[0], ds=cluster[0], mm="YZ", sa="closestPoint", ia=["oneToOne", "closestJoint"])
+        else:
+            cmds.copySkinWeights(ss=cluster[0], ds=cluster[0], mm="YZ",  sa="closestPoint", ia=["oneToOne", "closestJoint"], mi=True)
 
 
 #----------------------------------------------------------------------------#
@@ -3510,32 +3512,6 @@ def JointSize():
     print "Change Jnts Size: "+str(j)
 
 
-def lockUnlock(i, j, tmp=False):
-    ranges = []
-    objs = cmds.ls(sl=True)
-    
-    if tmp:
-        sl_attrs = pm.channelBox("mainChannelBox", q=True, sma=True)
-        for sl_attr in sl_attrs:
-            ranges.append("."+sl_attr)
-        for obj in objs:
-            for attr1 in ranges:
-                cmds.setAttr(obj+attr1, l=i, k=j)
-    else:
-        if cmds.checkBoxGrp(lock_check, q=True, v1=True):
-            ranges.append(".t")
-        if cmds.checkBoxGrp(lock_check, q=True, v2=True):
-            ranges.append(".r")
-        if cmds.checkBoxGrp(lock_check, q=True, v3=True):
-            ranges.append(".s")
-        for obj in objs:
-            for attr1 in ranges:
-                for attr2 in ["x", "y", "z"]:
-                    cmds.setAttr(obj+attr1+attr2, l=i, k=j)
-            if cmds.checkBoxGrp(lock_check, q=True, v4=True):
-                cmds.setAttr(obj+".visibility", l=i, k=j)
-
-
 def matchFreeze():
     if cmds.checkBoxGrp(match_check, q=True, v1=True):
         cmds.MatchTranslation()
@@ -3545,3 +3521,27 @@ def matchFreeze():
         cmds.MatchScaling()
     if cmds.checkBoxGrp(match_check, q=True, v4=True):
         cmds.MatchPivots()
+
+
+def newGroup():
+    objs = pm.ls(sl=True)
+    tmps = pm.duplicate(rr=True)
+    lst = []
+    for x in range(len(tmps)):
+        tmps[x].rename(objs[x])
+        tmp = pm.ls(tmps[x])
+        grp = pm.group(em=True)
+        grp.rename(objs[x]+"_grp")
+        pm.parentConstraint(tmp, grp, mo=False, n="ex")
+        pm.delete("ex")
+        pm.parent(tmp, grp)
+        lst.append(grp)
+        if x == 0:
+            tmps[x].rename(objs[x])
+            grp.rename(objs[x]+"_grp")
+            lst = []
+            lst.append(grp)
+    tmps = tmps[:-1]
+    lst = lst[1:]
+    for x in range(len(lst)):
+        pm.parent(lst[x], tmps[x])

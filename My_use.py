@@ -182,13 +182,13 @@ cmds.setParent("..")
 cmds.separator(h=1)
 
 btnLayout(2)
-cmds.button(l="Rest Tfm", c="cmds.ResetTransformations()", w=WI02[1], h=30)
+cmds.button(l="LBA", c="cmds.ToggleLocalRotationAxes()", w=WI02[1], h=30)
 cmds.button(l="Center Pivot", c="cmds.CenterPivot()", w=WI02[2], h=30)
 cmds.setParent("..")
 
 btnLayout(2)
-cmds.button(l="Delete Hist", c="cmds.DeleteHistory()", w=WI02[1], h=30)
-cmds.button(l="LBA", c="cmds.ToggleLocalRotationAxes()", w=WI02[2], h=30)
+cmds.button(l="Rest Tfm", c="cmds.ResetTransformations()", w=WI02[1], h=30)
+cmds.button(l="Delete Hist", c="cmds.DeleteHistory()", w=WI02[2], h=30)
 endSpace()
 
 #--------------------------------------------------------------------------------------------#
@@ -213,7 +213,7 @@ endSpace()
 frame("Rename")
 
 cmds.rowLayout(nc=1)
-pos_check = cmds.radioButtonGrp(l="Position : ", cw4=(60,65,65,10), la3=["rt","lf","None"], nrb=3, sl=3, h=25)
+pos_check = cmds.radioButtonGrp(l="Position : ", cw4=(60,65,65,10), la3=["R","L","None"], nrb=3, sl=3, h=25)
 cmds.setParent("..")
 
 btnLayout(2)
@@ -642,9 +642,9 @@ def hashRenamer():
     hb_text = cmds.textField(hb, q=True, tx=True)
     
     if cmds.radioButtonGrp(pos_check, q=True, sl=1) == 1:
-        hf_text = "rt_"+hf_text
+        hf_text = "R_"+hf_text
     elif cmds.radioButtonGrp(pos_check, q=True, sl=1) == 2:
-        hf_text = "lf_"+hf_text
+        hf_text = "L_"+hf_text
     if hb_text != "":
         hb_text = "_"+hb_text
     
@@ -877,7 +877,7 @@ def const(tmp=False):
         num = 2
         if cmds.checkBoxGrp(mo_quick_check, q=True, v1=True):
             if len(objs) % 2 != 0:
-                cmds.warning("Select even numbers of objs! Objs nums: {}".format(len(objs)))
+                cmds.warning("Select even numbers of objs! Objs nums: "+str(len(objs)))
             else:
                 for x in range(0, len(objs), 2):
                     constrains(objs[x], objs[x+1], num)

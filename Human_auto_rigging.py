@@ -1690,6 +1690,7 @@ def ik_middle_follow(part):
         match_objs(ik_mid, grp)
         cmds.parent(name, ctrl)
     cmds.parentConstraint(follow_top, follow_bottom, ik_mid_grp)
+    cmds.setAttr(ik_mid_grp+"_parentConstraint1.interpType", 2)
     
     follow_attr(ik_mid, ik_mid_grp, follow_top, follow_bottom, 5)
 
@@ -2785,8 +2786,15 @@ def ik_ribbon_position(part, lr, num, bodies):
     cmds.connectAttr(name+"_rot_Multiply.outputX", name+"_lower_aimpoint"+ROTATE+"Z")
 
     end_name = "_Wrist" if part == "Arm" else "_Ankle"
+    match_objs(joint_name(0,lr+end_name,num), name+"_9"+ctrlgrp(2))
     cmds.pointConstraint(joint_name(0,lr+end_name,num), name+"_9"+ctrlgrp(1))
     cmds.connectAttr(joint_name(0,lr+end_name,num)+ROTATE, name+"_9"+ctrlgrp(1)+ROTATE)
+    
+    cmds.duplicate(name+"_9"+ctrlgrp(1), n=name+"_9_ctrl_grp_grp", po=True)
+    cmds.parent(name+"_9"+ctrlgrp(), name+"_9_ctrl_grp_grp")
+    cmds.parent(name+"_9_ctrl_grp_grp", name+"_9"+ctrlgrp(1))
+    cmds.orientConstraint(joint_name(0,lr+end_name,num), name+"_9_ctrl_grp_grp")
+    
     cmds.parent(name+ctrlgrp(2), "Ribbon_grp")
     cmds.connectAttr("World_ctrl"+SCALE, name+ctrlgrp(1)+SCALE)
     
@@ -2805,6 +2813,8 @@ def ik_ribbon_vis(part, lr, num):
         cmds.hide(name+"_"+str(idx)+"_jnt")
         if idx in [3, 5]:
             cmds.hide(name+"_"+str(idx)+"_fix")
+    for idx in range(1, 10):
+        cmds.setAttr(name+"_"+str(idx)+ctrlgrp()+".sx", l=True, k=False)
     for idx in [1, 9]:
         cmds.hide(name+"_"+str(idx)+ctrlgrp())
     cmds.hide(name+"_volume_grp", name+"_surface_grp", name+"_deformer_grp")

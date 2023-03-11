@@ -2805,6 +2805,8 @@ def ik_ribbon_vis(part, lr, num):
         cmds.hide(name+"_"+str(idx)+"_jnt")
         if idx in [3, 5]:
             cmds.hide(name+"_"+str(idx)+"_fix")
+    for idx in [1, 9]:
+        cmds.hide(name+"_"+str(idx)+ctrlgrp())
     cmds.hide(name+"_volume_grp", name+"_surface_grp", name+"_deformer_grp")
     cmds.hide(name+"_start_ctrl", name+"_end_ctrl")
 

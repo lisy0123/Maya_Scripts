@@ -818,9 +818,14 @@ def FingerIK(lr):
             cmds.connectAttr(ik_finger+"_master"+ctrlgrp()+SCALE, ik_finger+"_ikHandle"+ctrlgrp(2)+SCALE)
             for sub in range(1, sub_num+1):
                 cmds.connectAttr(joint_name(0,lr+"_Wrist",num)+SCALE, ik_finger+"_"+str(sub)+SCALE)
+        thumb = joint_name(2,lr+"_Finger",num)+"_1_1"
+        CtrlCreate(thumb, CIRCLE, 0, thumb, SKYBLUE)
+        cmds.scale(0.2, 0.2, 0.2, thumb+"_ctrl.cv[0:7]", r=True, ocp=True)
+        finger = joint_name(2,lr+"_Finger",num)+"_1_master"+ctrlgrp(1)
+        cmds.parent(finger, thumb+ctrlgrp())
+        cmds.parent(thumb+ctrlgrp(1), joint_name(2,lr+"_Finger",num)+ctrlgrp(1))
         if base_num > 3:
             cmds.connectAttr(joint_name(0,lr+"_Wrist",num)+SCALE, joint_name(2, lr+"_Finger", num)+"_Cup"+SCALE)
-        if base_num > 3:
             cup = joint_name(2,lr+"_Finger",num)+"_Cup"
             CtrlCreate(cup, CIRCLE, 0, cup, SKYBLUE)
             cmds.scale(0.3, 0.3, 0.3, cup+"_ctrl.cv[0:7]", r=True, ocp=True)
@@ -2830,7 +2835,7 @@ def ik_finger_handle(lr, num, base):
     
     name = joint_name(2,lr+"_Finger",num)+"_"+str(base)
     ik_handle_grp = name+"_ikHandle"+ctrlgrp(2)
-    ik_start = name+"_1"
+    ik_start = name+"_2" if base == 1 else name+"_1"
     ik_end = name+"_"+str(sub_num+1)
     cmds.ikHandle(sj=ik_start, ee=ik_end, n=name+"_ikHandle")
     CtrlCreate(name+"_ikHandle", CIRCLE, 9, name, RED, 1)
@@ -2856,7 +2861,8 @@ def ik_finger_pole_vector(lr, num, base):
     sub_num = cmds.intField(subfinger, q=True, v=True)+1
     world_scale = cmds.getAttr("scale_grp"+SCALE+"X")
     
-    pv_joint = joint_name(2,lr+"_Finger",num)+"_"+str(base)+"_"+str(sub_num/2)
+    tmp = sub_num/2+1 if base == 1 else sub_num/2
+    pv_joint = joint_name(2,lr+"_Finger",num)+"_"+str(base)+"_"+str(tmp)
     pole_vector = "IK_PV_"+lr+"_Finger"+str(num)+"_"+str(base)
     ik_handle_name = joint_name(2,lr+"_Finger",num)+"_"+str(base)+"_ikHandle"
     
@@ -3227,6 +3233,8 @@ def sub_ctrls(lr, num):
         add_attrs(sub_ctrl, name_ctrl, 2, 0, -5, 10)
         fk_grp = joint_name(1,lr+"_Finger",num)+"_"+str(base)
         for sub in range(1, sub_num+1):
+            if base == 1 and sub == 1:
+                continue
             finger_attr = fk_grp+"_"+str(sub)+"_sub"+ctrlgrp(2)+ROTATE+"Z"
             finger_set_driven_key([10, -5, 0], [90, -20, 0], sub_ctrl+"."+name_ctrl, finger_attr)
 

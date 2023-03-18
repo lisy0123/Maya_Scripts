@@ -1872,6 +1872,9 @@ def ik_stretch_each_joints(part, end_num):
     cmds.duplicate(joint_name(3,part,1), n=fake, po=True)
     cmds.parentConstraint(joint_name(3,part,1), fake)
     cmds.connectAttr(fake+".worldMatrix[0]", aim_cons+".worldUpMatrix")
+    cmds.delete(joint_name(4,part,1)+"_pointConstraint1")
+    cmds.delete(joint_name(4,part,1)+"_aimConstraint1")
+    cmds.parentConstraint(fake, joint_name(4,part,1))
     
 
 def ik_stretch_top_bottom(part, end_num):
@@ -2152,7 +2155,8 @@ def ik_pole_vector_swivel(part, lr, num):
     aim_div = pole_vector+"follow_aim_Divide"
     cmds.shadingNode(MULDIV, n=aim_div, au=True)
     cmds.connectAttr(ik_ctrl+".swivel", aim_div+".input1X")
-    idx = 1 if part == "Arm" and lr == "L" else -1
+    idx = -1 if lr == "L" else 1
+    idx = idx if part == "Leg" else idx*-1
     cmds.setAttr(aim_div+".input2X", idx)
     cmds.connectAttr(aim_div+".outputX", aim+"_aimConstraint1.offsetX")
     
@@ -2566,28 +2570,20 @@ def ik_ribbon_twist(part, lr, num):
     for grp_name in tmp:
         add_attrs(name+grp_name+ctrlgrp())
         add_attrs(name+grp_name+ctrlgrp(), "twist", 1)
-        add_attrs(name+grp_name+ctrlgrp(), "twist_offset", 1)
-    add_attrs(mid_ctrl)
     add_attrs(mid_ctrl, "twist_roll", 1)
-    add_attrs(mid_ctrl, "twist_roll_offset", 1)
         
     for idx, grp_name in enumerate([tmp[0], tmp[2]]):
         twist_sum = name+grp_name+"_Sum"
         attr_ctrl = name+tmp[idx*2]+ctrlgrp()
-        
         cmds.shadingNode(PLUSMIN, n=twist_sum, au=True)
         cmds.connectAttr(attr_ctrl+".twist", twist_sum+".input1D[0]")
-        cmds.connectAttr(attr_ctrl+".twist_offset", twist_sum+".input1D[1]")
-        cmds.connectAttr(mid_ctrl+".twist_roll", twist_sum+".input1D[2]")
-        cmds.connectAttr(mid_ctrl+".twist_roll_offset", twist_sum+".input1D[3]")
+        cmds.connectAttr(mid_ctrl+".twist_roll", twist_sum+".input1D[1]")
 
     if lr == "R":
         tmp = tmp[::-1]
     cmds.connectAttr(name+tmp[0]+"_Sum.output1D", name+"_twist.startAngle")
     cmds.connectAttr(name+tmp[2]+"_Sum.output1D", name+"_twist.endAngle")
-
-    for attr in [".twist", ".twist_offset"]:
-        cmds.connectAttr(mid_ctrl+attr, name+"_end"+ctrlgrp()+attr)
+    cmds.connectAttr(mid_ctrl+".twist", name+"_end"+ctrlgrp()+".twist")
 
 
 def ik_ribbon_volume(part, lr, num, bodies):
@@ -2717,6 +2713,7 @@ def ik_ribbon_position(part, lr, num, bodies):
     grp_names = [name+"_upper", name+"_lower"]
     grp_bc = name+"_BlendColors"
     grp_div = name+"_10into1_Divide"
+    rev_div = name+"_rev_Divide"
         
     tmp = ["_start", "_mid", "_end"]
     for idx, body in enumerate(bodies):
@@ -2729,7 +2726,7 @@ def ik_ribbon_position(part, lr, num, bodies):
     cmds.scaleConstraint(name+"_3_jnt", name+"_5_jnt", grp_names[1]+ctrlgrp(1))
     
     cmds.shadingNode(BLENDCOLORS, n=grp_bc, au=True)
-    for grp_name in [grp_div, name+"_rot_Divide", name+"_rot_Multiply"]:
+    for grp_name in [rev_div, grp_div, name+"_rot_Divide", name+"_rot_Multiply"]:
         cmds.shadingNode(MULDIV, n=grp_name, au=True)
     cmds.setAttr(grp_div+".operation", 2)
     cmds.setAttr(name+"_rot_Divide.operation", 2)
@@ -2737,7 +2734,9 @@ def ik_ribbon_position(part, lr, num, bodies):
     cmds.connectAttr("IK_PV_"+lr+"_"+part+str(num)+ctrlgrp()+".follow", grp_div+".input1X")
     cmds.setAttr(grp_div+".input2X", 10)
     cmds.connectAttr(grp_div+".outputX", grp_bc+".blender")
-    cmds.connectAttr(joint_name(2,lr+"_"+part,num)+ctrlgrp()+".swivel", grp_bc+".color1R")
+    cmds.connectAttr(joint_name(2,lr+"_"+part,num)+ctrlgrp()+".swivel", rev_div+".input1X")
+    cmds.setAttr(rev_div+".input2X", -1)
+    cmds.connectAttr(rev_div+".outputX", grp_bc+".color1R")
     
     for idx, grp_name in enumerate(grp_names):
         cmds.group(n=grp_name+"_aim", em=True)
@@ -2775,15 +2774,18 @@ def ik_ribbon_position(part, lr, num, bodies):
     cmds.setAttr(name+"_6"+ctrlgrp(2)+"_scaleConstraint1."+name+"_5"+ctrlgrp(2)+"W0", 2)
     cmds.setAttr(name+"_8"+ctrlgrp(2)+"_scaleConstraint1."+name+"_9"+ctrlgrp(2)+"W1", 2)
 
-    cmds.duplicate(name+"_lower_aim", n=name+"_lower_x_grp", po=True)
-    cmds.parent(name+"_lower_ctrl", name+"_lower_x_grp")
-    cmds.parent(name+"_lower_x_grp", name+"_lower_aim")
+    for uplow in ["_upper", "_lower"]:
+        cmds.duplicate(name+uplow+"_aim", n=name+uplow+"_x_grp", po=True)
+        cmds.parent(name+uplow+"_ctrl", name+uplow+"_x_grp")
+        cmds.parent(name+uplow+"_x_grp", name+uplow+"_aim")
     
     cmds.connectAttr(name+"_9"+ctrlgrp(1)+ROTATE+"X", name+"_rot_Divide.input1X")
     cmds.connectAttr(name+"_9"+ctrlgrp(1)+ROTATE+"X", name+"_rot_Divide.input1Y")
     cmds.setAttr(name+"_rot_Divide.input2X", 2)
-    cmds.setAttr(name+"_rot_Divide.input2Y", -2)
+    idx = -1 if part == "Arm" else 2
+    cmds.setAttr(name+"_rot_Divide.input2Y", idx)
     cmds.connectAttr(name+"_rot_Divide.outputX", name+"_8"+ctrlgrp(1)+ROTATE+"X")
+    cmds.connectAttr(name+"_rot_Divide.outputY", name+"_upper_x_grp"+ROTATE+"X")
     cmds.connectAttr(name+"_rot_Divide.outputY", name+"_lower_x_grp"+ROTATE+"X")
     
     cmds.connectAttr(name+"_9"+ctrlgrp(1)+ROTATE+"Z", name+"_rot_Multiply.input1X")

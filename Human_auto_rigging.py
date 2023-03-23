@@ -2267,6 +2267,8 @@ def ik_armleg_stretch_node(part, num, mid_names, stretch_name):
     for grp_name in [prepare_div, messure_div]:
         cmds.setAttr(grp_name+".operation", 2)
     cmds.shadingNode(BLENDTWO, n=stretch_blendtwo, au=True)
+    cmds.shadingNode("condition", n=stretch_name(4)+"_messure_Condition", au=True)
+    cmds.setAttr(stretch_name(4)+"_messure_Condition.operation", 2)
     cmds.connectAttr("World_ctrl.scaleY", snap_rev+".input1X")
     cmds.setAttr(snap_rev+".input2X", -1)
 
@@ -2292,6 +2294,7 @@ def ik_armleg_stretch_prepare(stretch_name, ik_ctrl, all_length):
     prepare_div = stretch_name(4)+"_10into1_Divide"
     messure_div = stretch_name(4)+"_messure_Divide"
     stretch_blendtwo = stretch_name(4)+"_BlendTwo"
+    messure_con = stretch_name(4)+"_messure_Condition"
 
     cmds.connectAttr(ik_ctrl+".stretch", prepare_div+".input1X")
     cmds.setAttr(prepare_div+".input2X", 10)
@@ -2301,13 +2304,16 @@ def ik_armleg_stretch_prepare(stretch_name, ik_ctrl, all_length):
     cmds.connectAttr(stretch_name(4)+"_distance.distance", stretch_blendtwo+".input[1]")
     cmds.connectAttr(stretch_blendtwo+".output", messure_div+".input1X")
     cmds.setAttr(messure_div+".input2X", all_length)
+    cmds.connectAttr(messure_div+".outputX", messure_con+".firstTerm")
+    cmds.connectAttr(messure_div+".outputX", messure_con+".colorIfTrueR")
+    cmds.setAttr(messure_con+".secondTerm", 1)
     
 
 def ik_armleg_stretch_snap(part, lr, num, stretch_name, mid_names,
                             position, length):
     ik_ctrl = stretch_name(2)+ctrlgrp()
     pole_vector_ctrl = "IK_PV_"+lr+"_"+part+str(num)+ctrlgrp()
-    messure_div = stretch_name(4)+"_messure_Divide"
+    messure_con = stretch_name(4)+"_messure_Condition"
     length_attr = ".length_"+position
     snap_rev = stretch_name(5)+"_rev_Multiply"
 
@@ -2326,7 +2332,7 @@ def ik_armleg_stretch_snap(part, lr, num, stretch_name, mid_names,
         stretch_distance = stretch_name(5)+"_pv_bottom_distance"
         mid = mid_names[2]
 
-    cmds.connectAttr(messure_div+".outputX", stretch_mul+".input1X")
+    cmds.connectAttr(messure_con+".outColorR", stretch_mul+".input1X")
     cmds.connectAttr(ik_ctrl+length_attr, messure_mul+".input1X")
     length = length if lr == "L" else -length
     cmds.setAttr(messure_mul+".input2X", length)
@@ -2782,8 +2788,7 @@ def ik_ribbon_position(part, lr, num, bodies):
     cmds.connectAttr(name+"_9"+ctrlgrp(1)+ROTATE+"X", name+"_rot_Divide.input1X")
     cmds.connectAttr(name+"_9"+ctrlgrp(1)+ROTATE+"X", name+"_rot_Divide.input1Y")
     cmds.setAttr(name+"_rot_Divide.input2X", 2)
-    idx = -1 if part == "Arm" else 2
-    cmds.setAttr(name+"_rot_Divide.input2Y", idx)
+    cmds.setAttr(name+"_rot_Divide.input2Y", 2)
     cmds.connectAttr(name+"_rot_Divide.outputX", name+"_8"+ctrlgrp(1)+ROTATE+"X")
     cmds.connectAttr(name+"_rot_Divide.outputY", name+"_upper_x_grp"+ROTATE+"X")
     cmds.connectAttr(name+"_rot_Divide.outputY", name+"_lower_x_grp"+ROTATE+"X")

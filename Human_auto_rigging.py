@@ -2424,7 +2424,7 @@ def ik_ribbon(part, lr, num):
     ik_ribbon_ctrl(part, lr, num)
     ik_ribbon_twist(part, lr, num)
     ik_ribbon_volume(part, lr, num, bodies)
-    ik_ribbon_sine(name)
+    ik_ribbon_sine(lr, name)
     ik_ribbon_fix_mid(name)
     ik_ribbon_position(part, lr, num, bodies)
     ik_ribbon_vis(part, lr, num)
@@ -2663,7 +2663,7 @@ def ik_ribbon_volume(part, lr, num, bodies):
         cmds.connectAttr(fol_sum+".output1D", name+"_"+str(idx)+ctrlgrp(1)+SCALE+"Z")
 
 
-def ik_ribbon_sine(name):
+def ik_ribbon_sine(lr, name):
     mid_ctrl = name+"_mid"+ctrlgrp()
     
     add_attrs(mid_ctrl)
@@ -2674,7 +2674,13 @@ def ik_ribbon_sine(name):
     
     cmds.connectAttr(mid_ctrl+".sine_amplitude", name+"_sine.amplitude")
     cmds.connectAttr(mid_ctrl+".sine_wavelength", name+"_sine.wavelength")
-    cmds.connectAttr(mid_ctrl+".sine_offset", name+"_sine.offset")
+    if lr == "L":
+        cmds.connectAttr(mid_ctrl+".sine_offset", name+"_sine.offset")
+    else:
+        cmds.shadingNode(MULDIV, n=name+"_sine_rev_Multiply", au=True)
+        cmds.connectAttr(mid_ctrl+".sine_offset", name+"_sine_rev_Multiply.input1X")
+        cmds.setAttr(name+"_sine_rev_Multiply.input2X", -1)
+        cmds.connectAttr(name+"_sine_rev_Multiply.outputX", name+"_sine.offset")
     cmds.connectAttr(mid_ctrl+".sine_twist", name+"_sine_handle"+ROTATE+"Y")
     
     cmds.setAttr(name+"_sine.dropoff", 1)

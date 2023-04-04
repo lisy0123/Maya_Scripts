@@ -2738,6 +2738,29 @@ def ik_ribbon_position(part, lr, num, bodies):
             cmds.parent(name+tmp[idx]+ctrlgrp(), name+tmp[idx]+"_rot")
             cmds.parent(name+tmp[idx]+"_rot", name+tmp[idx]+ctrlgrp(1))
             cmds.connectAttr(joint_name(0,body,num)+ROTATE+"Z", name+tmp[idx]+"_rot"+ROTATE+"Z")
+            
+            cmds.shadingNode("condition", n=name+"_end_rot_Condition", au=True)
+            cmds.shadingNode("condition", n=name+"_end_rot_FKIK_Condition", au=True)
+            cmds.shadingNode(MULDIV, n=name+"_end_rot_FKIK_Multiply", au=True)
+            
+            cmds.setAttr(name+"_end_rot_FKIK_Condition.secondTerm", 1)
+            cmds.setAttr(name+"_end_rot_FKIK_Condition.colorIfTrueR", 1)
+            cmds.setAttr(name+"_end_rot_FKIK_Condition.colorIfFalseR", 0)
+            cmds.connectAttr("FKIK_"+lr+"_"+part+str(num)+ctrlgrp()+".FKIK", name+"_end_rot_FKIK_Condition.firstTerm")
+            cmds.connectAttr(name+"_end_rot_FKIK_Condition.outColorR", name+"_end_rot_FKIK_Multiply.input1X")
+            cmds.connectAttr(joint_name(2,"PV_"+lr+"_"+part,num)+ctrlgrp()+".follow", name+"_end_rot_FKIK_Multiply.input2X")
+            cmds.connectAttr(name+"_end_rot_FKIK_Multiply.outputX", name+"_end_rot_Condition.firstTerm")
+            
+            cmds.setAttr(name+"_end_rot_Condition.colorIfFalseR", 0)
+            cmds.setAttr(name+"_end_rot_Condition.secondTerm", 10)
+            cmds.connectAttr(joint_name(2,lr+"_"+part,num)+ctrlgrp()+ROTATE+"Y", name+"_end_rot_Condition.colorIfTrueR")
+            if lr == "L":
+                cmds.shadingNode(MULDIV, n=name+"_end_rot_rev_Multiply", au=True)
+                cmds.setAttr(name+"_end_rot_rev_Multiply.input2X", -1)
+                cmds.connectAttr(name+"_end_rot_Condition.outColorR", name+"_end_rot_rev_Multiply.input1X")
+                cmds.connectAttr(name+"_end_rot_rev_Multiply.outputX", name+"_end_rot"+ROTATE+"X")
+            else:
+                cmds.connectAttr(name+"_end_rot_Condition.outColorR", name+"_end_rot"+ROTATE+"X")
         else:
             cmds.parentConstraint(joint_name(0,body,num), name+tmp[idx]+ctrlgrp(1))
     

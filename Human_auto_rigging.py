@@ -2729,8 +2729,17 @@ def ik_ribbon_position(part, lr, num, bodies):
         
     tmp = ["_start", "_mid", "_end"]
     for idx, body in enumerate(bodies):
-        cmds.parentConstraint(joint_name(0,body,num), name+tmp[idx]+ctrlgrp(1))
         cmds.connectAttr(joint_name(0,body,num)+SCALE, name+tmp[idx]+ctrlgrp(1)+SCALE)
+        if tmp[idx] == "_end":
+            cmds.parentConstraint(joint_name(0,body,num), name+tmp[idx]+ctrlgrp(1))
+            cmds.delete(name+tmp[idx]+ctrlgrp(1)+"_parentConstraint1")
+            cmds.pointConstraint(joint_name(0,body,num), name+tmp[idx]+ctrlgrp(1))
+            cmds.duplicate(name+tmp[idx]+ctrlgrp(1), n=name+tmp[idx]+"_rot", po=True)
+            cmds.parent(name+tmp[idx]+ctrlgrp(), name+tmp[idx]+"_rot")
+            cmds.parent(name+tmp[idx]+"_rot", name+tmp[idx]+ctrlgrp(1))
+            cmds.connectAttr(joint_name(0,body,num)+ROTATE+"Z", name+tmp[idx]+"_rot"+ROTATE+"Z")
+        else:
+            cmds.parentConstraint(joint_name(0,body,num), name+tmp[idx]+ctrlgrp(1))
     
     cmds.pointConstraint(name+"_1_jnt", name+"_3_jnt", grp_names[0]+ctrlgrp(1))
     cmds.pointConstraint(name+"_3_jnt", name+"_5_jnt", grp_names[1]+ctrlgrp(1))
@@ -2741,7 +2750,6 @@ def ik_ribbon_position(part, lr, num, bodies):
     for grp_name in [rev_div, grp_div, name+"_rot_Divide", name+"_rot_Multiply"]:
         cmds.shadingNode(MULDIV, n=grp_name, au=True)
     cmds.setAttr(grp_div+".operation", 2)
-    cmds.setAttr(name+"_rot_Divide.operation", 2)
     
     cmds.connectAttr("IK_PV_"+lr+"_"+part+str(num)+ctrlgrp()+".follow", grp_div+".input1X")
     cmds.setAttr(grp_div+".input2X", 10)
@@ -2785,19 +2793,17 @@ def ik_ribbon_position(part, lr, num, bodies):
     cmds.setAttr(name+"_4"+ctrlgrp(2)+"_scaleConstraint1."+name+"_5"+ctrlgrp(2)+"W1", 2)
     cmds.setAttr(name+"_6"+ctrlgrp(2)+"_scaleConstraint1."+name+"_5"+ctrlgrp(2)+"W0", 2)
     cmds.setAttr(name+"_8"+ctrlgrp(2)+"_scaleConstraint1."+name+"_9"+ctrlgrp(2)+"W1", 2)
-
-    for uplow in ["_upper", "_lower"]:
-        cmds.duplicate(name+uplow+"_aim", n=name+uplow+"_x_grp", po=True)
-        cmds.parent(name+uplow+"_ctrl", name+uplow+"_x_grp")
-        cmds.parent(name+uplow+"_x_grp", name+uplow+"_aim")
     
-    cmds.connectAttr(name+"_9"+ctrlgrp(1)+ROTATE+"X", name+"_rot_Divide.input1X")
-    cmds.connectAttr(name+"_9"+ctrlgrp(1)+ROTATE+"X", name+"_rot_Divide.input1Y")
-    cmds.setAttr(name+"_rot_Divide.input2X", 2)
-    cmds.setAttr(name+"_rot_Divide.input2Y", 2)
+    end_name = "_Wrist" if part == "Arm" else "_Ankle"
+    cmds.connectAttr(joint_name(0,lr+end_name,num)+ROTATE+"X", name+"_rot_Divide.input1X")
+    cmds.connectAttr(joint_name(0,lr+end_name,num)+ROTATE+"X", name+"_rot_Divide.input1Y")
+    cmds.connectAttr(joint_name(0,lr+end_name,num)+ROTATE+"X", name+"_rot_Divide.input1Z")
+    cmds.setAttr(name+"_rot_Divide.input2X", 0.75)
+    cmds.setAttr(name+"_rot_Divide.input2Y", 0.5)
+    cmds.setAttr(name+"_rot_Divide.input2Y", 0.25)
     cmds.connectAttr(name+"_rot_Divide.outputX", name+"_8"+ctrlgrp(1)+ROTATE+"X")
-    cmds.connectAttr(name+"_rot_Divide.outputY", name+"_upper_x_grp"+ROTATE+"X")
-    cmds.connectAttr(name+"_rot_Divide.outputY", name+"_lower_x_grp"+ROTATE+"X")
+    cmds.connectAttr(name+"_rot_Divide.outputY", name+"_7"+ctrlgrp(1)+ROTATE+"X")
+    cmds.connectAttr(name+"_rot_Divide.outputY", name+"_6"+ctrlgrp(1)+ROTATE+"X")
     
     cmds.connectAttr(name+"_9"+ctrlgrp(1)+ROTATE+"Z", name+"_rot_Multiply.input1X")
     cmds.setAttr(name+"_rot_Multiply.input2X", -1)
@@ -3531,7 +3537,7 @@ def SelectJnt():
     objs = cmds.ls("RIG_*", typ="joint")
     tmp_lists = cmds.ls("RIG_*end*", typ="joint")
     tmp_lists += cmds.ls("RIG_*Finger*_"+str(sub_num))
-    for body in ["Shoulder", "Elbow", "Wrist", "Hip", "Knee", "Ankle"]:
+    for body in ["Shoulder", "Elbow", "Hip", "Knee"]:
         tmp_lists += cmds.ls("*"+body+"*")
     for tmp in tmp_lists:
         if tmp in objs:
@@ -3540,9 +3546,11 @@ def SelectJnt():
     
     for lr in LFRT:
         for num in range(1, num_arm+1):
-            objs += cmds.ls(joint_name(6,lr+"_Arm",num)+"_skin*", typ="joint")
+            for idx in range(1, 9):
+                objs += cmds.ls(joint_name(6,lr+"_Arm",num)+"_skin"+str(idx)+"*", typ="joint")
         for num in range(1, num_leg+1):
-            objs += cmds.ls(joint_name(6,lr+"_Leg",num)+"_skin*", typ="joint")
+            for idx in range(1, 9):
+                objs += cmds.ls(joint_name(6,lr+"_Leg",num)+"_skin"+str(idx)+"*", typ="joint")
     cmds.select(objs)
     print "Select : "+str(objs)
 

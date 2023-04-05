@@ -2729,40 +2729,8 @@ def ik_ribbon_position(part, lr, num, bodies):
         
     tmp = ["_start", "_mid", "_end"]
     for idx, body in enumerate(bodies):
+        cmds.parentConstraint(joint_name(0,body,num), name+tmp[idx]+ctrlgrp(1))
         cmds.connectAttr(joint_name(0,body,num)+SCALE, name+tmp[idx]+ctrlgrp(1)+SCALE)
-        if tmp[idx] == "_end":
-            cmds.parentConstraint(joint_name(0,body,num), name+tmp[idx]+ctrlgrp(1))
-            cmds.delete(name+tmp[idx]+ctrlgrp(1)+"_parentConstraint1")
-            cmds.pointConstraint(joint_name(0,body,num), name+tmp[idx]+ctrlgrp(1))
-            cmds.duplicate(name+tmp[idx]+ctrlgrp(1), n=name+tmp[idx]+"_rot", po=True)
-            cmds.parent(name+tmp[idx]+ctrlgrp(), name+tmp[idx]+"_rot")
-            cmds.parent(name+tmp[idx]+"_rot", name+tmp[idx]+ctrlgrp(1))
-            cmds.connectAttr(joint_name(0,body,num)+ROTATE+"Z", name+tmp[idx]+"_rot"+ROTATE+"Z")
-            
-            cmds.shadingNode("condition", n=name+"_end_rot_Condition", au=True)
-            cmds.shadingNode("condition", n=name+"_end_rot_FKIK_Condition", au=True)
-            cmds.shadingNode(MULDIV, n=name+"_end_rot_FKIK_Multiply", au=True)
-            
-            cmds.setAttr(name+"_end_rot_FKIK_Condition.secondTerm", 1)
-            cmds.setAttr(name+"_end_rot_FKIK_Condition.colorIfTrueR", 1)
-            cmds.setAttr(name+"_end_rot_FKIK_Condition.colorIfFalseR", 0)
-            cmds.connectAttr("FKIK_"+lr+"_"+part+str(num)+ctrlgrp()+".FKIK", name+"_end_rot_FKIK_Condition.firstTerm")
-            cmds.connectAttr(name+"_end_rot_FKIK_Condition.outColorR", name+"_end_rot_FKIK_Multiply.input1X")
-            cmds.connectAttr(joint_name(2,"PV_"+lr+"_"+part,num)+ctrlgrp()+".follow", name+"_end_rot_FKIK_Multiply.input2X")
-            cmds.connectAttr(name+"_end_rot_FKIK_Multiply.outputX", name+"_end_rot_Condition.firstTerm")
-            
-            cmds.setAttr(name+"_end_rot_Condition.colorIfFalseR", 0)
-            cmds.setAttr(name+"_end_rot_Condition.secondTerm", 10)
-            cmds.connectAttr(joint_name(2,lr+"_"+part,num)+ctrlgrp()+ROTATE+"Y", name+"_end_rot_Condition.colorIfTrueR")
-            if lr == "L":
-                cmds.shadingNode(MULDIV, n=name+"_end_rot_rev_Multiply", au=True)
-                cmds.setAttr(name+"_end_rot_rev_Multiply.input2X", -1)
-                cmds.connectAttr(name+"_end_rot_Condition.outColorR", name+"_end_rot_rev_Multiply.input1X")
-                cmds.connectAttr(name+"_end_rot_rev_Multiply.outputX", name+"_end_rot"+ROTATE+"X")
-            else:
-                cmds.connectAttr(name+"_end_rot_Condition.outColorR", name+"_end_rot"+ROTATE+"X")
-        else:
-            cmds.parentConstraint(joint_name(0,body,num), name+tmp[idx]+ctrlgrp(1))
     
     cmds.pointConstraint(name+"_1_jnt", name+"_3_jnt", grp_names[0]+ctrlgrp(1))
     cmds.pointConstraint(name+"_3_jnt", name+"_5_jnt", grp_names[1]+ctrlgrp(1))
@@ -2821,9 +2789,9 @@ def ik_ribbon_position(part, lr, num, bodies):
     cmds.connectAttr(joint_name(0,lr+end_name,num)+ROTATE+"X", name+"_rot_Divide.input1X")
     cmds.connectAttr(joint_name(0,lr+end_name,num)+ROTATE+"X", name+"_rot_Divide.input1Y")
     cmds.connectAttr(joint_name(0,lr+end_name,num)+ROTATE+"X", name+"_rot_Divide.input1Z")
-    cmds.setAttr(name+"_rot_Divide.input2X", 0.75)
-    cmds.setAttr(name+"_rot_Divide.input2Y", 0.5)
-    cmds.setAttr(name+"_rot_Divide.input2Y", 0.25)
+    cmds.setAttr(name+"_rot_Divide.input2X", 0.3)
+    cmds.setAttr(name+"_rot_Divide.input2Y", -0.5)
+    cmds.setAttr(name+"_rot_Divide.input2Y", -0.25)
     cmds.connectAttr(name+"_rot_Divide.outputX", name+"_8"+ctrlgrp(1)+ROTATE+"X")
     cmds.connectAttr(name+"_rot_Divide.outputY", name+"_7"+ctrlgrp(1)+ROTATE+"X")
     cmds.connectAttr(name+"_rot_Divide.outputY", name+"_6"+ctrlgrp(1)+ROTATE+"X")

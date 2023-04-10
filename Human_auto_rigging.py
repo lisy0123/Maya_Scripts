@@ -3300,9 +3300,10 @@ def sub_relax_slide_scrunch(lr, num):
     
     for base in range(2, base_num+1):
         for sub in range(1, sub_num+1):
-            slide_value = [int(120/(sub_num-2)), 0]
+            slide_value = [int(120/(sub_num-2)), 0] if sub_num > 2 else [60, 0]
             scrunch_value = [90, -20, 0]
-            slide_value = [-60, 0]
+            if sub == 1 or sub == sub_num:
+                slide_value = [-60, 0]
             if sub == 1:
                 scrunch_value = [-60, 0, 0]
             finger_set_driven_key([10, 0], [(2+base)*4, 0], sub_ctrl+".relax", finger_attr(base, sub, "relax"))

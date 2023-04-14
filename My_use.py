@@ -754,6 +754,7 @@ def addAttr(tmp):
 
 # ing
 def changeAttrName():
+    cmds.warning("WIP!")
     attr_text = cmds.textField(attr_tx, q=True, tx=True)
     objs = pm.ls(sl=True)
     for obj in objs:
@@ -1050,6 +1051,7 @@ def selectShape(obj):
 #--------------------------------------------------------------------------------------------#
 
 def rivet():
+    cmds.warning("WIP!")
     # Each
     if cmds.radioButtonGrp(rivet_check, q=True, sl=1) == 1:
         pass

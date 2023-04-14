@@ -4,7 +4,7 @@ Useful tools made with [**Maya commands**](https://help.autodesk.com/cloudhelp/2
 
 ## :couple: Human auto rigging
 
-![Human_auto_rigging](https://github.com/lisy0123/Maya_Scripts/blob/master/Human_auto_rigging.png)
+![Human_auto_rigging](https://github.com/lisy0123/Maya_Scripts/blob/master/imgs/Human_auto_rigging.png)
 
 |    Part     | functions                                                    |
 | :---------: | ------------------------------------------------------------ |
@@ -19,7 +19,9 @@ Useful tools made with [**Maya commands**](https://help.autodesk.com/cloudhelp/2
 
 ## :mag: My use
 
-<img src="https://github.com/lisy0123/Maya_Scripts/blob/master/My_use1.png" width="48%" height="60%"> <img src="https://github.com/lisy0123/Maya_Scripts/blob/master/My_use2.png" width="48%" height="60%"> <img src="https://github.com/lisy0123/Maya_Scripts/blob/master/My_use3.png" width="48%" height="60%"> <img src="https://github.com/lisy0123/Maya_Scripts/blob/master/My_use4.png" width="48%" height="60%">
+<img src="https://github.com/lisy0123/Maya_Scripts/blob/master/imgs/My_use1.png" width="30%" height="30%"> <img src="https://github.com/lisy0123/Maya_Scripts/blob/master/imgs/My_use2.png" width="30%" height="30%"> 
+
+<img src="https://github.com/lisy0123/Maya_Scripts/blob/master/imgs/My_use3.png" width="30%" height="30%"> <img src="https://github.com/lisy0123/Maya_Scripts/blob/master/imgs/My_use4.png" width="30%" height="30%">
 
 - [x] joint, ik, weights options, set driven key, etc...
 - [x] constraint: maintain offset toggle
@@ -56,7 +58,7 @@ Useful tools made with [**Maya commands**](https://help.autodesk.com/cloudhelp/2
 
 ## :hand: Hand auto rigging
 
-![Hand_auto_rigging](https://github.com/lisy0123/Maya_Scripts/blob/master/Hand_auto_rigging.png)
+![Hand_auto_rigging](https://github.com/lisy0123/Maya_Scripts/blob/master/imgs/Hand_auto_rigging.png)
 
 - [x] one/both hand rigging
 

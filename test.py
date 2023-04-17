@@ -1,8 +1,8 @@
 from socket import *
 
 class SocketInfo():
-	HOST='172.30.1.48'
-	PORT=9999
+	HOST=HOSTNUM
+	PORT=PORTNUM
 	ADDR=(HOST, PORT)
 
 severSocket=socket(AF_INET, SOCK_STREAM)

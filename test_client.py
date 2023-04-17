@@ -2,8 +2,8 @@ import maya.cmds as cmds
 from socket import *
 
 class SocketInfo():
-    HOST='172.30.1.48'
-    PORT=9999
+    HOST=HOSTNUM
+    PORT=PORTNUM
     ADDR=(HOST, PORT)
 
 clientSocket=socket(AF_INET, SOCK_STREAM)

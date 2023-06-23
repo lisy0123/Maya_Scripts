@@ -487,6 +487,51 @@ cmds.setParent("..")
 cmds.setParent(WINDOW)
 ch5 = cmds.rowColumnLayout(w=285, nc=1)
 
+# ing
+# FK, IK, Ribbon setup
+frame("Rigging Setup")
+
+wi = (120,150)
+cmds.rowLayout(nc=2, cw2=wi)
+cmds.text(l="                        Name : ")
+ribbon_num = cmds.textField(w=wi[1], h=25)
+cmds.setParent("..")
+
+cmds.rowLayout(nc=1)
+setup_type_check = cmds.checkBoxGrp(l="   Options :  ", ncb=3, cw4=(125,40,40,10), la3=["FK","IK","Ribbon"], v1=True, v2=True, h=25)
+cmds.setParent("..")
+
+wi = (120,150)
+cmds.rowLayout(nc=2, cw2=wi)
+cmds.text(l=" Ribbon Joint Number:")
+ribbon_num = cmds.intField(w=wi[1], v=9, h=25)
+cmds.setParent("..")
+
+btnLayout(1)
+cmds.button(l="Create", c="fkIkRibbon()", w=WI01[1], h=30)
+endSpace()
+
+
+# ing
+# Motion path
+frame("Motion path")
+
+wi = (100,170)
+cmds.rowLayout(nc=2, cw2=wi)
+cmds.text(l="                  Name : ")
+ribbon_num = cmds.textField(w=wi[1], h=25)
+cmds.setParent("..")
+
+wi = (100,170)
+cmds.rowLayout(nc=2, cw2=wi)
+cmds.text(l="  Locator Number : ")
+ribbon_num = cmds.intField(w=wi[1], v=5, h=25)
+cmds.setParent("..")
+
+btnLayout(1)
+cmds.button(l="Create", c="mationPath()", w=WI01[1], h=30)
+endSpace()
+
 
 # ing
 # Rivet
@@ -500,12 +545,6 @@ btnLayout(1)
 cmds.button(l="Rivet", c="rivet()", w=WI01[1], h=30)
 endSpace()
 
-
-# ing
-# Motion path
-frame("Motion path")
-
-endSpace()
 
 # ing
 # Copy Weight

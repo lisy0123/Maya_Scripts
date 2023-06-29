@@ -494,11 +494,11 @@ frame("Rigging Setup")
 wi = (120,150)
 cmds.rowLayout(nc=2, cw2=wi)
 cmds.text(l="                        Name : ")
-ribbon_num = cmds.textField(w=wi[1], h=25)
+setup_name = cmds.textField(w=wi[1], h=25)
 cmds.setParent("..")
 
 cmds.rowLayout(nc=1)
-setup_type_check = cmds.checkBoxGrp(l="   Options :  ", ncb=3, cw4=(125,40,40,10), la3=["FK","IK","Ribbon"], v1=True, v2=True, h=25)
+setup_check = cmds.checkBoxGrp(l="   Options :  ", ncb=3, cw4=(125,40,40,10), la3=["FK","IK","Ribbon"], v1=True, v2=True, h=25)
 cmds.setParent("..")
 
 wi = (120,150)
@@ -514,22 +514,22 @@ endSpace()
 
 # ing
 # Motion path
-frame("Motion path")
+frame("Motion Path")
 
 wi = (100,170)
 cmds.rowLayout(nc=2, cw2=wi)
 cmds.text(l="                  Name : ")
-ribbon_num = cmds.textField(w=wi[1], h=25)
+mp_name = cmds.textField(w=wi[1], h=25)
 cmds.setParent("..")
 
 wi = (100,170)
 cmds.rowLayout(nc=2, cw2=wi)
 cmds.text(l="  Locator Number : ")
-ribbon_num = cmds.intField(w=wi[1], v=5, h=25)
+mp_loc_num = cmds.intField(w=wi[1], v=5, h=25)
 cmds.setParent("..")
 
 btnLayout(1)
-cmds.button(l="Create", c="mationPath()", w=WI01[1], h=30)
+cmds.button(l="Create", c="motionPath()", w=WI01[1], h=30)
 endSpace()
 
 
@@ -791,15 +791,12 @@ def addAttr(tmp):
                     flag = False
 
 
-# ing
 def changeAttrName():
-    cmds.warning("WIP!")
     attr_text = cmds.textField(attr_tx, q=True, tx=True)
     objs = pm.ls(sl=True)
     for obj in objs:
         sl_attr = pm.channelBox("mainChannelBox", q=True, sma=True)
-        print sl_attr, attr_text
-        
+        cmds.addAttr(obj+'.'+sl_attr[0], e=True, nn=attr_text)
     
 
 def deleteAttr(up=False, tmp=False):
@@ -1089,6 +1086,24 @@ def selectShape(obj):
 
 #--------------------------------------------------------------------------------------------#
 
+
+# ing
+#setup_name = cmds.textField(w=wi[1], h=25)
+#setup_check = cmds.checkBoxGrp(l="   Options :  ", ncb=3, cw4=(125,40,40,10), la3=["FK","IK","Ribbon"], v1=True, v2=True, h=25)
+#ribbon_num = cmds.intField(w=wi[1], v=9, h=25)
+
+def fkIkRibbon():
+    cmds.warning("WIP!")
+
+# ing
+#mp_name = cmds.textField(w=wi[1], h=25)
+#mp_loc_num = cmds.intField(w=wi[1], v=5, h=25)
+
+def motionPath():
+    cmds.warning("WIP!")
+    
+    
+# ing
 def rivet():
     cmds.warning("WIP!")
     # Each

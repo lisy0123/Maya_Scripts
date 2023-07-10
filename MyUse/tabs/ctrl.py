@@ -1,16 +1,26 @@
 import maya.cmds as cmds
-from tabs.util import Utils
+from imp import reload
+import tabs.util
 
-Utils = reload(Utils)
+reload(tabs.util)
+
+from tabs.util import Utils
 
 WI01 = (2,273)
 WI02 = (1,136,136)
 
 
 class TabCtrl():
+    def __init__(self):
+        self.frame_ctrl()
+        self.frame_text()
+        self.frame_const()
+        self.frame_color_picker()
+
+
     # Controller
     def frame_ctrl(self):
-        Utils.frame("Controller")
+        Utils().frame("Controller")
 
         cmds.rowLayout(nc=1)
         ctrl_make = cmds.radioButtonGrp(l=" Make : ", cw3=(60,100,10), la2=["Each","Sum"], nrb=2, sl=1, h=25)
@@ -41,7 +51,7 @@ class TabCtrl():
         const_check = cmds.checkBoxGrp(l=" Constraint: ", ncb=4, cw5=(63,55,48,55,10), la4=["Parent","Point","Orient","Scale"], v2=True, v3=True, h=25)
         cmds.setParent("..")
 
-        Utils.btn_layout(1)
+        Utils().btn_layout(1)
         cmds.button(l="Create Controller", c="createController()", w=WI01[1], h=30)
         cmds.setParent("..")
         cmds.separator(h=1)
@@ -55,16 +65,16 @@ class TabCtrl():
         tx = cmds.textField(w=wi[1], h=25)
         cmds.setParent("..")
 
-        Utils.btn_layout(1)
+        Utils().btn_layout(1)
         cmds.button(l="Create", c="text()", w=WI01[1], h=25)
-        Utils.end_space()
+        Utils().end_space()
 
 
     # Constraint
     def frame_const(self):
-        Utils.frame("Constraint")
+        Utils().frame("Constraint")
 
-        Utils.btn_layout(2)
+        Utils().btn_layout(2)
         mo_quick_check = cmds.checkBoxGrp(l="Quick: ", ncb=1, cw2=(55,10), h=25)
         mo_check = cmds.checkBoxGrp(l="Maintain offset : ", ncb=1, v1=True, cw2=(90,10), h=25)
         cmds.setParent("..")
@@ -77,20 +87,20 @@ class TabCtrl():
         mo_const_check = cmds.checkBoxGrp(l=" Constraint: ", ncb=4, cw5=(63,55,48,55,10), la4=["Parent","Point","Orient","Scale"], v2=True, v3=True, h=25)
         cmds.setParent("..")
 
-        Utils.btn_layout(1)
+        Utils().btn_layout(1)
         cmds.button(l="Constraint", c="const()", w=WI01[1], h=30)
         cmds.setParent("..")
         cmds.separator(h=1)
 
-        Utils.btn_layout(2)
+        Utils().btn_layout(2)
         cmds.button(l="Aim Constraint", c="cmds.AimConstraintOptions()", w=WI02[1], h=30)
         cmds.button(l="PoleVector Constraint", c="cmds.poleVectorConstraint(w=1)", w=WI02[1], h=30)
-        Utils.end_space()
+        Utils().end_space()
 
 
     # Color Picker
     def frame_color_picker(self):
-        Utils.frame("Color Picker", 0)
+        Utils().frame("Color Picker", 0)
 
         wi=(45,45,45,45,45,45)
         cmds.rowLayout(nc=6, cw6=wi)

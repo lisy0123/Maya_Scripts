@@ -1,40 +1,49 @@
 import maya.cmds as cmds
-from tabs.util import Utils
+from imp import reload
+import tabs.util
 
-Utils = reload(Utils)
+reload(tabs.util)
+
+from tabs.util import Utils
 
 WI01 = (2,273)
 WI02 = (1,136,136)
 
 
 class TabAttr():
+    def __init__(self):
+        self.frame_lock()
+        self.frame_attr()
+        self.frame_spread()
+
+
     # Lock
     def frame_lock(self):
-        Utils.frame("Lock")
+        Utils().frame("Lock")
 
         cmds.rowLayout(nc=1)
         lock_check = cmds.checkBoxGrp(l="Attr : ", ncb=4, cw5=(40,60,60,60,10), la4=["Trans","Rot","Scale","Vis"], v1=True, v2=True, v3=True, h=25)
         cmds.setParent("..")
 
-        Utils.btn_layout(2)
+        Utils().btn_layout(2)
         cmds.button(l="Lock + UnKeyable", c="lockUnlock(True, False)", w=WI02[1], h=30)
         cmds.button(l="Lock + Keyable", c="lockUnlock(True, True)", w=WI02[2], h=30)
         cmds.setParent("..")
 
-        Utils.btn_layout(1)
+        Utils().btn_layout(1)
         cmds.button(l="Unlock + Keyable", c="lockUnlock(False, True)", w=WI01[1], h=30)
         cmds.setParent("..")
         cmds.separator(h=1)
 
-        Utils.btn_layout(2)
+        Utils().btn_layout(2)
         cmds.button(l="Lock Selected", c="lockUnlock(True, True, True)", w=WI02[1], h=30)
         cmds.button(l="Unlock Selected", c="lockUnlock(False, True, True)", w=WI02[2], h=30)
-        Utils.end_space()
+        Utils().end_space()
 
 
     # Attribute
     def frame_attr(self):
-        Utils.frame("Attribute")
+        Utils().frame("Attribute")
 
         wi=(45,230)
         cmds.rowLayout(nc=2, cw2=wi)
@@ -57,19 +66,19 @@ class TabAttr():
         en01_tx = cmds.textField(w=wi[1], tx="OFF:ON", h=25)
         cmds.setParent("..")
 
-        Utils.btn_layout(1)
+        Utils().btn_layout(1)
         cmds.button(l="Change Attr Name", c="changeAttrName()", w=WI01[1], h=30)
         cmds.setParent("..")
 
-        Utils.btn_layout(1)
+        Utils().btn_layout(1)
         cmds.button(l="Add Float Attr", c="addAttr(0)", w=WI01[1], h=30)
         cmds.setParent("..")
 
-        Utils.btn_layout(1)
+        Utils().btn_layout(1)
         cmds.button(l="Add Bool Attr", c="addAttr(1)", w=WI01[1], h=30)
         cmds.setParent("..")
 
-        Utils.btn_layout(2)
+        Utils().btn_layout(2)
         cmds.button(l="Separator Attr", c="addAttr(2)", w=WI02[1], h=30)
         cmds.button(l="Delete Attr", c="deleteAttr()", w=WI02[2], h=30)
         cmds.setParent("..")
@@ -82,12 +91,12 @@ class TabAttr():
         cmds.button(l="UP", c="changeAttrOder(True)", w=wi[2], h=30)
         cmds.button(l="DOWN", c="changeAttrOder(False)", w=wi[3], h=30)
         cmds.button(l="DDOWN", c="deleteAttr(False, True)", w=wi[4], h=30)
-        Utils.end_space()
+        Utils().end_space()
 
 
     # Spread Constraint
     def frame_spread(self):
-        Utils.frame("Spread Constraint")
+        Utils().frame("Spread Constraint")
 
         cmds.rowLayout(nc=1)
         spread_axes_check = cmds.checkBoxGrp(l=" Axes: ", ncb=3, cw4=(60,60,60,10), la3=["X","Y","Z"], v1=True, v2=True, v3=True, h=25)
@@ -97,6 +106,6 @@ class TabAttr():
         spread_const_check = cmds.checkBoxGrp(l=" Constraint: ", ncb=4, cw5=(63,55,48,55,10), la4=["Parent","Point","Orient","Scale"], v2=True, v3=True, h=25)
         cmds.setParent("..")
 
-        Utils.btn_layout(1)
+        Utils().btn_layout(1)
         cmds.button(l="Add Attr", c="spread()", w=WI01[1], h=30)
-        Utils.end_space()
+        Utils().end_space()

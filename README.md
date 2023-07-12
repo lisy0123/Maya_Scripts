@@ -2,6 +2,8 @@
 
 Useful tools made with [**Maya commands**](https://help.autodesk.com/cloudhelp/2023/ENU/Maya-Tech-Docs/CommandsPython/index.html) and [**pymel**](https://help.autodesk.com/cloudhelp/2023/ENU/Maya-Tech-Docs/PyMel/index.html#) that helps you easily rigging something in **[Maya](https://www.autodesk.com/products/maya/overview?support=ADVANCED&plc=MAYA&term=3-YEAR&quantity=1)**.
 
+For quick view: https://vimeo.com/844741652?share=copy
+
 ## [:mag: My use](https://github.com/lisy0123/Maya_Scripts/tree/master/MyUse)
 
 <img src="https://github.com/lisy0123/Maya_Scripts/blob/master/_imgs/My_use1.png" width="30%" height="30%"> <img src="https://github.com/lisy0123/Maya_Scripts/blob/master/_imgs/My_use2.png" width="30%" height="30%"> 

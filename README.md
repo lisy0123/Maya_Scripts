@@ -2,21 +2,6 @@
 
 Useful tools made with [**Maya commands**](https://help.autodesk.com/cloudhelp/2023/ENU/Maya-Tech-Docs/CommandsPython/index.html) and [**pymel**](https://help.autodesk.com/cloudhelp/2023/ENU/Maya-Tech-Docs/PyMel/index.html#) that helps you easily rigging something in **[Maya](https://www.autodesk.com/products/maya/overview?support=ADVANCED&plc=MAYA&term=3-YEAR&quantity=1)**.
 
-## :couple: Human auto rigging
-
-![Human_auto_rigging](https://github.com/lisy0123/Maya_Scripts/blob/master/_imgs/Human_auto_rigging.png)
-
-|    Part     | functions                                                    |
-| :---------: | ------------------------------------------------------------ |
-| Spine, Neck | fk/ik (spline), ik hybrid, stretch, follow, stiff, volume    |
-|  Arm, Leg   | Multiple/None, fk/ik, stretch, follow, snap, ribbon(twist, volume, sine) |
-|    Hand     | fk/ik, each attr, spread, relax, slide, scrunch              |
-|    Foot     | fk/ik, rock, roll, swivel, sub ctrl                          |
-
-- [ ] refactoring
-
----
-
 ## [:mag: My use](https://github.com/lisy0123/Maya_Scripts/tree/master/MyUse)
 
 <img src="https://github.com/lisy0123/Maya_Scripts/blob/master/_imgs/My_use1.png" width="30%" height="30%"> <img src="https://github.com/lisy0123/Maya_Scripts/blob/master/_imgs/My_use2.png" width="30%" height="30%"> 
@@ -36,9 +21,7 @@ Useful tools made with [**Maya commands**](https://help.autodesk.com/cloudhelp/2
 - [x] change attribute name
 - [ ] add attribute for target visibility
 - [x] spread constraint
-- [ ] spread constraint error: hi에서 종종 꼬이는 경우 발생. 원인 찾기
 - [ ] replace, resize, select, rotate, mirror ctrl
-- [ ] add more ctrl shapes
 - [ ] add pivot ctrl
 - [ ] cluster deformer(??)
 - [ ] rivet (Each/Sum)
@@ -50,9 +33,23 @@ Useful tools made with [**Maya commands**](https://help.autodesk.com/cloudhelp/2
 - [ ] quick FK/IK rig
 - [ ] quick mouth/eye rig
 - [ ] copy/paste weight
-- [ ] refactoring
 
 :label: Updating...
+
+---
+
+## :couple: Human auto rigging
+
+![Human_auto_rigging](https://github.com/lisy0123/Maya_Scripts/blob/master/_imgs/Human_auto_rigging.png)
+
+|    Part     | functions                                                    |
+| :---------: | ------------------------------------------------------------ |
+| Spine, Neck | fk/ik (spline), ik hybrid, stretch, follow, stiff, volume    |
+|  Arm, Leg   | Multiple/None, fk/ik, stretch, follow, snap, ribbon(twist, volume, sine) |
+|    Hand     | fk/ik, each attr, spread, relax, slide, scrunch              |
+|    Foot     | fk/ik, rock, roll, swivel, sub ctrl                          |
+
+- [ ] refactoring
 
 ---
 

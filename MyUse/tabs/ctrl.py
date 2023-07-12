@@ -3,7 +3,7 @@ import pymel.core as pm
 from imp import reload
 import tabs.util
 import functions.controller as funcs_ctrl
-import functions.constrains as funcs_const
+import functions.constraint as funcs_const
 import functions.text_ctrl as funcs_text
 import functions.color as funcs_color
 

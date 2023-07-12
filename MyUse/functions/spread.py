@@ -1,8 +1,8 @@
 import pymel.core as pm
 from imp import reload
-import functions.constrains
+import functions.constraint
 
-reload(functions.constrains)
+reload(functions.constraint)
 
 
 def sub_spread(obj, num):
@@ -19,7 +19,7 @@ def spread(check_axes, check_const):
         return
     
     for idx in range(len(objs)-1):
-        functions.constrains.constrains(objs[idx], objs[-1], 1, check_axes, check_const)
+        functions.constraint.constrains(objs[idx], objs[-1], 1, check_axes, check_const)
 
     cons = pm.listRelatives(pm.ls(objs[-1]), ad=True, typ='constraint')
     attrs = []

@@ -1,9 +1,9 @@
 import maya.cmds as cmds
 import pymel.core as pm
 from imp import reload
-import functions.constrains
+import functions.constraint
 
-reload(functions.constrains)
+reload(functions.constraint)
 
 
 def create_ctrl(make, shapes, axes, const):
@@ -161,4 +161,4 @@ def sel_shape(obj, make, shapes, axes, const):
     cmds.parentConstraint(obj, grp, mo=False, n="ex")
     cmds.delete("ex")
     if cmds.radioButtonGrp(make, q=True, sl=1) == 1:
-        functions.constrains.constrains(c, obj, 0, axes, const)
+        functions.constraint.constrains(c, obj, 0, axes, const)

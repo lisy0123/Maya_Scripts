@@ -17,7 +17,7 @@ Useful tools made with [**Maya commands**](https://help.autodesk.com/cloudhelp/2
 
 ---
 
-## :mag: My use
+## [:mag: My use](https://github.com/lisy0123/Maya_Scripts/tree/master/MyUse)
 
 <img src="https://github.com/lisy0123/Maya_Scripts/blob/master/_imgs/My_use1.png" width="30%" height="30%"> <img src="https://github.com/lisy0123/Maya_Scripts/blob/master/_imgs/My_use2.png" width="30%" height="30%"> 
 

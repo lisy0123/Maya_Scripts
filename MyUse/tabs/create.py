@@ -1,10 +1,10 @@
 import maya.cmds as cmds
 from imp import reload
 import tabs.util
-import functions.match_freeze
+import functions.match_freeze as funcs_mf
 
 reload(tabs.util)
-reload(functions.match_freeze)
+funcs_mf = reload(funcs_mf)
 
 from tabs.util import Utils
 
@@ -72,15 +72,15 @@ class TabCreate():
         Utils().frame("TRS")
 
         cmds.rowLayout(nc=1)
-        self.match_check = cmds.checkBoxGrp(l="Attr : ", ncb=4, cw5=(40,58,52,55,10), la4=["Trans","Rot","Scale","Pivots"], v1=True, v2=True, v3=True, h=25)
+        self.match = cmds.checkBoxGrp(l="Attr : ", ncb=4, cw5=(40,58,52,55,10), la4=["Trans","Rot","Scale","Pivots"], v1=True, v2=True, v3=True, h=25)
         cmds.setParent("..")
 
         Utils().btn_layout(1)
-        Utils().create_btn("Match", self.func_match, WI01[1])
+        Utils().create_btn("Match", lambda x: funcs_mf.match(self.match), WI01[1])
         cmds.setParent("..")
 
         Utils().btn_layout(1)
-        Utils().create_btn("Freeze", self.func_freeze, WI01[1])
+        Utils().create_btn("Freeze", lambda x: funcs_mf.freeze(self.match), WI01[1])
         cmds.setParent("..")
         cmds.separator(h=1)
 
@@ -98,11 +98,3 @@ class TabCreate():
     def func_joint_size(self):
         joints = cmds.floatSliderGrp(self.jnt, q=True, v=True)
         cmds.jointDisplayScale(joints)
-
-
-    def func_match(self, _):
-        functions.match_freeze.match(self.match_check)
-
-
-    def func_freeze(self, _):
-        functions.match_freeze.freeze(self.match_check)

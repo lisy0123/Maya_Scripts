@@ -22,17 +22,16 @@ from tabs.advance import TabAdvance
 
 class MyUse():
     def __init__(self):
+        self.toolname = "MyUse"
+        self.tooltitle = "My Use"
         self.built_ui()
 
 
     def built_ui(self):
-        TOOLNAME = "MyUse"
-        TOOLTITLE = "My Use"
+        if cmds.window(self.toolname, ex=True):
+            cmds.deleteUI(self.toolname)
 
-        if cmds.window(TOOLNAME, ex=True):
-            cmds.deleteUI(TOOLNAME)
-
-        self.WINDOW = cmds.window(TOOLNAME, t=TOOLTITLE)
+        self.window = cmds.window(self.toolname, t=self.tooltitle)
         tabs = cmds.tabLayout(imh=5, imw=5)
         
         ch1 = self.create_tab(1)
@@ -46,12 +45,12 @@ class MyUse():
                     (ch3, "Attr"),
                     (ch4, "Ctrl"),
                     (ch5, "Advance")))
-        cmds.showWindow(TOOLNAME)
+        cmds.showWindow(self.toolname)
 
     
     def tab_layout(self, tmp):
         if tmp:
-            cmds.setParent(self.WINDOW)
+            cmds.setParent(self.window)
         col_layout = cmds.rowColumnLayout(w=285, nc=1)
 
         return(col_layout)

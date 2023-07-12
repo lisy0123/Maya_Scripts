@@ -25,17 +25,17 @@ class TabAdvance():
         wi = (120,150)
         cmds.rowLayout(nc=2, cw2=wi)
         cmds.text(l="                        Name : ")
-        setup_name = cmds.textField(w=wi[1], h=25)
+        self.setup_name = cmds.textField(w=wi[1], h=25)
         cmds.setParent("..")
 
         cmds.rowLayout(nc=1)
-        setup_check = cmds.checkBoxGrp(l="   Options :  ", ncb=3, cw4=(125,40,40,10), la3=["FK","IK","Ribbon"], v1=True, v2=True, h=25)
+        self.check_setup = cmds.checkBoxGrp(l="   Options :  ", ncb=3, cw4=(125,40,40,10), la3=["FK","IK","Ribbon"], v1=True, v2=True, h=25)
         cmds.setParent("..")
 
         wi = (120,150)
         cmds.rowLayout(nc=2, cw2=wi)
         cmds.text(l=" Ribbon Joint Number:")
-        ribbon_num = cmds.intField(w=wi[1], v=9, h=25)
+        self.ribbon_num = cmds.intField(w=wi[1], v=9, h=25)
         cmds.setParent("..")
 
         Utils().btn_layout(1)
@@ -50,13 +50,13 @@ class TabAdvance():
         wi = (100,170)
         cmds.rowLayout(nc=2, cw2=wi)
         cmds.text(l="                  Name : ")
-        mp_name = cmds.textField(w=wi[1], h=25)
+        self.mp_name = cmds.textField(w=wi[1], h=25)
         cmds.setParent("..")
 
         wi = (100,170)
         cmds.rowLayout(nc=2, cw2=wi)
         cmds.text(l="  Locator Number : ")
-        mp_loc_num = cmds.intField(w=wi[1], v=5, h=25)
+        self.mp_loc_num = cmds.intField(w=wi[1], v=5, h=25)
         cmds.setParent("..")
 
         Utils().btn_layout(1)
@@ -69,7 +69,7 @@ class TabAdvance():
         Utils().frame("Rivet")
 
         cmds.rowLayout(nc=1)
-        rivet_check = cmds.radioButtonGrp(l="Check : ", cw3=(50,90,10), la2=["Each","Sum"], nrb=2, sl=1, h=25)
+        self.check_rivet = cmds.radioButtonGrp(l="Check : ", cw3=(50,90,10), la2=["Each","Sum"], nrb=2, sl=1, h=25)
         cmds.setParent("..")
 
         Utils().btn_layout(1)

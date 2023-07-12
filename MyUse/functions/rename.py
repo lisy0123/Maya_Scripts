@@ -1,28 +1,30 @@
-import maya.cmds as cmds
 import pymel.core as pm
 
 
 def hash_renamer(hf, hb, check):
-    if cmds.radioButtonGrp(check, q=True, sl=1) == 1:
-        hf = "R_"+hf
-    elif cmds.radioButtonGrp(check, q=True, sl=1) == 2:
-        hf = "L_"+hf
-    if hb != "":
-        hb = "_"+hb
+    if pm.radioButtonGrp(check, q=True, sl=1) == 1:
+        hf = "R_" + hf if hf != "" else "R"
+    elif pm.radioButtonGrp(check, q=True, sl=1) == 2:
+        hf = "L_" + hf if hf != "" else "L"
+    hf = hf + "_" if hf != "" else hf
+    hb = "_" + hb if hb != "" else hb
     
     objs = pm.ls(sl=True)
-    for x in range(len(objs)):
+    for idx in range(len(objs)):
         if len(objs) == 1:
-            name = hf+hb
-        elif x < 9:
-            name = hf+"_0"+str(x+1)+hb
+            if hf != "":
+                name = hf[:-1] if hb == "" else hf[:-1] + hb
+            else:
+                name = "XXX" if hb == "" else hb[1:]
+        elif idx < 9:
+            name = hf + "0" + str(idx+1) + hb if hf != "" else hb[1:] + "_0" + str(idx+1)
         else:
-            name = hf+"_"+str(x+1)+hb
-        objs[x].rename(name)
+            name = hf + str(idx+1) + hb if hf != "" else hb[1:] + "_" + str(idx+1)
+        objs[idx].rename(name)
 
 
 def replace(search, replace, check):
-    if cmds.radioButtonGrp(check, q=True, sl=1) == 2:
+    if pm.radioButtonGrp(check, q=True, sl=1) == 2:
         objs = pm.listRelatives(ad=True)
         objs += pm.ls(sl=True)
     else:
@@ -31,42 +33,32 @@ def replace(search, replace, check):
         obj.rename(obj.name().replace(search, replace))
 
 
-def namer(num, before, after, objs):
-    for obj in objs:
-        if num == 1:
-            blen = len(before)
-            bcheck=""
-            for x in range(blen+1):
-                bcheck += obj[x]
-            if bcheck != before+"_":
-                name = before+"_"+obj
-                obj.rename(name)
-        else:
-            alen = len(after)
-            acheck=""
-            for x in range(alen+1):
-                tmp = len(obj.name())-len(after)+x-1
-                acheck += obj[tmp]
-            if acheck != "_"+after:
-                name = obj+"_"+after
-                obj.rename(name)
-
-
-def add(num, before, after, check):
-    if cmds.radioButtonGrp(check, q=True, sl=1) == 2:
+def add(num, before, after, check, repeat):
+    if pm.radioButtonGrp(check, q=True, sl=1) == 2:
         objs = pm.listRelatives(ad=True, typ='joint')
         objs += pm.listRelatives(ad=True, typ='transform')
         objs += pm.ls(sl=True)
-        print(objs)
     else:
         objs = pm.ls(sl=True)
-    namer(num, before, after, objs)
+    namer(num, before, after, objs, repeat)
 
 
-def add_tail(tail):
-    # tails = [
-    #     "grp", "jnt", "ctrl",
-    #     "extra", "loc", "rig",
-    # ]
-    objs = pm.ls(sl=True)
-    namer(0, None, tail, objs)
+def namer(num, before, after, objs, repeat):
+    for obj in objs:
+        if num == 1:
+            blen = len(before)
+            bcheck = ""
+            for idx in range(blen+1):
+                bcheck += obj[idx]
+            if bcheck != before + "_" or pm.checkBox(repeat, q=True, v=True):
+                name = before + "_" + obj
+                obj.rename(name)
+        else:
+            alen = len(after)
+            acheck = ""
+            for idx in range(alen+1):
+                tmp = len(obj.name()) - len(after) + idx - 1
+                acheck += obj[tmp]
+            if acheck != "_" + after or pm.checkBox(repeat, q=True, v=True):
+                name = obj + "_" + after
+                obj.rename(name)

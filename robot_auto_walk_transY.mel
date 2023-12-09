@@ -1,0 +1,40 @@
+if (main_ctrl.auto_leg == 1) {
+	$res = 0;
+	$tmp = abs(main_ctrl.translateX) % main_ctrl.auto_leg_width;
+
+	if (main_ctrl.translateX > 0) {
+		if (!($tmp >= (main_ctrl.auto_leg_width/2) || $tmp == 0)) {
+			if ($tmp > (main_ctrl.auto_leg_width/4)) {
+				$tmp = main_ctrl.auto_leg_width/2 - $tmp;
+			} 
+			$res = $res + abs(main_ctrl.auto_leg_height / (main_ctrl.auto_leg_width / $tmp / 4));
+		}
+	} else {
+		if (!($tmp <= (main_ctrl.auto_leg_width/2) || $tmp == 0)) {
+			$tmp = $tmp - main_ctrl.auto_leg_width/2;
+			if ($tmp > (main_ctrl.auto_leg_width/4)) {
+				$tmp = main_ctrl.auto_leg_width/2 - $tmp;
+			} 
+			$res = $res + abs(main_ctrl.auto_leg_height / (main_ctrl.auto_leg_width / $tmp / 4));
+		}
+	}
+
+	$tmp = abs(main_ctrl.translateZ) % main_ctrl.auto_leg_width;
+	if (main_ctrl.translateZ < 0) {
+		if (!($tmp >= (main_ctrl.auto_leg_width/2) || $tmp == 0)) {
+			if ($tmp > (main_ctrl.auto_leg_width/4)) {
+				$tmp = main_ctrl.auto_leg_width/2 - $tmp;
+			}
+			$res = $res + abs(main_ctrl.auto_leg_height / (main_ctrl.auto_leg_width / $tmp / 4));
+		}
+	} else {
+		if (!($tmp <= (main_ctrl.auto_leg_width/2) || $tmp == 0)) {
+			$tmp = $tmp - main_ctrl.auto_leg_width/2;
+			if ($tmp > (main_ctrl.auto_leg_width/4)) {
+				$tmp = main_ctrl.auto_leg_width/2 - $tmp;
+			} 
+			$res = $res + abs(main_ctrl.auto_leg_height / (main_ctrl.auto_leg_width / $tmp / 4));
+		}
+	}
+	lf_back_leg_sub_ctrl_grp.translateY = $res;
+}

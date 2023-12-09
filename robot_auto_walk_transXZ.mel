@@ -1,0 +1,21 @@
+$res = 0;
+$main = main_ctrl.translateX + main_ctrl.auto_leg_width/2;
+
+if (main_ctrl.auto_leg == 1) {
+	$res = -main_ctrl.auto_leg_width/2;
+	$tmp = abs($main) % main_ctrl.auto_leg_width;
+
+	if ($tmp >= (main_ctrl.auto_leg_width/2)) {
+		$tmp = main_ctrl.auto_leg_width - $tmp;
+	}
+	if (!($tmp == 0)) {
+		if ($main) {
+			$res = $res + main_ctrl.auto_leg_width / (main_ctrl.auto_leg_width / $tmp / 2);
+		} else {
+			$res = $res - main_ctrl.auto_leg_width / (main_ctrl.auto_leg_width / $tmp / 2);
+		}
+	}
+	$res = $res + ($main / main_ctrl.auto_leg_width-1) * main_ctrl.auto_leg_width;
+}
+
+rt_back_leg_sub_ctrl_grp.translateX = $res;

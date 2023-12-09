@@ -2,14 +2,15 @@
 
 Useful tools made with [**Maya commands**](https://help.autodesk.com/cloudhelp/2023/ENU/Maya-Tech-Docs/CommandsPython/index.html) and [**pymel**](https://help.autodesk.com/cloudhelp/2023/ENU/Maya-Tech-Docs/PyMel/index.html#) that helps you easily rigging something in **[Maya](https://www.autodesk.com/products/maya/overview?support=ADVANCED&plc=MAYA&term=3-YEAR&quantity=1)**.
 
-For quick view: https://vimeo.com/844741652?share=copy
-
 ## [:mag: My use](https://github.com/lisy0123/Maya_Scripts/tree/master/MyUse)
 
 <img src="https://github.com/lisy0123/Maya_Scripts/blob/master/_imgs/My_use1.png" width="30%" height="30%"> <img src="https://github.com/lisy0123/Maya_Scripts/blob/master/_imgs/My_use2.png" width="30%" height="30%"> 
 
 <img src="https://github.com/lisy0123/Maya_Scripts/blob/master/_imgs/My_use3.png" width="30%" height="30%"> <img src="https://github.com/lisy0123/Maya_Scripts/blob/master/_imgs/My_use4.png" width="30%" height="30%">
 
+**:point_right: [Quick view](https://vimeo.com/844741652) (00:18 - 01:37)**
+
+- [x] refactoring
 - [x] joint, ik, weights options, set driven key, etc...
 - [x] constraint: maintain offset toggle
 - [x] quick constraint (1:1, M:1)
@@ -40,15 +41,30 @@ For quick view: https://vimeo.com/844741652?share=copy
 
 ---
 
+## :robot: Robot auto walk
+
+> MEL scripts
+
+**:point_right: [Quick view](https://vimeo.com/817940077) (00:00 - 00:09)**
+
+| Translate |                          code link                           |
+| :-------: | :----------------------------------------------------------: |
+|   X, Z    | [:link:](https://github.com/lisy0123/Maya_Scripts/blob/master/robot_auto_walk_transXZ.mel) |
+|     Y     | [:link:](https://github.com/lisy0123/Maya_Scripts/blob/master/robot_auto_walk_transY.mel) |
+
+---
+
 ## :couple: Human auto rigging
 
 ![Human_auto_rigging](https://github.com/lisy0123/Maya_Scripts/blob/master/_imgs/Human_auto_rigging.png)
+
+**:point_right: [Quick view](https://vimeo.com/844741652) (00:04 - 00:18)**
 
 |    Part     | functions                                                    |
 | :---------: | ------------------------------------------------------------ |
 | Spine, Neck | fk/ik (spline), ik hybrid, stretch, follow, stiff, volume    |
 |  Arm, Leg   | Multiple/None, fk/ik, stretch, follow, snap, ribbon(twist, volume, sine) |
-|    Hand     | fk/ik, each attr, spread, relax, slide, scrunch              |
+|    Hand     | fk/ik, sub ctrl(each attr, spread, relax, slide, scrunch)    |
 |    Foot     | fk/ik, rock, roll, swivel, sub ctrl                          |
 
 - [ ] refactoring

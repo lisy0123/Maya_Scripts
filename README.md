@@ -6,7 +6,7 @@ Useful tools made with [**Maya commands**](https://help.autodesk.com/cloudhelp/2
 
 > MEL scripts
 
-![robot_auto_walking](https://github.com/lisy0123/Maya_Scripts/blob/master/_imgs/robot_auto_walking)
+![robot_auto_walking](https://github.com/lisy0123/Maya_Scripts/blob/master/_imgs/robot_auto_walking.gif)
 
 ---
 
